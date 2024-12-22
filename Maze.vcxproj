@@ -142,7 +142,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;freetype.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -768,6 +768,7 @@
     <ClCompile Include="src\private\Core\Objects\Player.cpp" />
     <ClCompile Include="src\private\Core\Physics\PhysicsEngine.cpp" />
     <ClCompile Include="src\private\Core\Render\Render.cpp" />
+    <ClCompile Include="src\private\Core\Render\TextRender.cpp" />
     <ClCompile Include="src\private\Core\Scenes\ASceneController.cpp" />
     <ClCompile Include="src\private\Core\Objects\SquareObject.cpp" />
     <ClCompile Include="src\private\Core\Scenes\Maze2DScene.cpp" />
@@ -948,6 +949,7 @@
     <ClInclude Include="src\public\Core\Objects\Player.h" />
     <ClInclude Include="src\public\Core\Physics\PhysicsEngine.h" />
     <ClInclude Include="src\public\Core\Render\Render.h" />
+    <ClInclude Include="src\public\Core\Render\TextRender.h" />
     <ClInclude Include="src\public\Core\Scenes\Maze2DScene.h" />
     <ClInclude Include="src\public\Core\Scenes\ASceneController.h" />
     <ClInclude Include="src\public\Core\Objects\SquareObject.h" />
@@ -960,12 +962,18 @@
     <ClInclude Include="src\public\Core\Window.h" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Shaders\ColorRenderization\ColorRenderization.frag" />
-    <Content Include="Assets\Shaders\ColorRenderization\ColorRenderization.vert" />
+    <Content Include="Assets\Fonts\Arial.ttf" />
+    <Content Include="Assets\Shaders\BaseShader\BaseFrag.glsl" />
+    <Content Include="Assets\Shaders\BaseShader\BaseVert.glsl" />
+    <Content Include="Assets\Shaders\ColorShader\ColorFrag.glsl" />
+    <Content Include="Assets\Shaders\ColorShader\ColorVert.glsl" />
+    <Content Include="Assets\Shaders\TextShader\TextFrag.glsl" />
+    <Content Include="Assets\Shaders\TextShader\TextVert.glsl" />
+    <Content Include="freetype.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Shaders\ColorRenderization\ColorRenderization.frag" />
-    <None Include="Assets\Shaders\ColorRenderization\ColorRenderization.vert" />
+    <None Include="Assets\Shaders\BaseShader\ColorRenderization.frag" />
+    <None Include="Assets\Shaders\BaseShader\ColorRenderization.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

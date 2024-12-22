@@ -7,6 +7,7 @@
 #include "Core/Render/Shader.h"
 #include "Core/Materials/GizmosMaterial.h"
 #include "Core/Global.h"
+#include "Core/Render/TextRender.h"
 
 Render::Render() {
 
@@ -14,6 +15,7 @@ Render::Render() {
 
 	InitQuad();
 	InitLine();
+	InitText();
 }
 
 Render::~Render() {
@@ -83,6 +85,38 @@ void Render::InitQuad() {
 
 }
 
+void Render::InitText() {
+
+	std::string vertexPath =	"Assets/Shaders/BaseShader/BaseVert.glsl";
+	std::string fragmentPath =	"Assets/Shaders/BaseShader/BaseFrag.glsl";
+
+	textShader = CreateShader(vertexPath, fragmentPath);
+	
+	TextRender::Init();
+	
+	unsigned int indices[] = {
+		0, 1, 2,
+		0, 2, 3
+	};
+
+	glGenVertexArrays(1, &VAO_text);
+
+	glBindVertexArray(VAO_text);
+	
+	glGenBuffers(1, &VBO_text);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO_line);
+	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
+
+	glGenBuffers(1, &EBO_quad);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_quad);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+}
+
 void Render::DrawLineSegment(glm::vec3 start, glm::vec3 end, glm::vec3 color) {
 
 	start = TransformWorldToScreen(start);
@@ -145,4 +179,38 @@ void Render::DrawQuadLine(glm::vec3 center, glm::vec3 scale, glm::vec3 color) {
 	DrawLineSegment(points[2], points[3], color);
 	DrawLineSegment(points[3], points[0], color);
 
+}
+
+void Render::DrawText(std::string text, glm::vec3 position, float scale, glm::vec3 color) {
+	textShader->Use();
+	textShader->SetVector3("_textColor", color);
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(VAO_text);
+	
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++) 
+	{
+		Character ch = TextRender::Characters[*c];
+
+		float xpos = position.x + ch.Bearing.x * scale;
+		float ypos = position.y - (ch.Size.y - ch.Bearing.y) * scale;
+
+		float w = ch.Size.x * scale;
+		float h = ch.Size.y * scale;
+		float vertices[4][5] = {
+			{ xpos,     ypos + h,	0.0f,	0.0f,	0.0f },            
+			{ xpos,     ypos,		0.0f,	0.0f,	1.0f },
+			{ xpos + w, ypos,		0.0f,	1.0f,	1.0f },
+			{ xpos + w, ypos + h,	0.0f,	1.0f,	0.0f }           
+		};
+		glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, VBO_text);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+		
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+		position.x += (ch.Advance >> 6) * scale; 
+	}
 }

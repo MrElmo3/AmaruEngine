@@ -4,8 +4,8 @@
 #include "Core/Render/Shader.h"
 
 BaseMaterial::BaseMaterial() {
-	std::string vertexPath = "Assets/Shaders/ColorRenderization/ColorRenderization.vert";
-	std::string fragmentPath = "Assets/Shaders/ColorRenderization/ColorRenderization.frag";
+	std::string vertexPath = "Assets/Shaders/ColorShader/ColorVert.glsl";
+	std::string fragmentPath = "Assets/Shaders/ColorShader/ColorFrag.glsl";
 	this->shader = Render::GetInstance().CreateShader(vertexPath, fragmentPath);
 }
 
