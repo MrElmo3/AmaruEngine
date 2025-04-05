@@ -2,17 +2,17 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <glad/glad.h>
 #include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
 #include <stb_image.h>
+#include <Core/Global.h>
 #include <Core/Window.h>
+#include <Core/Components/Render/CameraComponent.h>
+#include <Core/Materials/AMaterial.h>
 #include <Core/Materials/ColorMaterial.h>
-
-#include "Core/Render/Shader.h"
-#include "Core/Materials/AMaterial.h"
-#include "Core/Components/Render/CameraComponent.h"
-#include "Util/Logger.h"
+#include <Core/Render/Shader.h>
+#include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <Util/Logger.h>
 
 
 Render::Render() {
@@ -150,15 +150,16 @@ void Render::InitCube() {
 	};
 	
 	float vertices[] = {
-		-0.5f,	-0.5f,	-0.5f,	0.0f,	1.0f,
-		0.5f,	-0.5f,	-0.5f,	1.0f,	1.0f,
-		0.5f,	0.5f,	-0.5f,	1.0f,	2.0f,
-		-0.5f,	0.5f,	-0.5f,	0.0f,	2.0f,
+		//x,	y,		z,		t,		v,		normal
+		-0.5f,	-0.5f,	-0.5f,	0.0f,	1.0f,	-1.0f,	-1.0f,	-1.0f,
+		0.5f,	-0.5f,	-0.5f,	1.0f,	1.0f,	1.0f,	-1.0f,	-1.0f,
+		0.5f,	0.5f,	-0.5f,	1.0f,	2.0f,	1.0f,	1.0f,	-1.0f,
+		-0.5f,	0.5f,	-0.5f,	0.0f,	2.0f,	-1.0f,	1.0f,	-1.0f,
 		
-		-0.5f,	-0.5f,	0.5f,	0.0f,	0.0f,
-		0.5f,	-0.5f,	0.5f,	1.0f,	0.0f,
-		0.5f,	0.5f,	0.5f,	1.0f,	1.0f,
-		-0.5f,	0.5f,	0.5f,	0.0f,	1.0f,
+		-0.5f,	-0.5f,	0.5f,	0.0f,	0.0f,	-1.0f,	-1.0f,	1.0f,
+		0.5f,	-0.5f,	0.5f,	1.0f,	0.0f,	1.0f,	-1.0f,	1.0f,
+		0.5f,	0.5f,	0.5f,	1.0f,	1.0f,	1.0f,	1.0f,	1.0f,
+		-0.5f,	0.5f,	0.5f,	0.0f,	1.0f,	-1.0f,	1.0f,	1.0f,
 		
 	};
 
@@ -168,17 +169,23 @@ void Render::InitCube() {
 
 	glGenBuffers(1, &VBO_cube);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_cube);
-	glBufferData(GL_ARRAY_BUFFER, 40 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 64 * sizeof(float), vertices, GL_STATIC_DRAW);
 
 	glGenBuffers(1, &EBO_cube);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_cube);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+		8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+		8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_TRUE,
+		8 * sizeof(float), (void*)(5 *  sizeof(float)));
+	glEnableVertexAttribArray(2);
 }
 
 void Render::DrawLineSegment(glm::vec3 start, glm::vec3 end, glm::vec3 color) {
@@ -250,6 +257,9 @@ void Render::DrawCube(glm::mat4 model, AMaterial* material) {
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
+	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
+	material->shader->SetVector3("_lightPosition",
+		Window::GetInstance().GetActualScene()->lightSource->GetLightPosition());
 	material->shader->SetVector3("_lightColor",
 		Window::GetInstance().GetActualScene()->lightSource->GetColor());
 

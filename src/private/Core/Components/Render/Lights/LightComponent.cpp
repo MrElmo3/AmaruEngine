@@ -4,7 +4,6 @@
 
 LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
 	type = Point;
-
 	range = 1.0f;
 	color = glm::vec3(1.0f, 1.0f, 1.0f);
 	intensity = 1.0f;
@@ -15,6 +14,11 @@ LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
 	}
 	parent->scene->lightSource = this;
 }
+
+void LightComponent::Update(double deltaTime) {
+	lightPosition = parent->GetWorldPosition();
+}
+
 
 void LightComponent::SetColor(glm::vec3 color) {
 	this->color = color;
