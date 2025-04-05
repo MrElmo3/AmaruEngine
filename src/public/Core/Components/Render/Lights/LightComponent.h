@@ -28,6 +28,7 @@ public:
 	void SetIntensity(float intensity);
 	void SetRange(float range);
 
+	glm::vec3 GetLightPosition() const { return this->lightPosition; }
 	glm::vec3 GetColor() const { return this->color; }
 	glm::vec3 GetPosition() const { return this->lightPosition; }
 	float GetRange() const { return this->range; }

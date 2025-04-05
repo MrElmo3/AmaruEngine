@@ -11,6 +11,13 @@ uniform float _ambientStrength = 1.0;
 uniform float _specularStrength = 0.5;
 uniform uint _shininess = 32u;
 
+uniform vec3 _viewPosition = vec3(0.0, 0.0, 0.0);
+
+uniform float _ambientStrength = 1.0;
+uniform float _specularStrength = 0.5;
+uniform uint _shininess = 32u;
+
+uniform vec3 _lightPosition = vec3(0.0, 0.0, 0.0);
 uniform vec3 _lightColor = vec3(1.0, 1.0, 1.0);
 uniform vec3 _lightPosition = vec3(0.0, 0.0, 0.0);
 uniform float _lightRange = 1.0;
