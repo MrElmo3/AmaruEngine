@@ -2,16 +2,18 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <glad/glad.h>
 #include <iostream>
-#include <glm/gtc/matrix_transform.hpp>
 #include <stb_image.h>
+#include <Core/Global.h>
 #include <Core/Window.h>
+#include <Core/Components/Render/CameraComponent.h>
+#include <Core/Materials/AMaterial.h>
 #include <Core/Materials/ColorMaterial.h>
 #include <Core/Objects/AObject.h>
 #include <Core/Render/Shader.h>
 #include <Core/Materials/AMaterial.h>
 #include <Core/Components/Render/CameraComponent.h>
+#include <glm/gtc/matrix_transform.hpp>
 #include <Util/Logger.h>
 
 
@@ -343,6 +345,9 @@ void Render::DrawCube(
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
+	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
+	material->shader->SetVector3("_lightPosition",
+		Window::GetInstance().GetActualScene()->lightSource->GetLightPosition());
 	material->shader->SetVector3("_lightColor",
 		Window::GetInstance().GetActualScene()->lightSource->GetColor());
 
