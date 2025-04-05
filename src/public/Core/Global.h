@@ -39,4 +39,8 @@ public:
 	 * Up vector in global space
 	 */
 	static const glm::vec3 UP;
+
+	//--- Phong lightning constans ---
+	static const float AMBIENT_LIGHT_STRENGTH;
+
 };

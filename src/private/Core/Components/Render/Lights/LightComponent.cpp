@@ -16,6 +16,11 @@ LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
 	parent->scene->lightSource = this;
 }
 
+void LightComponent::Update(double deltaTime) {
+	lightPosition = parent->GetWorldPosition();
+}
+
+
 void LightComponent::SetColor(glm::vec3 color) {
 	this->color = color;
 }
