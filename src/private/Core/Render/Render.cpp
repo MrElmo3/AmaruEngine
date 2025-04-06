@@ -201,8 +201,8 @@ void Render::DrawLineSegment(glm::vec3 start, glm::vec3 end, glm::vec3 color) {
 	gizmosMaterial->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	float vertices[] = {
-		(float)start.x, (float)start.y, (float)start.z,
-		(float)end.x, (float)end.y, (float)end.z
+		start.x, start.y, start.z,
+		end.x, end.y, end.z
 	};
 
 	glLineWidth(1);
@@ -250,7 +250,9 @@ void Render::DrawQuad(glm::mat4 model, AMaterial* material) {
 
 void Render::DrawCube(glm::mat4 model, AMaterial* material) {
 	if (!currentCamera) return;
-	if (!Window::GetInstance().GetActualScene()->lightSource) return;
+
+	LightComponent* sceneLight = Window::GetInstance().GetActualScene()->lightSource;
+	if (!sceneLight) return;
 
 	material->Use();
 	
@@ -259,10 +261,11 @@ void Render::DrawCube(glm::mat4 model, AMaterial* material) {
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
-	material->shader->SetVector3("_lightPosition",
-		Window::GetInstance().GetActualScene()->lightSource->GetLightPosition());
-	material->shader->SetVector3("_lightColor",
-		Window::GetInstance().GetActualScene()->lightSource->GetColor());
+
+	material->shader->SetVector3("_lightColor", sceneLight->GetColor());
+	material->shader->SetVector3("_lightPosition", sceneLight->GetPosition());
+	material->shader->SetFloat("_lightRange", sceneLight->GetRange());
+	material->shader->SetFloat("_lightIntensity", sceneLight->GetIntensity());
 
 	glBindVertexArray(VAO_cube);
 
