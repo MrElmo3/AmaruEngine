@@ -13,7 +13,7 @@ TestPhongLightScene::TestPhongLightScene() {
 	auto* cameraComponent = dynamic_cast<CameraComponent*>(
 		cameraObject->AddComponent(new CameraComponent(cameraObject))
 		);
-	cameraObject->position = glm::vec3(4, 0, 4);
+	cameraObject->position = glm::vec3(1, 0, 3);
 	cameraObject->RotateEuler(glm::vec3(0, -45, 0));
 	cameraComponent->orthographic = false;
 	cameraComponent->mainCamera = true;
@@ -23,12 +23,12 @@ TestPhongLightScene::TestPhongLightScene() {
 	cube->scale = glm::vec3(1, 2, 1);
 	cube->position = glm::vec3(-0.5f, 0, 0);
 	dynamic_cast<LitMaterial*>(cube->GetRenderComponent()->material)
-		//->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-		->SetTexture("Assets/Textures/HL.jpg");
+		->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+		//->SetTexture("Assets/Textures/HL.jpg");
 
 	auto* lightSource = new PointLight("light", nullptr, this);
-	lightSource->scale = glm::vec3(0.1f, 0.1f, 0.1f);
-	lightSource->position = glm::vec3(1, 1, 1);
+	lightSource->scale = glm::vec3(0.1, 0.1, 0.1);
+	lightSource->position = glm::vec3(-2, 0, 1);
 	lightSource->SetColor(1.0, 1.0, 1.0);
 	lightSource->SetIntensity(1.0f);
 	lightSource->SetRange(5.0f);

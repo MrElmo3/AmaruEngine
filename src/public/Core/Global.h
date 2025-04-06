@@ -40,7 +40,9 @@ public:
 	 */
 	static const glm::vec3 UP;
 
-	//--- Phong lightning constans ---
+	//--- Phong lightning constants ---
 	static const float AMBIENT_LIGHT_STRENGTH;
+	static const float SPECULAR_LIGHT_STRENGTH;
+	static const unsigned int SHININESS;
 
 };
