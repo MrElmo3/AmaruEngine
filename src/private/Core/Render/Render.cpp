@@ -347,6 +347,9 @@ void Render::DrawCube(
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
+	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(currentCamera->GetViewMatrix())));
+	material->shader->SetMatrix3("_normalModel", normalMatrix);
+
 	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
 
 	material->shader->SetVector3("_lightColor", sceneLight->GetColor());

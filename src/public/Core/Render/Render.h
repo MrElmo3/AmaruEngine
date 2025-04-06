@@ -14,7 +14,7 @@ class Shader;
 
 /**
  * This class represents the render of the engine
- * Encapsulates all of the rendering methods
+ * Encapsulates all the rendering methods
  */
 class Render : public Singleton<Render> {
 private:
