@@ -7,3 +7,20 @@ PointLight::PointLight(const std::string &_name, AObject* _parent, ASceneControl
 		AddComponent(new LightComponent(this))
 	);
 }
+
+void PointLight::SetColor(glm::vec3 color) {
+	lightComponent->SetColor(color);
+}
+
+void PointLight::SetColor(float r, float g, float b) {
+	lightComponent->SetColor(r, g, b);
+}
+
+void PointLight::SetIntensity(float intensity) {
+	lightComponent->SetIntensity(intensity);
+}
+
+void PointLight::SetRange(float range) {
+	lightComponent->SetRange(range);
+}
+

@@ -337,7 +337,9 @@ void Render::DrawCube(
 	std::vector<glm::vec2>* uv) {
 
 	if (!currentCamera) return;
-	if (!Window::GetInstance().GetActualScene()->lightSource) return;
+
+	LightComponent* sceneLight = Window::GetInstance().GetActualScene()->lightSource;
+	if (!sceneLight) return;
 
 	material->Use();
 	
@@ -346,10 +348,11 @@ void Render::DrawCube(
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
-	material->shader->SetVector3("_lightPosition",
-		Window::GetInstance().GetActualScene()->lightSource->GetLightPosition());
-	material->shader->SetVector3("_lightColor",
-		Window::GetInstance().GetActualScene()->lightSource->GetColor());
+
+	material->shader->SetVector3("_lightColor", sceneLight->GetColor());
+	material->shader->SetVector3("_lightPosition", sceneLight->GetPosition());
+	material->shader->SetFloat("_lightRange", sceneLight->GetRange());
+	material->shader->SetFloat("_lightIntensity", sceneLight->GetIntensity());
 
 	glBindVertexArray(VAOCube);
 

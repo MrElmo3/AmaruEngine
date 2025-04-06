@@ -26,7 +26,9 @@ TestPhongLightScene::TestPhongLightScene() {
 	auto* lightSource = new PointLight("light", nullptr, this);
 	lightSource->scale = glm::vec3(0.1f, 0.1f, 0.1f);
 	lightSource->position = glm::vec3(1, 1, -1);
-	lightSource->GetComponent<LightComponent>()->SetColor(1.0, 1.0, 1.0);
+	lightSource->SetColor(1.0, 1.0, 1.0);
+	lightSource->SetIntensity(3.0f);
+	lightSource->SetRange(20.0f);
 	lightSource->AddComponent(new RenderCubeComponent(lightSource));
 
 }

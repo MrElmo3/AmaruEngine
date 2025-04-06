@@ -14,5 +14,11 @@ private:
 	LightComponent* lightComponent;
 
 public:
+
+	void SetRange(float range);
+	void SetColor(glm::vec3 color);
+	void SetColor(float r, float g, float b);
+	void SetIntensity(float intensity);
+
 	LightComponent* GetLightComponent() const { return lightComponent; }
 };
