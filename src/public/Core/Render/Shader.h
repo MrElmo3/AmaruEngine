@@ -64,7 +64,7 @@ public:
     }
 
 	/**
-	 * @brief Set a vector2 uniform in the shader
+	 * @brief Set a vector3 uniform in the shader
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */
@@ -74,7 +74,17 @@ public:
 	}
 
 	/**
-	 * @brief Set a vector3 uniform in the shader
+	 * @brief Set a matrix3 uniform in the shader
+	 * @param name the name of the uniform
+	 * @param value the value to set the uniform
+	 */
+	void SetMatrix3(const std::string &name, glm::mat3 value) {
+		int location = glGetUniformLocation(ID, name.c_str());
+		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+	}
+
+	/**
+	 * @brief Set a matrix4 uniform in the shader
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */

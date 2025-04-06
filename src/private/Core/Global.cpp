@@ -13,4 +13,4 @@ const glm::vec3 Global::UP = glm::vec3(0, 1, 0);
 
 //Phong Lightning constans
 
-const float Global::AMBIENT_LIGHT_STRENGTH = 0.1;
+const float Global::AMBIENT_LIGHT_STRENGTH = 0.15f;
