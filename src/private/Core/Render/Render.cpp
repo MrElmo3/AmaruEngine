@@ -350,7 +350,11 @@ void Render::DrawCube(
 	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(currentCamera->GetViewMatrix())));
 	material->shader->SetMatrix3("_normalModel", normalMatrix);
 
+	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
+
 	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
+	material->shader->SetFloat("_specularStrength", Global::SPECULAR_LIGHT_STRENGTH);
+	material->shader->SetUInt("_shininess", Global::SHININESS);
 
 	material->shader->SetVector3("_lightColor", sceneLight->GetColor());
 	material->shader->SetVector3("_lightPosition", sceneLight->GetPosition());

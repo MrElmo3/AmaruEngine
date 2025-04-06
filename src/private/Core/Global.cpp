@@ -11,6 +11,7 @@ const glm::vec3 Global::FORWARD = glm::vec3(0, 0, -1);
 const glm::vec3 Global::RIGHT = glm::vec3(1, 0, 0);
 const glm::vec3 Global::UP = glm::vec3(0, 1, 0);
 
-//Phong Lightning constans
-
+//Phong Lightning constants
 const float Global::AMBIENT_LIGHT_STRENGTH = 0.15f;
+const float Global::SPECULAR_LIGHT_STRENGTH = 0.5f;
+const unsigned int Global::SHININESS = 32;

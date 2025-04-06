@@ -42,7 +42,18 @@ public:
 	 * @param value The value to set the uniform
 	 */
 	void SetBool(const std::string &name, bool value) const{
-		glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+		int location = glGetUniformLocation(ID, name.c_str());
+		glUniform1i(location, (int)value);
+	}
+
+	/**
+	 * @brief Set an unsigned integer uniform in the shader
+	 * @param name The name of the uniform
+	 * @param value The value to set the uniform
+	 */
+	void SetUInt(const std::string &name, unsigned int value) const {
+		int location = glGetUniformLocation(ID, name.c_str());
+		glUniform1ui(location, value);
 	}
 
 	/**
@@ -50,8 +61,9 @@ public:
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */
-	void SetInt(const std::string &name, int value) const {
-		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	void SetInt(const std::string &name, int value) const{
+		int location = glGetUniformLocation(ID, name.c_str());
+    	glUniform1i(location, value);
     }
 
 	/**
@@ -59,8 +71,9 @@ public:
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */
-	void SetFloat(const std::string &name, float value) const {
-		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	void SetFloat(const std::string &name, float value) const{
+		int location = glGetUniformLocation(ID, name.c_str());
+    	glUniform1f(location, value);
     }
 
 	/**
