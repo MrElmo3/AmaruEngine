@@ -1,5 +1,7 @@
 #include "Core/Global.h"
 
+float Global::TIME = 0.0f;
+
 const float Global::FIXED_DELTA_TIME = 0.016f;
 
 const float Global::SCREEN_FORMAT = (float)Global::SCREEN_WIDTH / (float)Global::SCREEN_HEIGHT;
@@ -12,6 +14,6 @@ const glm::vec3 Global::RIGHT = glm::vec3(1, 0, 0);
 const glm::vec3 Global::UP = glm::vec3(0, 1, 0);
 
 //Phong Lightning constants
-const float Global::AMBIENT_LIGHT_STRENGTH = 0.15f;
+const float Global::AMBIENT_LIGHT_STRENGTH = 0.1f;
 const float Global::SPECULAR_LIGHT_STRENGTH = 0.5f;
-const unsigned int Global::SHININESS = 32;
+const unsigned int Global::SHININESS = 4;

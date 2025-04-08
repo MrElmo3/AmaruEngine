@@ -20,7 +20,7 @@ TestPhongLightScene::TestPhongLightScene() {
 	cameraComponent->FOV = 60.0f;
 
 	auto* cube = new Cube( "Square2", nullptr, this);
-	cube->scale = glm::vec3(1, 2, 1);
+	cube->scale = glm::vec3(1, 1, 1);
 	cube->position = glm::vec3(-0.5f, 0, 0);
 	dynamic_cast<LitMaterial*>(cube->GetRenderComponent()->material)
 		->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
@@ -28,7 +28,7 @@ TestPhongLightScene::TestPhongLightScene() {
 
 	auto* lightSource = new PointLight("light", nullptr, this);
 	lightSource->scale = glm::vec3(0.1, 0.1, 0.1);
-	lightSource->position = glm::vec3(-2, 0, 1);
+	lightSource->position = glm::vec3(-3, 0, 1);
 	lightSource->SetColor(1.0, 1.0, 1.0);
 	lightSource->SetIntensity(1.0f);
 	lightSource->SetRange(5.0f);

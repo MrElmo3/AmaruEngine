@@ -53,23 +53,6 @@ void AObject::Start() {
 }
 
 void AObject::FixedUpdate() {
-	
-	if (parent != nullptr) {
-		glm::mat4 trans = glm::mat4(1);
-		
-		glm::scale(trans, parent->worldScale);
-		worldScale = trans * glm::vec4(scale, 1);
-
-		glm::translate(trans, parent->worldPosition);
-		worldPosition = trans * glm::vec4(position, 1);
-		
-		worldRotation = parent->worldRotation * rotationQuat;
-	}
-	else {
-		this->worldScale = scale;
-		this->worldPosition = position;
-		this->worldRotation = rotationQuat;
-	}
 
 	for (auto element : components) {
 		if (!element->isEnabled) continue;
@@ -84,6 +67,23 @@ void AObject::FixedUpdate() {
 
 
 void AObject::Update(const double deltaTime) {
+
+	if (parent != nullptr) {
+		glm::mat4 trans = glm::mat4(1);
+
+		glm::scale(trans, parent->worldScale);
+		worldScale = trans * glm::vec4(scale, 1);
+
+		glm::translate(trans, parent->worldPosition);
+		worldPosition = trans * glm::vec4(position, 1);
+
+		worldRotation = parent->worldRotation * rotationQuat;
+	}
+	else {
+		this->worldScale = scale;
+		this->worldPosition = position;
+		this->worldRotation = rotationQuat;
+	}
 
 	for (auto element : components) {
 		if (!element->isEnabled) continue;

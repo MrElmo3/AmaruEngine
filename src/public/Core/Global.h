@@ -3,6 +3,8 @@
 
 class Global {
 public:
+	static float TIME;
+
 	static const float FIXED_DELTA_TIME;
 	/**
 	 * Screen width in pixels
