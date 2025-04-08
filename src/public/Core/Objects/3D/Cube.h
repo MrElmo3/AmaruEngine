@@ -14,6 +14,9 @@ private:
 	RenderCubeComponent* renderComponent;
 	BoxColliderComponent* colliderComponent;
 
+protected:
+	void Update(double deltaTime) override;
+
 public:
 	RenderCubeComponent* GetRenderComponent() const { return renderComponent; }
 	BoxColliderComponent* GetBoxColliderComponent() const { return colliderComponent; }
