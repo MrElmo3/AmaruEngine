@@ -1,6 +1,5 @@
 #include <Core/Window.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
-#include <Game/Objects/HamSandwichTree/Point.h>
 #include <Util/Logger.h>
 
 LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){

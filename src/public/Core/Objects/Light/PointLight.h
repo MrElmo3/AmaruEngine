@@ -5,7 +5,9 @@ class LightComponent;
 
 class PointLight : public AObject {
 public:
-	PointLight(const std::string &_name, AObject* _parent = nullptr, ASceneController* _scene = nullptr);
+	PointLight(const std::string &_name, 
+		AObject* _parent = nullptr, 
+		ASceneController* _scene = nullptr);
 	~PointLight() override = default;
 
 private:

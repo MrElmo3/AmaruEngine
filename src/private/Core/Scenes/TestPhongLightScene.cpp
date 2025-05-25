@@ -1,23 +1,20 @@
+#include "Core/Scenes/TestPhongLightScene.h"
 #include <Core/Objects/EmptyObject.h>
-#include <Core/Scenes/TestPhongLightScene.h>
 #include <string>
 #include <Core/Components/Render/CameraComponent.h>
 #include <Core/Components/Render/RenderCubeComponent.h>
 #include <Core/Materials/LitMaterial.h>
 #include <Core/Objects/3D/Cube.h>
 #include <Core/Objects/Light/PointLight.h>
+#include <Core/Objects/General/CameraObject.h>
 
 TestPhongLightScene::TestPhongLightScene() {
 
-	auto* cameraObject = new EmptyObject("Camera", nullptr, this);
-	auto* cameraComponent = dynamic_cast<CameraComponent*>(
-		cameraObject->AddComponent(new CameraComponent(cameraObject))
-		);
+	auto* cameraObject = new CameraObject("Camera", nullptr, this);
+	auto* cameraComponent = cameraObject->GetCameraComponent();
 	cameraObject->position = glm::vec3(4, 0, 4);
 	cameraObject->RotateEuler(glm::vec3(0, -45, 0));
-	cameraComponent->orthographic = false;
 	cameraComponent->mainCamera = true;
-	cameraComponent->FOV = 60.0f;
 
 	auto* cube = new Cube( "Square2", nullptr, this);
 	cube->scale = glm::vec3(1, 1, 1);
