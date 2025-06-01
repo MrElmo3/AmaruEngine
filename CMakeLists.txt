@@ -151,5 +151,3 @@ add_custom_command(TARGET AmaruEngine POST_BUILD
     "${CMAKE_SOURCE_DIR}/Assets"
     "$<TARGET_FILE_DIR:AmaruEngine>/Assets"
 )
-
-#execute_process(COMMAND ${CMAKE_COMMAND} -E copy_directory ${ASSETS_SRC_DIR} $<TARGET_FILE_DIR:AmaruEngine>/Assets)

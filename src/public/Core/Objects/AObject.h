@@ -58,7 +58,11 @@ public:
 	AObject* parent = nullptr;
 	std::vector<AObject*> children;
 	
-	AObject(const std::string &_name, AObject* _parent = nullptr, ASceneController* _scene = nullptr);
+	AObject(
+		const std::string &_name, 
+		AObject* _parent = nullptr, 
+		ASceneController* _scene = nullptr
+	);
 	virtual ~AObject();
 
 protected:

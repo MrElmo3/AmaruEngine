@@ -58,7 +58,10 @@ public:
 	 * @param fragmentPath The path of the fragment shader
 	 * @return An object of the Shader class representing the shader program
 	 */
-	Shader* CreateShader(const std::string vertexPath, const std::string fragmentPath);
+	Shader* CreateShader(
+		const std::string vertexPath, 
+		const std::string fragmentPath
+	);
 
 	/**
 	 * @brief Generates a texture from a file
@@ -75,7 +78,8 @@ public:
 	void DrawQuad(glm::mat4 model, AMaterial* material);
 
 	/**
-	 * @brief This method draws a line segment in the world using the gizmos material
+	 * @brief This method draws a line segment in the world using the 
+	 * gizmos material
 	 * @param start The start point of the line
 	 * @param end The end point of the line
 	 * @param color The color of the line
@@ -102,6 +106,13 @@ public:
 	 * @param camera The camera to set as the current camera
 	 */
 	void SetCurrentCamera(CameraComponent* camera);
+
+	/**
+	 * @brief Encapsulates the logic of calculation of the 
+	 * model matrix of an object
+	 * @param object the object to calculate the matrix
+	 */
+	glm::mat4 GetModelMatrix(AObject* object);
 	
 	CameraComponent* GetCurrentCamera() const { return currentCamera; }
 };

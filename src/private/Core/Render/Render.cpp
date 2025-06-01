@@ -8,11 +8,11 @@
 #include <stb_image.h>
 #include <Core/Window.h>
 #include <Core/Materials/ColorMaterial.h>
-
-#include "Core/Render/Shader.h"
-#include "Core/Materials/AMaterial.h"
-#include "Core/Components/Render/CameraComponent.h"
-#include "Util/Logger.h"
+#include <Core/Objects/AObject.h>
+#include <Core/Render/Shader.h>
+#include <Core/Materials/AMaterial.h>
+#include <Core/Components/Render/CameraComponent.h>
+#include <Util/Logger.h>
 
 
 Render::Render() {
@@ -258,6 +258,22 @@ void Render::DrawCube(glm::mat4 model, AMaterial* material) {
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
+}
+
+glm::mat4 Render::GetModelMatrix(AObject* object){
+
+	glm::mat4 model = glm::mat4(1);
+
+	glm::quat rotation = object->GetWorldRotation();
+	glm::vec3 vectorRotation = glm::vec3(rotation.x, rotation.y, rotation.z);
+	float angle = 2 * glm::acos(rotation.w);
+	
+	model = glm::translate(model, object->GetWorldPosition());
+	if (vectorRotation != glm::vec3(0))
+		model = glm::rotate(model, angle, vectorRotation);
+	model = glm::scale(model, object->GetWorldScale());
+
+	return model;
 }
 
 void Render::SetCurrentCamera(CameraComponent* camera) {
