@@ -94,16 +94,16 @@ void Render::InitLine() {
 
 void Render::InitQuad() {
 
-	unsigned int indices[] = {
-		0, 1, 3,
-		1, 2, 3
+	std::vector<Vertex> vertices =  {
+		{{-0.5f,	-0.5f,	0.0f}, {0.0f,	0.0f}},
+		{{ 0.5f,	-0.5f,	0.0f}, {1.0f,	0.0f}},
+		{{ 0.5f,	0.5f,	0.0f}, {1.0f,	1.0f}},
+		{{-0.5f,	0.5f,	0.0f}, {0.0f,	1.0f}}
 	};
 
-	float vertices[] = {
-		-0.5f,	-0.5f,	0.0f,	0.0f,	0.0f,
-		0.5f,	-0.5f,	0.0f,	1.0f,	0.0f,
-		0.5f,	0.5f,	0.0f,	1.0f,	1.0f,
-		-0.5f,	0.5f,	0.0f,	0.0f,	1.0f,
+	std::vector<unsigned int> indices = {
+		0, 1, 3,
+		1, 2, 3
 	};
 
 	glGenVertexArrays(1, &VAO_quad);
@@ -112,11 +112,21 @@ void Render::InitQuad() {
 
 	glGenBuffers(1, &VBO_quad);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_quad);
-	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		vertices.size() * sizeof(Vertex), 
+		vertices.data(), 
+		GL_STATIC_DRAW
+	);
 
 	glGenBuffers(1, &EBO_quad);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_quad);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	glBufferData(
+		GL_ELEMENT_ARRAY_BUFFER, 
+		indices.size() * sizeof(unsigned int), 
+		indices.data(), 
+		GL_STATIC_DRAW
+	);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -127,39 +137,70 @@ void Render::InitQuad() {
 }
 
 void Render::InitCube() {
+	
+	std::vector<Vertex> vertices = {
 
-	unsigned int indices[] = {
+		//right face
+		{{+0.5f,	-0.5f,	+0.5f}, {0.0f,	0.0f}},
+		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
+		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
+		{{+0.5f,	+0.5f,	+0.5f}, {0.0f,	1.0f}},
+
+		//left face
+		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
+		{{-0.5f,	-0.5f,	+0.5f}, {1.0f,	0.0f}},
+		{{-0.5f,	+0.5f,	+0.5f}, {1.0f,	1.0f}},
+		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+
+		//top face
+		{{-0.5f,	+0.5f,	+0.5f}, {0.0f,	0.0f}},
+		{{+0.5f,	+0.5f,	+0.5f}, {1.0f,	0.0f}},
+		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
+		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+
+		//bottom face
+		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
+		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
+		{{+0.5f,	-0.5f,	+0.5f}, {1.0f,	1.0f}},
+		{{-0.5f,	-0.5f,	+0.5f}, {0.0f,	1.0f}},
+
 		//front face
+		{{-0.5f,	-0.5f,	+0.5f}, {0.0f,	0.0f}},
+		{{+0.5f,	-0.5f,	+0.5f}, {1.0f,	0.0f}},
+		{{+0.5f,	+0.5f,	+0.5f}, {1.0f,	1.0f}},
+		{{-0.5f,	+0.5f,	+0.5f}, {0.0f,	1.0f}},
+
+		//back face
+		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
+		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
+		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
+		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+	};
+
+	std::vector<unsigned int> indices = {
+		//right face
 		0, 1, 3,
 		1, 2, 3,
-		//right face
-		1, 5, 2,
-		5, 6, 2,
-		//back face
-		5, 4, 6,
-		4, 7, 6,
+		
 		//left face
-		4, 0, 7,
-		0, 3, 7,
-		//bottom face
-		4, 5, 0,
-		5, 1, 0,
+		4, 5, 7,
+		5, 6, 7,
+
 		//top face
-		3, 2, 7,
-		2, 6, 7
-	};
-	
-	float vertices[] = {
-		-0.5f,	-0.5f,	-0.5f,	0.0f,	1.0f,
-		0.5f,	-0.5f,	-0.5f,	1.0f,	1.0f,
-		0.5f,	0.5f,	-0.5f,	1.0f,	2.0f,
-		-0.5f,	0.5f,	-0.5f,	0.0f,	2.0f,
-		
-		-0.5f,	-0.5f,	0.5f,	0.0f,	0.0f,
-		0.5f,	-0.5f,	0.5f,	1.0f,	0.0f,
-		0.5f,	0.5f,	0.5f,	1.0f,	1.0f,
-		-0.5f,	0.5f,	0.5f,	0.0f,	1.0f,
-		
+		8, 9, 11,
+		9, 10, 11,
+
+		//bottom face
+		12, 13, 15,
+		13, 14, 15,
+
+		//front face
+		16, 17, 19,
+		17, 18, 19,
+
+		//back face
+		20, 21, 23,
+		21, 22, 23
 	};
 
 	glGenVertexArrays(1, &VAO_cube);
@@ -168,11 +209,17 @@ void Render::InitCube() {
 
 	glGenBuffers(1, &VBO_cube);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO_cube);
-	glBufferData(GL_ARRAY_BUFFER, 40 * sizeof(float), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 
+		vertices.size() * sizeof(Vertex), 
+		vertices.data(), 
+		GL_STATIC_DRAW);
 
 	glGenBuffers(1, &EBO_cube);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_cube);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 36 * sizeof(unsigned int), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
+		indices.size() * sizeof(unsigned int), 
+		indices.data(), 
+		GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);

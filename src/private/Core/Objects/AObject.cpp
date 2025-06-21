@@ -11,7 +11,7 @@
 
 AObject::AObject(const std::string &_name, AObject* _parent, ASceneController* _scene) {
 
-	if (!(_parent != nullptr ^ _scene != nullptr)){
+	if (!((_parent != nullptr) ^ (_scene != nullptr))){
 		Logger::Error("The object " + _name + " needs either a parent or a scene specification");
 		return;
 	}

@@ -8,6 +8,7 @@
 
 class ColorMaterial;
 class AMaterial;
+class AObject;
 class CameraComponent;
 class Shader;
 
@@ -118,3 +119,8 @@ public:
 };
 
 template class Singleton<Render>;
+
+struct Vertex {
+	glm::vec3 position;
+	glm::vec2 uv;
+};
