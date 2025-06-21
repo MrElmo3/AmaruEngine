@@ -8,6 +8,7 @@
 
 class ColorMaterial;
 class AMaterial;
+class AObject;
 class CameraComponent;
 class Shader;
 
@@ -24,16 +25,18 @@ private:
 
 	std::map<std::string, unsigned int> textures;
 
-	unsigned int VAO_cube;
-	unsigned int VBO_cube;
-	unsigned int EBO_cube;
+	unsigned int VAOCube;
+	unsigned int VBOCubePos;
+	unsigned int VBOCubeUv;
+	unsigned int EBOCube;
 	
-	unsigned int VAO_quad;
-	unsigned int VBO_quad;
-	unsigned int EBO_quad;
+	unsigned int VAOQuad;
+	unsigned int VBOQuadPos;
+	unsigned int VBOQuadUv;
+	unsigned int EBOQuad;
 	
-	unsigned int VAO_line;
-	unsigned int VBO_line;
+	unsigned int VAOLine;
+	unsigned int VBOLine;
 
 public:
 	/**
@@ -71,13 +74,6 @@ public:
 	unsigned int GenerateTexture(const std::string texturePath);
 
 	/**
-	 * @brief This method draws a quad in the world
-	 * @param model The model matrix
-	 * @param material The material to use
-	 */
-	void DrawQuad(glm::mat4 model, AMaterial* material);
-
-	/**
 	 * @brief This method draws a line segment in the world using the 
 	 * gizmos material
 	 * @param start The start point of the line
@@ -95,11 +91,27 @@ public:
 	void DrawQuadLine(glm::vec2 center, glm::vec2 size, glm::vec3 color);
 
 	/**
+	 * @brief This method draws a quad in the world
+	 * @param model The model matrix
+	 * @param material The material to use
+	 * @param uv A vector with the uv for each vertex of the quad
+	 */
+	void DrawQuad(
+		glm::mat4* model, 
+		AMaterial* material, 
+		std::vector<glm::vec2>* uv = nullptr
+	);
+
+	/**
 	 * @brief This method draws a cube in the world
 	 * @param model The model matrix
 	 * @param material The material to use
 	 */
-	void DrawCube(glm::mat4 model, AMaterial* material);
+	void DrawCube(
+		glm::mat4* model, 
+		AMaterial* material,
+		std::vector<glm::vec2>* uv = nullptr
+	);
 
 	/**
 	 * @brief This method sets the current camera

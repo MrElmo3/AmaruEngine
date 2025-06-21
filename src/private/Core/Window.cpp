@@ -5,10 +5,8 @@
 #include <iostream>
 #include <Core/Scenes/TestPhongLightScene.h>
 
-#include <Game/Scenes/Maze3DScene.h>
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
-#include <Game/Objects/Maze.h>
 #include <Util/Logger.h>
 
 Window::Window():Singleton(){

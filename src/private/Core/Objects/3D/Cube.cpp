@@ -4,7 +4,7 @@
 #include <Core/Components/Render/RenderCubeComponent.h>
 
 Cube::Cube(const std::string &_name, AObject* _parent, ASceneController* _scene)
-	: AObject(_name, _parent, _scene){
+	: AObject(_name, _parent, _scene) {
 	renderComponent = dynamic_cast<RenderCubeComponent*>(
 		AddComponent(new RenderCubeComponent(this))
 	);
