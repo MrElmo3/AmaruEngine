@@ -22,5 +22,5 @@ void RenderCubeComponent::Draw() {
 	if (!enableRender) return;
 	
 	glm::mat4 model = Render::GetInstance().GetModelMatrix(parent);
-	Render::GetInstance().DrawCube(model, material);
+	Render::GetInstance().DrawCube(&model, material);
 }

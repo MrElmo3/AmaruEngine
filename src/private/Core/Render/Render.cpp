@@ -80,12 +80,12 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 }
 
 void Render::InitLine() {
-	glGenVertexArrays(1, &VAO_line);
+	glGenVertexArrays(1, &VAOLine);
 
-	glBindVertexArray(VAO_line);
+	glBindVertexArray(VAOLine);
 
-	glGenBuffers(1, &VBO_line);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_line);
+	glGenBuffers(1, &VBOLine);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOLine);
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
@@ -94,89 +94,122 @@ void Render::InitLine() {
 
 void Render::InitQuad() {
 
-	std::vector<Vertex> vertices =  {
-		{{-0.5f,	-0.5f,	0.0f}, {0.0f,	0.0f}},
-		{{ 0.5f,	-0.5f,	0.0f}, {1.0f,	0.0f}},
-		{{ 0.5f,	0.5f,	0.0f}, {1.0f,	1.0f}},
-		{{-0.5f,	0.5f,	0.0f}, {0.0f,	1.0f}}
-	};
+	glGenVertexArrays(1, &VAOQuad);
+	glBindVertexArray(VAOQuad);
 
+	//position buffer
+	std::vector<glm::vec3> verticesPos =  {
+		{-0.5f,	-0.5f,	0.0f},
+		{ 0.5f,	-0.5f,	0.0f},
+		{ 0.5f,	0.5f,	0.0f},
+		{-0.5f,	0.5f,	0.0f}
+	};
+	glGenBuffers(1, &VBOQuadPos);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadPos);
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		verticesPos.size() * sizeof(glm::vec3), 
+		verticesPos.data(), 
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glGenBuffers(1, &VBOQuadUv);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		4 * sizeof(glm::vec2), 
+		nullptr, 
+		GL_DYNAMIC_DRAW
+	);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	//EBO
 	std::vector<unsigned int> indices = {
 		0, 1, 3,
 		1, 2, 3
 	};
-
-	glGenVertexArrays(1, &VAO_quad);
-
-	glBindVertexArray(VAO_quad);
-
-	glGenBuffers(1, &VBO_quad);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_quad);
-	glBufferData(
-		GL_ARRAY_BUFFER, 
-		vertices.size() * sizeof(Vertex), 
-		vertices.data(), 
-		GL_STATIC_DRAW
-	);
-
-	glGenBuffers(1, &EBO_quad);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_quad);
+	glGenBuffers(1, &EBOQuad);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOQuad);
 	glBufferData(
 		GL_ELEMENT_ARRAY_BUFFER, 
 		indices.size() * sizeof(unsigned int), 
 		indices.data(), 
 		GL_STATIC_DRAW
 	);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
 }
 
 void Render::InitCube() {
+
+	//VAO
+	glGenVertexArrays(1, &VAOCube);
+	glBindVertexArray(VAOCube);
 	
-	std::vector<Vertex> vertices = {
+	//VBO POS
+	std::vector<glm::vec3> verticesPos = {
 
 		//right face
-		{{+0.5f,	-0.5f,	+0.5f}, {0.0f,	0.0f}},
-		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
-		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
-		{{+0.5f,	+0.5f,	+0.5f}, {0.0f,	1.0f}},
+		{+0.5f,	-0.5f,	+0.5f},
+		{+0.5f,	-0.5f,	-0.5f},
+		{+0.5f,	+0.5f,	-0.5f},
+		{+0.5f,	+0.5f,	+0.5f},
 
 		//left face
-		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
-		{{-0.5f,	-0.5f,	+0.5f}, {1.0f,	0.0f}},
-		{{-0.5f,	+0.5f,	+0.5f}, {1.0f,	1.0f}},
-		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+		{-0.5f,	-0.5f,	-0.5f},
+		{-0.5f,	-0.5f,	+0.5f},
+		{-0.5f,	+0.5f,	+0.5f},
+		{-0.5f,	+0.5f,	-0.5f},
 
 		//top face
-		{{-0.5f,	+0.5f,	+0.5f}, {0.0f,	0.0f}},
-		{{+0.5f,	+0.5f,	+0.5f}, {1.0f,	0.0f}},
-		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
-		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+		{-0.5f,	+0.5f,	+0.5f},
+		{+0.5f,	+0.5f,	+0.5f},
+		{+0.5f,	+0.5f,	-0.5f},
+		{-0.5f,	+0.5f,	-0.5f},
 
 		//bottom face
-		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
-		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
-		{{+0.5f,	-0.5f,	+0.5f}, {1.0f,	1.0f}},
-		{{-0.5f,	-0.5f,	+0.5f}, {0.0f,	1.0f}},
+		{-0.5f,	-0.5f,	-0.5f},
+		{+0.5f,	-0.5f,	-0.5f},
+		{+0.5f,	-0.5f,	+0.5f},
+		{-0.5f,	-0.5f,	+0.5f},
 
 		//front face
-		{{-0.5f,	-0.5f,	+0.5f}, {0.0f,	0.0f}},
-		{{+0.5f,	-0.5f,	+0.5f}, {1.0f,	0.0f}},
-		{{+0.5f,	+0.5f,	+0.5f}, {1.0f,	1.0f}},
-		{{-0.5f,	+0.5f,	+0.5f}, {0.0f,	1.0f}},
+		{-0.5f,	-0.5f,	+0.5f},
+		{+0.5f,	-0.5f,	+0.5f},
+		{+0.5f,	+0.5f,	+0.5f},
+		{-0.5f,	+0.5f,	+0.5f},
 
 		//back face
-		{{-0.5f,	-0.5f,	-0.5f}, {0.0f,	0.0f}},
-		{{+0.5f,	-0.5f,	-0.5f}, {1.0f,	0.0f}},
-		{{+0.5f,	+0.5f,	-0.5f}, {1.0f,	1.0f}},
-		{{-0.5f,	+0.5f,	-0.5f}, {0.0f,	1.0f}},
+		{-0.5f,	-0.5f,	-0.5f},
+		{+0.5f,	-0.5f,	-0.5f},
+		{+0.5f,	+0.5f,	-0.5f},
+		{-0.5f,	+0.5f,	-0.5f},
 	};
+	glGenBuffers(1, &VBOCubePos);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOCubePos);
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		verticesPos.size() * sizeof(glm::vec3), 
+		verticesPos.data(), 
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
+	//VBO UV
+	glGenBuffers(1, &VBOQuadUv);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
+	glBufferData(
+		GL_ARRAY_BUFFER, 
+		24 * sizeof(glm::vec2), 
+		nullptr, 
+		GL_DYNAMIC_DRAW
+	);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	//EBO
 	std::vector<unsigned int> indices = {
 		//right face
 		0, 1, 3,
@@ -203,29 +236,13 @@ void Render::InitCube() {
 		21, 22, 23
 	};
 
-	glGenVertexArrays(1, &VAO_cube);
-
-	glBindVertexArray(VAO_cube);
-
-	glGenBuffers(1, &VBO_cube);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_cube);
-	glBufferData(GL_ARRAY_BUFFER, 
-		vertices.size() * sizeof(Vertex), 
-		vertices.data(), 
-		GL_STATIC_DRAW);
-
-	glGenBuffers(1, &EBO_cube);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO_cube);
+	glGenBuffers(1, &EBOCube);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBOCube);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 
 		indices.size() * sizeof(unsigned int), 
 		indices.data(), 
-		GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
+		GL_STATIC_DRAW
+	);
 }
 
 void Render::DrawLineSegment(glm::vec3 start, glm::vec3 end, glm::vec3 color) {
@@ -239,17 +256,22 @@ void Render::DrawLineSegment(glm::vec3 start, glm::vec3 end, glm::vec3 color) {
 	gizmosMaterial->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	gizmosMaterial->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
-	float vertices[] = {
+	glLineWidth(1);
+
+	glBindVertexArray(VAOLine);
+
+	std::vector<float> vertices = {
 		(float)start.x, (float)start.y, (float)start.z,
 		(float)end.x, (float)end.y, (float)end.z
 	};
 
-	glLineWidth(1);
-
-	glBindVertexArray(VAO_line);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO_line);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 6 * sizeof(float), vertices);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOLine);
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 
+		0, 
+		vertices.size() * sizeof(glm::vec2), 
+		vertices.data()
+	);
 
 	glDrawArrays(GL_LINES, 0, 2);
 
@@ -272,35 +294,101 @@ void Render::DrawQuadLine(glm::vec2 center, glm::vec2 scale, glm::vec3 color) {
 
 }
 
-void Render::DrawQuad(glm::mat4 model, AMaterial* material) {
+void Render::DrawQuad(
+	glm::mat4* model, 
+	AMaterial* material, 
+	std::vector<glm::vec2>* uv) {
+
 	if (currentCamera == nullptr) return;
 	
 	material->Use();
-	material->shader->SetMatrix4("_model", model);
+	material->shader->SetMatrix4("_model", *model);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
-	glBindVertexArray(VAO_quad);
-	
+	glBindVertexArray(VAOQuad);
+
+	if(uv == nullptr || uv->size() != 4) {
+		uv = new std::vector<glm::vec2>({
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+		});
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 
+		0, 
+		uv->size() * sizeof(float), 
+		uv->data()
+	);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);
 }
 
-void Render::DrawCube(glm::mat4 model, AMaterial* material) {
+void Render::DrawCube(
+	glm::mat4* model, 
+	AMaterial* material,
+	std::vector<glm::vec2>* uv) {
+
 	if (!currentCamera) return;
 	if (!Window::GetInstance().GetActualScene()->lightSource) return;
 
 	material->Use();
 	
-	material->shader->SetMatrix4("_model", model);
+	material->shader->SetMatrix4("_model", *model);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	material->shader->SetVector3("_lightColor",
 		Window::GetInstance().GetActualScene()->lightSource->GetColor());
 
-	glBindVertexArray(VAO_cube);
+	glBindVertexArray(VAOCube);
+
+	if(uv == nullptr || uv->size() != 24) {
+		uv = new std::vector<glm::vec2>({
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+
+			{0.0f,	0.0f},
+			{1.0f,	0.0f},
+			{1.0f,	1.0f},
+			{0.0f,	1.0f},
+		});
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
+	glBufferSubData(
+		GL_ARRAY_BUFFER, 
+		0, 
+		uv->size() * sizeof(glm::vec2), 
+		uv->data()
+	);
 
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 

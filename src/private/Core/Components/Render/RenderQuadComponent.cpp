@@ -23,5 +23,5 @@ void RenderQuadComponent::Draw() const {
 	if (!enableRender) return;
 
 	glm::mat4 model = Render::GetInstance().GetModelMatrix(parent);
-	Render::GetInstance().DrawQuad(model, material);
+	Render::GetInstance().DrawQuad(&model, material);
 }
