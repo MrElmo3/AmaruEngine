@@ -50,8 +50,8 @@ public:
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */
-	void SetInt(const std::string &name, int value) const{
-    	glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	void SetInt(const std::string &name, int value) const {
+		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
     }
 
 	/**
@@ -59,8 +59,8 @@ public:
 	 * @param name The name of the uniform
 	 * @param value The value to set the uniform
 	 */
-	void SetFloat(const std::string &name, float value) const{
-    	glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	void SetFloat(const std::string &name, float value) const {
+		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
 
 	/**

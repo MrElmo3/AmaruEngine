@@ -10,7 +10,7 @@ public:
 		AObject* _parent = nullptr,
 		ASceneController* _scene = nullptr);
 
-private:
+protected:
 	RenderCubeComponent* renderComponent;
 	BoxColliderComponent* colliderComponent;
 
