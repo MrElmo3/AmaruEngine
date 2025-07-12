@@ -6,8 +6,6 @@
 #include <stb_image.h>
 #include <Core/Global.h>
 #include <Core/Window.h>
-#include <Core/Components/Render/CameraComponent.h>
-#include <Core/Materials/AMaterial.h>
 #include <Core/Materials/ColorMaterial.h>
 #include <Core/Objects/AObject.h>
 #include <Core/Render/Shader.h>
