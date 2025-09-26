@@ -186,6 +186,7 @@ void Render::InitCube() {
 		{+0.5f,	+0.5f,	-0.5f},
 		{-0.5f,	+0.5f,	-0.5f},
 	};
+	
 	glGenBuffers(1, &VBOCubePos);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOCubePos);
 	glBufferData(
@@ -208,6 +209,56 @@ void Render::InitCube() {
 	);
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	//VBO NORMALS
+	std::vector<glm::vec3> verticesNorm = {
+		//right face
+		{+1.0f,	-0.0f,	+0.0f},
+		{+1.0f,	-0.0f,	-0.0f},
+		{+1.0f,	+0.0f,	-0.0f},
+		{+1.0f,	+0.0f,	+0.0f},
+
+		//left face
+		{-1.0f,	-0.0f,	-0.0f},
+		{-1.0f,	-0.0f,	+0.0f},
+		{-1.0f,	+0.0f,	+0.0f},
+		{-1.0f,	+0.0f,	-0.0f},
+
+		//top face
+		{-0.0f,	+1.0f,	+0.0f},
+		{+0.0f,	+1.0f,	+0.0f},
+		{+0.0f,	+1.0f,	-0.0f},
+		{-0.0f,	+1.0f,	-0.0f},
+
+		//bottom face
+		{-0.0f,	-1.0f,	-0.0f},
+		{+0.0f,	-1.0f,	-0.0f},
+		{+0.0f,	-1.0f,	+0.0f},
+		{-0.0f,	-1.0f,	+0.0f},
+
+		//front face
+		{-0.0f,	-0.0f,	+1.0f},
+		{+0.0f,	-0.0f,	+1.0f},
+		{+0.0f,	+0.0f,	+1.0f},
+		{-0.0f,	+0.0f,	+1.0f},
+
+		//back face
+		{-0.0f,	-0.0f,	-1.0f},
+		{+0.0f,	-0.0f,	-1.0f},
+		{+0.0f,	+0.0f,	-1.0f},
+		{-0.0f,	+0.0f,	-1.0f},
+	};
+
+	glGenBuffers(1, &VBOCubeNorm);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOCubeNorm);
+	glBufferData(
+		GL_ARRAY_BUFFER,
+		verticesNorm.size() * sizeof(glm::vec3), 
+		verticesNorm.data(),
+		GL_STATIC_DRAW
+	);
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//EBO
 	std::vector<unsigned int> indices = {

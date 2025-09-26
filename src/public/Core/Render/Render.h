@@ -27,12 +27,13 @@ private:
 
 	unsigned int VAOCube;
 	unsigned int VBOCubePos;
-	unsigned int VBOCubeUv;
+	unsigned int VBOCubeNorm;
 	unsigned int EBOCube;
 	
 	unsigned int VAOQuad;
 	unsigned int VBOQuadPos;
 	unsigned int VBOQuadUv;
+	unsigned int VBOQuadNorm;
 	unsigned int EBOQuad;
 	
 	unsigned int VAOLine;

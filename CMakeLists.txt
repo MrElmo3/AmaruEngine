@@ -146,8 +146,9 @@ target_link_libraries(AmaruEngine glfw)
 find_package(OpenGL REQUIRED)
 target_link_libraries(AmaruEngine OpenGL::GL)
 
-add_custom_command(TARGET AmaruEngine POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/Assets"
-    "$<TARGET_FILE_DIR:AmaruEngine>/Assets"
+add_custom_target(copy_assets ALL
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	"${CMAKE_SOURCE_DIR}/Assets"
+	"$<TARGET_FILE_DIR:AmaruEngine>/Assets"
+	COMMENT "Updating Assets folder..."
 )
