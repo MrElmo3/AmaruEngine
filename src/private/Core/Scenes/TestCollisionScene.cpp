@@ -17,11 +17,9 @@ TestColisionScene::TestColisionScene() {
 	auto* testSquare = new Square("squareMouse", nullptr, this);
 	testSquare->GetRenderComponent()->enableRender = true;
 	// testSquare->AddComponent(new FollowMouseComponent(testSquare));
-	testSquare->AddComponent(new Rigidbody2DComponent(testSquare));
-	testSquare->AddComponent(new InputComponent(testSquare));
-	MovementComponent* movement =  dynamic_cast<MovementComponent*>(
-		testSquare->AddComponent(new MovementComponent(testSquare))
-		);
+	testSquare->AddComponent<Rigidbody2DComponent>();
+	testSquare->AddComponent<InputComponent>();
+	MovementComponent* movement =  testSquare->AddComponent<MovementComponent>();
 	testSquare->position = glm::vec3(-0.5, 0.5, 0);
 	testSquare->scale = glm::vec3(0.3f);
 	movement->SetSpeed(1);

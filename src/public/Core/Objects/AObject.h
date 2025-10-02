@@ -74,7 +74,17 @@ protected:
 	virtual void End();
 
 public:
-	IComponent* AddComponent(IComponent* component);
+
+	/// @brief Adds a component of a certain type to the object.
+	/// @tparam T The type of the component.
+	/// @return The component added.
+	template<typename T>
+	std::enable_if_t<std::is_base_of_v<IComponent, T>, T*>
+	AddComponent(){
+		T* component = new T(this);
+		components.push_back(component);
+		return component;
+	}
 
 	/**
 	 * @brief Gets a component of the object.

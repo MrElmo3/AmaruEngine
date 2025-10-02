@@ -5,13 +5,9 @@
 
 Cube::Cube(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
-	renderComponent = dynamic_cast<RenderCubeComponent*>(
-		AddComponent(new RenderCubeComponent(this))
-	);
 
-	colliderComponent = dynamic_cast<BoxColliderComponent*>(
-		AddComponent(new BoxColliderComponent(this))
-	);
+	renderComponent = AddComponent<RenderCubeComponent>();
+	colliderComponent = AddComponent<BoxColliderComponent>();
 }
 
 void Cube::Update(double deltaTime) {

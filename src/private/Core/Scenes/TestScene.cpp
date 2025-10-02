@@ -28,9 +28,7 @@ TestScene::TestScene() {
 	AddObject(square2);
 
 	auto* cameraObject = new EmptyObject("Camera", nullptr, this);
-	auto* cameraComponent = dynamic_cast<CameraComponent*>(
-		cameraObject->AddComponent(new CameraComponent(cameraObject))
-		);
+	auto* cameraComponent = cameraObject->AddComponent<CameraComponent>();
 	cameraObject->position = glm::vec3(0, 0, 10);
 	cameraComponent->orthographic = true;
 	cameraComponent->mainCamera = true;

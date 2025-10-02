@@ -24,10 +24,10 @@ public:
 	void Update(double deltaTime) override;
 	void FixedUpdate() override;
 
-	void SetSpeed(float speed);
-	void SetRotationSpeed(float rotationSpeed);
-	void SetDirection(glm::vec2 direction);
-	void SetRotation(glm::vec2 rotation);
+	MovementComponent* SetSpeed(float speed);
+	MovementComponent* SetRotationSpeed(float rotationSpeed);
+	MovementComponent* SetDirection(glm::vec2 direction);
+	MovementComponent* SetRotation(glm::vec2 rotation);
 
 	glm::vec2 GetDirection()	const { return direction; }
 	glm::vec2 GetRotation()			const { return rotation; }

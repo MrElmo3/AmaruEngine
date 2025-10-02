@@ -4,14 +4,9 @@
 
 Square::Square(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene){
-	renderComponent = dynamic_cast<RenderQuadComponent*>(
-		AddComponent(new RenderQuadComponent(this))
-	);
-	colliderComponent = dynamic_cast<SquareColliderComponent*>(
-		AddComponent(new SquareColliderComponent(
-			this,
-			glm::vec2(0, 0),
-			glm::vec2(0.5, 0.5)
-			))
-	);
+
+	AddComponent<RenderQuadComponent>();
+	AddComponent<SquareColliderComponent>()
+		->SetCenter(glm::vec2(0.f))
+		->SetHalfSize(glm::vec2(0.5f));
 }

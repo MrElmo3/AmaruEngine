@@ -4,11 +4,10 @@
 #include "ACollider3DComponent.h"
 
 class BoxColliderComponent : public ACollider3DComponent {
-public:
+private:
 	glm::vec3 center;
 	glm::vec3 halfSize;
 
-private:
 	glm::vec3 worldCenter;
 	glm::vec3 worldHalfSize;
 
@@ -22,4 +21,7 @@ public:
 
 	glm::vec3 GetWorldCenter() const { return worldCenter; }
 	glm::vec3 GetWorldHalfSize() const { return worldHalfSize; }
+
+	BoxColliderComponent* SetCenter(glm::vec3 center);
+	BoxColliderComponent* SetHalfSize(glm::vec3 halfSize);
 };

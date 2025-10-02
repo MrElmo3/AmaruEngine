@@ -117,11 +117,6 @@ void AObject::End() {
 	}
 }
 
-IComponent* AObject::AddComponent(IComponent* component) {
-	components.push_back(component);
-	return component;
-}
-
 void AObject::AddChild(AObject* child) {
 	children.push_back(child);
 }

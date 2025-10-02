@@ -13,29 +13,17 @@
 Player::Player(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
 
-	playerCamera = dynamic_cast<CameraComponent*>(
-		AddComponent(new CameraComponent(this))
-	);
+	playerCamera = AddComponent<CameraComponent>();
 	playerCamera->orthographic = false;
 	playerCamera->mainCamera = true;
 	playerCamera->FOV = 60.0f;
 	
-	rigidbodyComponent = dynamic_cast<Rigidbody3DComponent*>(
-		AddComponent(new Rigidbody3DComponent( this ))
-	);
-	colliderComponent = dynamic_cast<BoxColliderComponent*>(
-		AddComponent(new BoxColliderComponent(
-			this,
-			glm::vec3(0.0f, 0.f, 0.0f),
-			glm::vec3(0.2f)
-			))
-	);
-	inputComponent = dynamic_cast<InputComponent*>(
-		AddComponent(new InputComponent(this))
-	);
-	movementComponent = dynamic_cast<MovementComponent*>(
-		AddComponent(new MovementComponent(this))
-	);
+	rigidbodyComponent = AddComponent<Rigidbody3DComponent>();
+	colliderComponent = AddComponent<BoxColliderComponent>()
+		->SetCenter(glm::vec3(0.0f))
+		->SetHalfSize(glm::vec3(0.2f));
+	inputComponent = AddComponent<InputComponent>();
+	movementComponent = AddComponent<MovementComponent>();
 	
 	// TextureMaterial* baseMaterial = dynamic_cast<TextureMaterial*>(renderComponent->material);
 	// baseMaterial->color = glm::vec3(63, 72, 204) / 255.0f;
@@ -45,7 +33,7 @@ Player::Player(const std::string &_name, AObject* _parent, ASceneController* _sc
 void Player::Awake() {
 	
 	position = glm::vec3(0.0f, 1.5f, -5.0f);
-	 RotateEuler(glm::vec3(0.0f, 180.0f, 0.0f));
+	RotateEuler(glm::vec3(0.0f, 180.0f, 0.0f));
 
 	movementComponent->SetSpeed(2.0f);
 	movementComponent->SetRotationSpeed(5.0f);

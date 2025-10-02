@@ -38,18 +38,22 @@ void MovementComponent::FixedUpdate() {
 }
 
 
-void MovementComponent::SetSpeed(float speed) {
+MovementComponent* MovementComponent::SetSpeed(float speed) {
 	this->speed = speed;
+	return this;
 }
 
-void MovementComponent::SetRotationSpeed(float rotationSpeed) {
+MovementComponent* MovementComponent::SetRotationSpeed(float rotationSpeed) {
 	this->rotationSpeed = rotationSpeed;
+	return this;
 }
 
-void MovementComponent::SetDirection(glm::vec2 direction) {
+MovementComponent* MovementComponent::SetDirection(glm::vec2 direction) {
 	this->direction = direction;
+	return this;
 }
 
-void MovementComponent::SetRotation(glm::vec2 rotation) {
+MovementComponent* MovementComponent::SetRotation(glm::vec2 rotation) {
 	this->rotation = rotation;
+	return this;
 }

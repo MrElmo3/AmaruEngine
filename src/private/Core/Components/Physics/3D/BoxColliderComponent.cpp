@@ -42,3 +42,13 @@ void BoxColliderComponent::LateUpdate() {
 		// 	Color::GREEN);
 	}
 }
+
+BoxColliderComponent* BoxColliderComponent::SetCenter(glm::vec3 center){
+	this->center = center;
+	return this;
+}
+
+BoxColliderComponent* BoxColliderComponent::SetHalfSize(glm::vec3 halfSize){
+	this->halfSize = halfSize;
+	return this;
+}

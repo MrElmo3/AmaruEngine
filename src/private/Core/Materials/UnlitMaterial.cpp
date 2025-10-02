@@ -6,8 +6,8 @@
 UnlitMaterial::UnlitMaterial() {
 	texture = Render::GetInstance().GenerateTexture("Assets/Textures/Default.png");
 
-	std::string vertexPath =	"Assets/Shaders/LitShader/Unlit.vert";
-	std::string fragmentPath =	"Assets/Shaders/LitShader/Unlit.frag";
+	std::string vertexPath =	"Assets/Shaders/UnlitShader/Unlit.vert";
+	std::string fragmentPath =	"Assets/Shaders/UnlitShader/Unlit.frag";
 	this->shader = Render::GetInstance().CreateShader(vertexPath, fragmentPath);
 }
 

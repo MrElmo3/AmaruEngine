@@ -4,11 +4,11 @@
 #include "ACollider2DComponent.h"
 
 class SquareColliderComponent : public ACollider2DComponent{
-public:
+private:
+
 	glm::vec2 center;
 	glm::vec2 halfSize;
 
-private:
 	glm::vec2 worldCenter;
 	glm::vec2 worldHalfSize;
 
@@ -22,4 +22,7 @@ public:
 
 	glm::vec2 GetWorldCenter() const { return worldCenter; }
 	glm::vec2 GetWorldHalfSize() const { return worldHalfSize; }
+
+	SquareColliderComponent* SetCenter(glm::vec2 center);
+	SquareColliderComponent* SetHalfSize(glm::vec2 halfSize);
 };

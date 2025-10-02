@@ -15,10 +15,10 @@ private:
 
 public:
 
-	void SetRange(float range);
-	void SetColor(glm::vec3 color);
-	void SetColor(float r, float g, float b);
-	void SetIntensity(float intensity);
+	PointLight* SetRange(float range);
+	PointLight* SetColor(glm::vec3 color);
+	PointLight* SetColor(float r, float g, float b);
+	PointLight* SetIntensity(float intensity);
 
 	LightComponent* GetLightComponent() const { return lightComponent; }
 };

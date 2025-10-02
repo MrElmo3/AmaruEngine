@@ -41,3 +41,13 @@ void SquareColliderComponent::LateUpdate() {
 			Color::GREEN);
 	}
 }
+
+SquareColliderComponent* SquareColliderComponent::SetCenter(glm::vec2 center) {
+	this->center = center;
+	return this;
+}
+
+SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize) {
+	this->halfSize = halfSize;
+	return this;
+}
