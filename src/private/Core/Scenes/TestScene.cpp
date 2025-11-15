@@ -21,9 +21,9 @@ TestScene::TestScene() {
 	auto* square2 = new Square("Square2", nullptr, this);
 	square2->scale = glm::vec3(1, 1, 1);
 	square2->position = glm::vec3(0, 0, 0);
-	dynamic_cast<LitMaterial*>(square2->GetRenderComponent()->material)
-		->SetColor(glm::vec3(1, 0.5, 1))
-		->SetTexture("Assets/Textures/HL.jpg");
+	dynamic_cast<LitMaterial*>(square2->GetRenderComponent()->material);
+		// ->SetColor(glm::vec3(1, 0.5, 1));
+		// ->SetTexture("Assets/Textures/HL.jpg");
 	
 	AddObject(square2);
 

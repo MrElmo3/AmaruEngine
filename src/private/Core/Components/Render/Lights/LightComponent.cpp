@@ -1,13 +1,10 @@
 #include <Core/Window.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
 #include <Util/Logger.h>
+#include <Core/Render/Shader.h>
 
 LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
 	type = LightType::Point;
-
-	range = 1.0f;
-	color = glm::vec3(1.0f, 1.0f, 1.0f);
-	intensity = 1.0f;
 
 	if (parent->scene->lightSource) {
 		Logger::Error("The actual scene already have a LightSource");
@@ -20,6 +17,13 @@ void LightComponent::Update(double deltaTime) {
 	lightPosition = parent->GetWorldPosition();
 }
 
+void LightComponent::Use(Shader* shader) {
+	shader->SetVector3("_light.position", lightPosition);
+	shader->SetVector3("_light.color", color);
+	shader->SetVector3("_light.ambient", ambient);
+	shader->SetVector3("_light.diffuse", diffuse);
+	shader->SetVector3("_light.specular", specular);
+}
 
 void LightComponent::SetColor(glm::vec3 color) {
 	this->color = color;

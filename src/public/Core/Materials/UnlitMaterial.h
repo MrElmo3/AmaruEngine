@@ -17,5 +17,5 @@ public:
 	UnlitMaterial* SetColor(glm::vec3 color);
 	UnlitMaterial* SetTexture(const std::string &texturePath);
 
-	[[nodiscard]] glm::vec3 GetColor() const { return this->color; };
+	glm::vec3 GetColor() const { return this->color; };
 };

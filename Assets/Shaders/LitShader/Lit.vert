@@ -15,8 +15,8 @@ uniform mat4 _projection;
 uniform mat3 _normalModel;
 
 void main(){
-    gl_Position = _projection * _view * _model * vec4(_position, 1.0);
-    fragPosition = vec3(_model * vec4(_position, 1.0));
-    uv = _uv;
-    normal = _normalModel * _normal;
+	gl_Position = _projection * _view * _model * vec4(_position, 1.0);
+	fragPosition = vec3(_model * vec4(_position, 1.0));
+	uv = _uv;
+	normal = _normalModel * _normal;
 }

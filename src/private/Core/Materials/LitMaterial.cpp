@@ -12,8 +12,13 @@ LitMaterial::LitMaterial() {
 
 void LitMaterial::Use() {
 	this->shader->Use();
-	this->shader->SetVector3("_color", this->color);
+	this->shader->SetVector3("_material.color", this->color);
 	this->shader->SetTexture(texture, 0);
+
+	this->shader->SetVector3("_material.ambient", this->ambient);
+	this->shader->SetVector3("_material.diffuse", this->diffuse);
+	this->shader->SetVector3("_material.specular", this->specular);
+	this->shader->SetFloat("_material.shininess", this->shininess);
 }
 
 LitMaterial* LitMaterial::SetColor(float r, float g, float b, float a) {
@@ -21,8 +26,28 @@ LitMaterial* LitMaterial::SetColor(float r, float g, float b, float a) {
 	return this;
 }
 
-LitMaterial* LitMaterial::SetColor(const glm::vec3 color) {
+LitMaterial* LitMaterial::SetColor(glm::vec3 color) {
 	this->color = color;
+	return this;
+}
+
+LitMaterial* LitMaterial::SetAmbient(const glm::vec3 ambient) {
+	this->ambient = ambient;
+	return this;
+}
+
+LitMaterial* LitMaterial::SetDiffuse(const glm::vec3 diffuse) {
+	this->diffuse = diffuse;
+	return this;
+}
+
+LitMaterial* LitMaterial::SetSpecular(const glm::vec3 specular) {
+	this->specular = specular;
+	return this;
+}
+
+LitMaterial* LitMaterial::SetShininess(const float shininess) {
+	this->shininess= shininess;
 	return this;
 }
 

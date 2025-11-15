@@ -36,7 +36,7 @@ TestPhongLightScene::TestPhongLightScene() {
 
 	light = new PointLight("light", nullptr, this);
 	light->scale = glm::vec3(0.1, 0.1, 0.1);
-	light->position = glm::vec3(0, 0, 1);
+	light->position = glm::vec3(0, 0, 0.75);
 	light->SetColor(1.0, 1.0, 1.0);
 	light->SetIntensity(1.0f);
 	light->SetRange(5.0f);

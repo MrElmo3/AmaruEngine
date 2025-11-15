@@ -391,6 +391,7 @@ void Render::DrawCube(
 	if (!sceneLight) return;
 
 	material->Use();
+	sceneLight->Use(material->shader);
 	
 	material->shader->SetMatrix4("_model", *model);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
@@ -400,15 +401,6 @@ void Render::DrawCube(
 	material->shader->SetMatrix3("_normalModel", normalMatrix);
 
 	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
-
-	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
-	material->shader->SetFloat("_specularStrength", Global::SPECULAR_LIGHT_STRENGTH);
-	material->shader->SetUInt("_shininess", Global::SHININESS);
-
-	material->shader->SetVector3("_lightColor", sceneLight->GetColor());
-	material->shader->SetVector3("_lightPosition", sceneLight->GetPosition());
-	material->shader->SetFloat("_lightRange", sceneLight->GetRange());
-	material->shader->SetFloat("_lightIntensity", sceneLight->GetIntensity());
 
 	glBindVertexArray(VAOCube);
 
