@@ -3,7 +3,7 @@
 #include <Core/Render/Shader.h>
 
 LitMaterial::LitMaterial() {
-	texture = Render::GetInstance().GenerateTexture("Assets/Textures/Default.png");
+	diffuse = Render::GetInstance().GenerateTexture("Assets/Textures/Default.png");
 
 	std::string vertexPath =	"Assets/Shaders/LitShader/Lit.vert";
 	std::string fragmentPath =	"Assets/Shaders/LitShader/Lit.frag";
@@ -13,10 +13,8 @@ LitMaterial::LitMaterial() {
 void LitMaterial::Use() {
 	this->shader->Use();
 	this->shader->SetVector3("_material.color", this->color);
-	this->shader->SetTexture(texture, 0);
+	this->shader->SetTexture(diffuse, 0);
 
-	this->shader->SetVector3("_material.ambient", this->ambient);
-	this->shader->SetVector3("_material.diffuse", this->diffuse);
 	this->shader->SetVector3("_material.specular", this->specular);
 	this->shader->SetFloat("_material.shininess", this->shininess);
 }
@@ -31,13 +29,8 @@ LitMaterial* LitMaterial::SetColor(glm::vec3 color) {
 	return this;
 }
 
-LitMaterial* LitMaterial::SetAmbient(const glm::vec3 ambient) {
-	this->ambient = ambient;
-	return this;
-}
-
-LitMaterial* LitMaterial::SetDiffuse(const glm::vec3 diffuse) {
-	this->diffuse = diffuse;
+LitMaterial* LitMaterial::SetDiffuse(const std::string &texturePath) {
+	this->diffuse = Render::GetInstance().GenerateTexture(texturePath);
 	return this;
 }
 
@@ -48,10 +41,5 @@ LitMaterial* LitMaterial::SetSpecular(const glm::vec3 specular) {
 
 LitMaterial* LitMaterial::SetShininess(const float shininess) {
 	this->shininess= shininess;
-	return this;
-}
-
-LitMaterial* LitMaterial::SetTexture(const std::string &texturePath) {
-	this->texture = Render::GetInstance().GenerateTexture(texturePath);
 	return this;
 }

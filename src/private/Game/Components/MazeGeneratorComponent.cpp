@@ -186,5 +186,5 @@ void MazeGeneratorComponent::InstantiateWall(std::string id, glm::vec3 objectPos
 	
 	LitMaterial* _material = dynamic_cast<LitMaterial*>(wall->GetRenderComponent()->material);
 	// _material->SetColor(glm::vec3(255, 127, 39) / 255.0f);
-	_material->SetTexture("Assets/Textures/HL.jpg");
+	_material->SetDiffuse("Assets/Textures/HL.jpg");
 }

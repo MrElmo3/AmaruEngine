@@ -32,7 +32,7 @@ TestPhongLightScene::TestPhongLightScene() {
 	testCube->position = glm::vec3(0, 0, 0);
 	dynamic_cast<LitMaterial*>(testCube->GetRenderComponent()->material)
 		->SetColor(1.0f, 0.0f, 0.0f, 1.0f)
-		->SetTexture("Assets/Textures/HL.jpg");
+		->SetDiffuse("Assets/Textures/HL.jpg");
 
 	light = new PointLight("light", nullptr, this);
 	light->scale = glm::vec3(0.1, 0.1, 0.1);
