@@ -14,8 +14,7 @@ void LitMaterial::Use() {
 	this->shader->Use();
 	this->shader->SetVector3("_material.color", this->color);
 	this->shader->SetTexture(diffuse, 0);
-
-	this->shader->SetVector3("_material.specular", this->specular);
+	this->shader->SetTexture(specular, 1);
 	this->shader->SetFloat("_material.shininess", this->shininess);
 }
 
@@ -34,8 +33,8 @@ LitMaterial* LitMaterial::SetDiffuse(const std::string &texturePath) {
 	return this;
 }
 
-LitMaterial* LitMaterial::SetSpecular(const glm::vec3 specular) {
-	this->specular = specular;
+LitMaterial* LitMaterial::SetSpecular(const std::string &texturePath) {
+	this->specular = Render::GetInstance().GenerateTexture(texturePath);
 	return this;
 }
 
