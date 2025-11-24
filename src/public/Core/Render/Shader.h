@@ -63,7 +63,7 @@ public:
 	 */
 	void SetInt(const std::string &name, int value) const{
 		int location = glGetUniformLocation(ID, name.c_str());
-    	glUniform1i(location, value);
+		glUniform1i(location, value);
     }
 
 	/**
@@ -73,7 +73,7 @@ public:
 	 */
 	void SetFloat(const std::string &name, float value) const{
 		int location = glGetUniformLocation(ID, name.c_str());
-    	glUniform1f(location, value);
+		glUniform1f(location, value);
     }
 
 	/**

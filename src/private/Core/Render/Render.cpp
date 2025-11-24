@@ -417,11 +417,8 @@ void Render::DrawCube(
 
 	if (!currentCamera) return;
 
-	LightComponent* sceneLight = Window::GetInstance().GetActualScene()->lightSource;
-	if (!sceneLight) return;
-
 	material->Use();
-	sceneLight->Use(material->shader);
+	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 	
 	material->shader->SetMatrix4("_model", *model);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());

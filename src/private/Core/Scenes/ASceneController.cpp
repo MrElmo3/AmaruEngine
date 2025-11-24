@@ -1,12 +1,12 @@
-#include "Core/Scenes/ASceneController.h"
-
+#include <Core/Scenes/ASceneController.h>
+#include <Core/Render/Shader.h>
 #include <thread>
 #include <GLFW/glfw3.h>
-
-#include "Core/Global.h"
-#include "Core/Physics/PhysicsEngine2D.h"
-#include "Core/Physics/PhysicsEngine3D.h"
-#include "Util/Logger.h"
+#include <Core/Global.h>
+#include <Core/Physics/PhysicsEngine2D.h>
+#include <Core/Physics/PhysicsEngine3D.h>
+#include <Core/Components/Render/Lights/LightComponent.h>
+#include <Util/Logger.h>
 
 
 ASceneController::ASceneController(){
@@ -85,4 +85,14 @@ void ASceneController::End(){
 	for (auto element : objects){
 		element->End();
 	}
+}
+
+void ASceneController::UseLights(Shader* shader) {
+	//directional light
+	shader->SetUInt("_directionalLight.type", (unsigned int)directionalLight->GetType());
+	shader->SetVector3("_directionalLight.direction", directionalLight->GetDirection());
+	shader->SetVector3("_directionalLight.color", directionalLight->GetColor());
+	shader->SetVector3("_directionalLight.ambient", directionalLight->GetAmbient());
+	shader->SetVector3("_directionalLight.diffuse", directionalLight->GetDiffuse());
+	shader->SetVector3("_directionalLight.specular", directionalLight->GetSpecular());
 }

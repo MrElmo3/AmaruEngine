@@ -5,39 +5,45 @@
 
 LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
 	type = LightType::Point;
-
-	if (parent->scene->lightSource) {
-		Logger::Error("The actual scene already have a LightSource");
-		return;
-	}
-	parent->scene->lightSource = this;
+	parent->scene->activeLights.insert(this);
 }
 
 void LightComponent::Update(double deltaTime) {
 	lightPosition = parent->GetWorldPosition();
+	lightDirection = parent->Forward();
 }
 
-void LightComponent::Use(Shader* shader) {
-	shader->SetVector3("_light.position", lightPosition);
-	shader->SetVector3("_light.color", color);
-	shader->SetVector3("_light.ambient", ambient);
-	shader->SetVector3("_light.diffuse", diffuse);
-	shader->SetVector3("_light.specular", specular);
+LightComponent* LightComponent::SetType(LightType _type) {
+	type = _type;
+
+	if(type == LightType::Directional){
+		if (parent->scene->directionalLight) {
+			Logger::Error("The actual scene already have a LightSource");
+			return nullptr;
+		}
+		parent->scene->activeLights.erase(this);
+		parent->scene->directionalLight = this;
+	}
+	return this;
 }
 
-void LightComponent::SetColor(glm::vec3 color) {
-	this->color = color;
+LightComponent* LightComponent::SetColor(glm::vec3 _color) {
+	color = _color;
+	return this;
 }
-void LightComponent::SetColor(float r, float g, float b) {
+LightComponent* LightComponent::SetColor(float r, float g, float b) {
 	this->color = glm::vec3(r, g, b);
+	return this;
 }
 
-void LightComponent::SetIntensity(float intensity) {
-	this->intensity = intensity;
+LightComponent* LightComponent::SetIntensity(float _intensity) {
+	intensity = _intensity;
+	return this;
 }
 
-void LightComponent::SetRange(float range) {
-	this->range = range;
+LightComponent* LightComponent::SetRange(float _range) {
+	range = _range;
+	return this;
 }
 
 

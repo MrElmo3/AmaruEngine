@@ -1,6 +1,6 @@
+#include <Core/Objects/Light/PointLight.h>
 #include <Core/Global.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
-#include <Core/Objects/Light/PointLight.h>
 #include <Util/Logger.h>
 
 PointLight::PointLight(const std::string &_name, AObject* _parent, ASceneController* _scene)

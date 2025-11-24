@@ -1,9 +1,9 @@
 #pragma once
-#include <vector>
-#include <Core/Components/Render/Lights/LightComponent.h>
-
+#include <set>
 #include "Core/Objects/AObject.h"
 
+class LightComponent;
+class Shader;
 class ASceneController {
 
 	friend class AObject;
@@ -23,10 +23,17 @@ public:
 
 
 	/**
-	 * @brief Active light source
+	 * @brief Active directional light.
+	 * The scene only can have one directional light
 	 */
-	//TODO: Implement multiple source lights
-	LightComponent* lightSource = nullptr;
+	LightComponent* directionalLight = nullptr;
+
+	/**
+	 * @brief Active lights in the scene.
+	 * The ammount of lights that an scene can support is 
+	 * determined in the fragment shader
+	 */
+	std::set<LightComponent*> activeLights;
 	
 	ASceneController();
 	virtual ~ASceneController();
@@ -68,6 +75,14 @@ public:
 	 * This method is called when the scene is destroyed
 	 */
 	virtual void End();
+
+	/**
+	 * @brief Method for use the lights inside this scene.
+	 * @param shader The shader that is in use.
+	 * 
+	 * DO NOT USE OUT OF THE RENDER SYSTEM
+	 */
+	void UseLights(Shader* shader);
 
 protected:
 	/**
