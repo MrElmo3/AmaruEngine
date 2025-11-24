@@ -48,23 +48,20 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 	}
 	
 	unsigned int generatedTexture;
-
 	glGenTextures(1, &generatedTexture);
-	glBindTexture(GL_TEXTURE_2D, generatedTexture);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	GLenum format;
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load(
+		texturePath.c_str(), 
+		&width, 
+		&height, 
+		&nrChannels, 
+		0
+	);
 
 	if (data) {
-		
+		GLenum format;
 		switch (nrChannels){
 			case 1:
 				format = GL_RED;
@@ -79,16 +76,31 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 				Logger::Error("Failed to load texture");
 				return 0;
 		}
+
+		glBindTexture(GL_TEXTURE_2D, generatedTexture);
+		glTexImage2D(
+			GL_TEXTURE_2D, 
+			0, 
+			GL_RGB, 
+			width, 
+			height, 
+			0, 
+			format, 
+			GL_UNSIGNED_BYTE, 
+			data
+		);
+		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		stbi_image_free(data);
 	}
 	else {
 		Logger::Error("Failed to load texture");
 		return 0;
 	}
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	stbi_image_free(data);
 
 	textures[texturePath] = generatedTexture;
 

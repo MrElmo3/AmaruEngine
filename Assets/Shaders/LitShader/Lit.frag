@@ -1,9 +1,11 @@
 #version 330 core
+out vec4 FragColor;
 
 struct Material {
 	vec3 color;
 	sampler2D diffuse;
 	sampler2D specular;
+	sampler2D emission;
 	float shininess;
 };
 
@@ -19,7 +21,6 @@ struct Light {
 in vec2 uv;
 in vec3 normal;
 in vec3 fragPosition;
-out vec4 FragColor;
 
 uniform vec3 _viewPosition = vec3(0.0, 0.0, 0.0);
 
@@ -28,7 +29,7 @@ uniform Light _light;
 
 void main() {
 	// ambient
-	vec3 ambient =  _light.ambient * vec3(texture(_material.diffuse, uv));
+	vec3 ambient =  _light.ambient * texture(_material.diffuse, uv).rgb;
 
 	//diffuse
 	vec3 norm = normalize(normal);
@@ -39,12 +40,14 @@ void main() {
 	// spec
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 	vec3 reflectDirection = reflect(-1 * lightDirection, norm);
-	float spec = pow(max(dot(viewDirection, reflectDirection), 0.0), _material.shininess);
+	float spec = pow(
+		max(dot(viewDirection, reflectDirection), 0.0), 
+		_material.shininess);
 	vec3 specular = _light.specular * spec * texture(_material.diffuse, uv).rgb;
 
-	// //emission
-	// vec3 emission = texture(_material.emission, uv).rgb;
+	//emission
+	vec3 emission = texture(_material.emission, uv).rgb;
 
-	vec3 result = (ambient + diffuse + specular);
+	vec3 result = (ambient + diffuse + specular + emission);
 	FragColor = vec4(result, 1.0);
 }
