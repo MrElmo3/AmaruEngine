@@ -20,11 +20,14 @@ private:
 
 	glm::vec3 color = glm::vec3(1.0);
 	glm::vec3 ambient = glm::vec3(0.2);
-	glm::vec3 diffuse = glm::vec3(0.5);
-	glm::vec3 specular = glm::vec3(1.0);
+	glm::vec3 diffuse = glm::vec3(0.4);
+	glm::vec3 specular = glm::vec3(1.1);
 
-	float range = 1.0f;
+	float range;
 	float intensity = 1.0f;
+
+	float linearValue = 0;
+	float quadraticValue = 0;
 
 public:
 	explicit LightComponent(AObject* _parent);
@@ -32,8 +35,9 @@ public:
 
 	void Update(double deltaTime) override;
 
-	LightComponent* SetType(LightType _type);
+	void Use(Shader* shader, int index = 0);
 
+	LightComponent* SetType(LightType _type);
 	LightComponent* SetColor(glm::vec3 _color);
 	LightComponent* SetColor(float r, float g, float b);
 	LightComponent* SetIntensity(float _intensity);

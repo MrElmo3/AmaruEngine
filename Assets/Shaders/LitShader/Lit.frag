@@ -15,7 +15,7 @@ const uint Point = 1u;
 const uint Spot = 2u;
 
 //number of active lights differents to directional
-const uint numberActiveLights = 4u;
+const int numberActiveLights = 4;
 
 struct Light {
 	uint type;
@@ -29,7 +29,6 @@ struct Light {
 	vec3 diffuse;
 	vec3 specular;
 
-	float constant;
 	float linear;
 	float quadratic;
 };
@@ -52,7 +51,12 @@ void main() {
 	vec3 norm = normalize(normal);
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 
+	//directional light
 	vec3 result = CalcDirectionalLight(_directionalLight, norm, viewDirection);
+
+	// other lights
+	for(int i = 0; i < numberActiveLights; i++)
+        result += CalcActiveLights(_activeLights[i], norm, fragPosition, viewDirection);
 
 	//emission
 	vec3 emission = texture(_material.emission, uv).rgb;
@@ -80,3 +84,32 @@ vec3 CalcDirectionalLight(Light light, vec3 normal, vec3 viewDirection){
 	return (ambient + diffuse + specular);
 }
 
+vec3 CalcActiveLights(Light light, vec3 normal, vec3 fragPosition, vec3 viewDirection) {
+	if(light.type == Point){
+		vec3 lightDirection = normalize(light.position - fragPosition);
+
+		//diffuse
+		float diff = max(dot(normal, lightDirection), 0.0);
+
+		//specular shading
+		vec3 reflectDirection = reflect(-lightDirection, normal);
+		float spec = pow(
+			max(dot(viewDirection, reflectDirection), 0.0), 
+			_material.shininess);
+
+		// atenuation
+		float distance    = length(light.position - fragPosition);
+		float atenuation = 1.0 / (1.0 + 
+			light.linear * distance + 
+  			light.quadratic * (distance * distance)
+		); 
+		vec3 ambient =  light.ambient * texture(_material.diffuse, uv).rgb;
+		vec3 diffuse = light.diffuse * diff * texture(_material.diffuse, uv).rgb;
+		vec3 specular = light.specular * spec * texture(_material.diffuse, uv).rgb;
+		ambient *= atenuation;
+		diffuse *= atenuation;
+		specular *= atenuation;
+		return (ambient + diffuse + specular);
+	}
+	return vec3(0);
+}

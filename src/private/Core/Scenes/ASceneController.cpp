@@ -89,10 +89,17 @@ void ASceneController::End(){
 
 void ASceneController::UseLights(Shader* shader) {
 	//directional light
-	shader->SetUInt("_directionalLight.type", (unsigned int)directionalLight->GetType());
-	shader->SetVector3("_directionalLight.direction", directionalLight->GetDirection());
-	shader->SetVector3("_directionalLight.color", directionalLight->GetColor());
-	shader->SetVector3("_directionalLight.ambient", directionalLight->GetAmbient());
-	shader->SetVector3("_directionalLight.diffuse", directionalLight->GetDiffuse());
-	shader->SetVector3("_directionalLight.specular", directionalLight->GetSpecular());
+	if(directionalLight != nullptr)
+		directionalLight->Use(shader);
+
+	//other lights
+	int i = 0;
+	for (auto light : activeLights) {
+		if (light == nullptr) continue;
+		light->Use(shader, i);
+		++i;
+		if(i >= 4) break;
+	}
+	
+	
 }

@@ -6,6 +6,7 @@
 #include <Core/Materials/LitMaterial.h>
 #include <Core/Objects/3D/Cube.h>
 #include <Core/Objects/Light/DirectionalLight.h>
+#include <Core/Objects/Light/PointLight.h>
 #include <Core/Objects/General/CameraObject.h>
 #include <Core/Materials/UnlitMaterial.h>
 // #include <Game/Components/MovementComponent.h>
@@ -46,6 +47,9 @@ TestPhongLightScene::TestPhongLightScene() {
 	// value = 0;
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
+	PointLight* light2 = new PointLight("light2", nullptr, this);
+	light2->position = glm::vec3(2, 0 , -1);
+	light2->SetRange(20);
 }
 
 void TestPhongLightScene::Update(double deltaTime) {
