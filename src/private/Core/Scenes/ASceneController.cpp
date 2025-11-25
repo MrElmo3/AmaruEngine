@@ -1,12 +1,12 @@
-#include "Core/Scenes/ASceneController.h"
-
+#include <Core/Scenes/ASceneController.h>
+#include <Core/Render/Shader.h>
 #include <thread>
 #include <GLFW/glfw3.h>
-
-#include "Core/Global.h"
-#include "Core/Physics/PhysicsEngine2D.h"
-#include "Core/Physics/PhysicsEngine3D.h"
-#include "Util/Logger.h"
+#include <Core/Global.h>
+#include <Core/Physics/PhysicsEngine2D.h>
+#include <Core/Physics/PhysicsEngine3D.h>
+#include <Core/Components/Render/Lights/LightComponent.h>
+#include <Util/Logger.h>
 
 
 ASceneController::ASceneController(){
@@ -85,4 +85,21 @@ void ASceneController::End(){
 	for (auto element : objects){
 		element->End();
 	}
+}
+
+void ASceneController::UseLights(Shader* shader) {
+	//directional light
+	if(directionalLight != nullptr)
+		directionalLight->Use(shader);
+
+	//other lights
+	int i = 0;
+	for (auto light : activeLights) {
+		if (light == nullptr) continue;
+		light->Use(shader, i);
+		++i;
+		if(i >= 4) break;
+	}
+	
+	
 }

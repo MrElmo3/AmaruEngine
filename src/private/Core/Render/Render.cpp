@@ -48,29 +48,59 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 	}
 	
 	unsigned int generatedTexture;
-
 	glGenTextures(1, &generatedTexture);
-	glBindTexture(GL_TEXTURE_2D, generatedTexture);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true);
-	unsigned char *data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
-	if (data)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	unsigned char *data = stbi_load(
+		texturePath.c_str(), 
+		&width, 
+		&height, 
+		&nrChannels, 
+		0
+	);
+
+	if (data) {
+		GLenum format;
+		switch (nrChannels){
+			case 1:
+				format = GL_RED;
+				break;
+			case 3:
+				format = GL_RGB;
+				break;
+			case 4:
+				format = GL_RGBA;
+				break;
+			default:
+				Logger::Error("Failed to load texture");
+				return 0;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, generatedTexture);
+		glTexImage2D(
+			GL_TEXTURE_2D, 
+			0, 
+			GL_RGB, 
+			width, 
+			height, 
+			0, 
+			format, 
+			GL_UNSIGNED_BYTE, 
+			data
+		);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		stbi_image_free(data);
 	}
 	else {
 		Logger::Error("Failed to load texture");
 		return 0;
 	}
-	stbi_image_free(data);
 
 	textures[texturePath] = generatedTexture;
 
@@ -387,10 +417,8 @@ void Render::DrawCube(
 
 	if (!currentCamera) return;
 
-	LightComponent* sceneLight = Window::GetInstance().GetActualScene()->lightSource;
-	if (!sceneLight) return;
-
 	material->Use();
+	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 	
 	material->shader->SetMatrix4("_model", *model);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
@@ -400,15 +428,6 @@ void Render::DrawCube(
 	material->shader->SetMatrix3("_normalModel", normalMatrix);
 
 	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
-
-	material->shader->SetFloat("_ambientStrength", Global::AMBIENT_LIGHT_STRENGTH);
-	material->shader->SetFloat("_specularStrength", Global::SPECULAR_LIGHT_STRENGTH);
-	material->shader->SetUInt("_shininess", Global::SHININESS);
-
-	material->shader->SetVector3("_lightColor", sceneLight->GetColor());
-	material->shader->SetVector3("_lightPosition", sceneLight->GetPosition());
-	material->shader->SetFloat("_lightRange", sceneLight->GetRange());
-	material->shader->SetFloat("_lightIntensity", sceneLight->GetIntensity());
 
 	glBindVertexArray(VAOCube);
 

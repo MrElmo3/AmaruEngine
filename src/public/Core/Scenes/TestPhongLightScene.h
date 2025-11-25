@@ -7,7 +7,6 @@ class TestPhongLightScene : public ASceneController {
 
 private:
 	Cube* testCube;
-	PointLight* light;
 	float value;
 
 public:

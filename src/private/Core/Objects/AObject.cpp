@@ -16,7 +16,7 @@ AObject::AObject(const std::string &_name, AObject* _parent, ASceneController* _
 		return;
 	}
 
-	this->name = name;
+	this->name = _name;
 
 	if (_parent) {
 		this->parent = _parent;
@@ -127,6 +127,7 @@ void AObject::Rotate(glm::quat rotation) {
 }
 
 void AObject::RotateEuler(glm::vec3 rotation) {
+	if(rotation == glm::vec3(0)) return;
 	rotation = glm::radians(rotation);
 	Rotate(glm::quat(rotation));
 }

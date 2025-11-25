@@ -59,6 +59,8 @@ set(OBJECTS
 	${PRIVATE_DIR}/Core/Objects/3D/Cube.cpp
 	${PRIVATE_DIR}/Core/Objects/2D/Square.cpp
 	${PRIVATE_DIR}/Core/Objects/Light/PointLight.cpp
+	${PRIVATE_DIR}/Core/Objects/Light/DirectionalLight.cpp
+	${PRIVATE_DIR}/Core/Objects/Light/SpotLight.cpp
 )
 
 #Physics engine source
