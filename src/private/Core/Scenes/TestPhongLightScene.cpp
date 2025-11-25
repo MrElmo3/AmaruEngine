@@ -37,16 +37,6 @@ TestPhongLightScene::TestPhongLightScene() {
 		->SetDiffuse("Assets/Textures/container2.png")
 		->SetSpecular("Assets/Textures/container2_specular.png");
 
-	// light = new PointLight("light", nullptr, this);
-	// light->scale = glm::vec3(0.1, 0.1, 0.1);
-	// light->position = glm::vec3(0, 0, 1);
-	// light->SetColor(1.0, 1.0, 1.0)
-	// 	->SetIntensity(1.0f)
-	// 	->SetRange(5.0f);
-	// light->AddComponent<RenderCubeComponent>()
-	// 	->material = (new UnlitMaterial());
-	// value = 0;
-
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 	
 	PointLight* light2 = new PointLight("light2", nullptr, this);
