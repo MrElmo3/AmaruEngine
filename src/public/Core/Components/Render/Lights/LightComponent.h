@@ -19,15 +19,20 @@ private:
 	glm::vec3 lightDirection;
 
 	glm::vec3 color = glm::vec3(1.0);
-	glm::vec3 ambient = glm::vec3(0.2);
+	glm::vec3 ambient = glm::vec3(0.075);
 	glm::vec3 diffuse = glm::vec3(0.4);
 	glm::vec3 specular = glm::vec3(1.1);
 
-	float range;
 	float intensity = 1.0f;
+	
+	//Point of light values
+	float range;
 
 	float linearValue = 0;
 	float quadraticValue = 0;
+
+	float innerRange;
+	float outerRange;
 
 public:
 	explicit LightComponent(AObject* _parent);
@@ -42,6 +47,7 @@ public:
 	LightComponent* SetColor(float r, float g, float b);
 	LightComponent* SetIntensity(float _intensity);
 	LightComponent* SetRange(float _range);
+	LightComponent* SetSpotRange(float _inner, float outer);
 
 	LightType GetType() const { return this->type; }
 	glm::vec3 GetPosition() const { return this->lightPosition; }

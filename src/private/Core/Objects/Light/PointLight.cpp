@@ -6,6 +6,8 @@
 PointLight::PointLight(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
 	lightComponent = AddComponent<LightComponent>();
+	lightComponent->SetType(LightType::Point)
+		->SetRange(25);
 }
 
 PointLight* PointLight::SetColor(glm::vec3 color) {

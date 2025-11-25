@@ -22,7 +22,6 @@ struct Light {
 
 	vec3 position;
 	vec3 direction;
-	float cutOff;
 
 	vec3 color;
 	vec3 ambient;
@@ -31,6 +30,9 @@ struct Light {
 
 	float linear;
 	float quadratic;
+
+	float innerRange;
+	float outerRange;
 };
 
 in vec2 uv;
@@ -44,19 +46,18 @@ uniform Material _material;
 uniform Light _directionalLight;
 uniform Light _activeLights[numberActiveLights];
 
-vec3 CalcDirectionalLight(Light light, vec3 normal, vec3 viewDirection);
-vec3 CalcActiveLights(Light light, vec3 normal, vec3 fragPosition, vec3 viewDirection);
+vec3 CalcLight(Light light, vec3 normal, vec3 viewDirection, vec3 fragPosition);
 
 void main() {
 	vec3 norm = normalize(normal);
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 
 	//directional light
-	vec3 result = CalcDirectionalLight(_directionalLight, norm, viewDirection);
+	vec3 result = CalcLight(_directionalLight, norm, viewDirection, fragPosition);
 
 	// other lights
 	for(int i = 0; i < numberActiveLights; i++)
-        result += CalcActiveLights(_activeLights[i], norm, fragPosition, viewDirection);
+        result += CalcLight(_activeLights[i], norm, viewDirection, fragPosition);
 
 	//emission
 	vec3 emission = texture(_material.emission, uv).rgb;
@@ -64,10 +65,16 @@ void main() {
 	FragColor = vec4(result, 1.0);
 }
 
-vec3 CalcDirectionalLight(Light light, vec3 normal, vec3 viewDirection){
-	if(light.type != 0u) return vec3(0);
+vec3 CalcLight(Light light, vec3 normal, vec3 viewDirection, vec3 fragPosition) {
 	
-	vec3 lightDirection = normalize(-light.direction);
+	vec3 lightDirection;
+
+	if(light.type == Directional) {
+		lightDirection = normalize(-light.direction);
+	}
+	else{
+		lightDirection = normalize(light.position - fragPosition);
+	}
 
 	//diffuse
 	float diff = max(dot(normal, lightDirection), 0.0);
@@ -81,35 +88,27 @@ vec3 CalcDirectionalLight(Light light, vec3 normal, vec3 viewDirection){
 	vec3 ambient =  light.ambient * texture(_material.diffuse, uv).rgb;
 	vec3 diffuse = light.diffuse * diff * texture(_material.diffuse, uv).rgb;
 	vec3 specular = light.specular * spec * texture(_material.diffuse, uv).rgb;
-	return (ambient + diffuse + specular);
-}
 
-vec3 CalcActiveLights(Light light, vec3 normal, vec3 fragPosition, vec3 viewDirection) {
-	if(light.type == Point){
-		vec3 lightDirection = normalize(light.position - fragPosition);
-
-		//diffuse
-		float diff = max(dot(normal, lightDirection), 0.0);
-
-		//specular shading
-		vec3 reflectDirection = reflect(-lightDirection, normal);
-		float spec = pow(
-			max(dot(viewDirection, reflectDirection), 0.0), 
-			_material.shininess);
-
+	if(light.type != Directional) {
 		// atenuation
 		float distance    = length(light.position - fragPosition);
 		float atenuation = 1.0 / (1.0 + 
 			light.linear * distance + 
   			light.quadratic * (distance * distance)
-		); 
-		vec3 ambient =  light.ambient * texture(_material.diffuse, uv).rgb;
-		vec3 diffuse = light.diffuse * diff * texture(_material.diffuse, uv).rgb;
-		vec3 specular = light.specular * spec * texture(_material.diffuse, uv).rgb;
-		ambient *= atenuation;
+		);
+
 		diffuse *= atenuation;
 		specular *= atenuation;
-		return (ambient + diffuse + specular);
+
+		if(light.type == Spot) {
+			//Spot soft edges
+			float theta = dot(lightDirection, normalize(-light.direction)); 
+			float epsilon = (light.innerRange - light.outerRange);
+			float intensity = clamp((theta - light.outerRange) / epsilon, 0.0, 1.0);
+			diffuse  *= intensity;
+			specular *= intensity;
+		}
+		return (diffuse + specular);
 	}
-	return vec3(0);
+	return (ambient + diffuse + specular);
 }
