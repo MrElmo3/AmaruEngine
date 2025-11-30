@@ -16,7 +16,7 @@ public:
 		std::vector<unsigned int> indices 
 	);
     
-	void Draw(Shader &shader);
+	void Draw();
 
 private:
 	//render data
