@@ -1,0 +1,4 @@
+new_line_before_open_brace = none
+indent_style = tab
+cpp_brace_style = attach
+cpp_indent_braces = false

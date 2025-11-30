@@ -20,7 +20,7 @@ class Render : public Singleton<Render> {
 private:
 
 	CameraComponent* currentCamera;
-	
+
 	std::vector<Shader*> shaders;
 
 	std::map<std::string, unsigned int> textures;
@@ -29,13 +29,13 @@ private:
 	unsigned int VBOCubePos;
 	unsigned int VBOCubeNorm;
 	unsigned int EBOCube;
-	
+
 	unsigned int VAOQuad;
 	unsigned int VBOQuadPos;
 	unsigned int VBOQuadUv;
 	unsigned int VBOQuadNorm;
 	unsigned int EBOQuad;
-	
+
 	unsigned int VAOLine;
 	unsigned int VBOLine;
 
@@ -55,7 +55,7 @@ private:
 	void InitCube();
 
 public:
-	
+
 	/**
 	 * @brief This method creates a shader program
 	 * @param vertexPath The path of the vertex shader
@@ -63,7 +63,7 @@ public:
 	 * @return An object of the Shader class representing the shader program
 	 */
 	Shader* CreateShader(
-		const std::string vertexPath, 
+		const std::string vertexPath,
 		const std::string fragmentPath
 	);
 
@@ -75,7 +75,7 @@ public:
 	unsigned int GenerateTexture(const std::string texturePath);
 
 	/**
-	 * @brief This method draws a line segment in the world using the 
+	 * @brief This method draws a line segment in the world using the
 	 * gizmos material
 	 * @param start The start point of the line
 	 * @param end The end point of the line
@@ -98,8 +98,8 @@ public:
 	 * @param uv A vector with the uv for each vertex of the quad
 	 */
 	void DrawQuad(
-		glm::mat4* model, 
-		AMaterial* material, 
+		glm::mat4* model,
+		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
 	);
 
@@ -109,9 +109,12 @@ public:
 	 * @param material The material to use
 	 */
 	void DrawCube(
-		glm::mat4* model, 
+		glm::mat4* model,
 		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
+	);
+
+	void DrawModel(
 	);
 
 	/**
@@ -121,12 +124,12 @@ public:
 	void SetCurrentCamera(CameraComponent* camera);
 
 	/**
-	 * @brief Encapsulates the logic of calculation of the 
+	 * @brief Encapsulates the logic of calculation of the
 	 * model matrix of an object
 	 * @param object the object to calculate the matrix
 	 */
 	glm::mat4 GetModelMatrix(AObject* object);
-	
+
 	CameraComponent* GetCurrentCamera() const { return currentCamera; }
 };
 

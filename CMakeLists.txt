@@ -34,6 +34,7 @@ set(COMPONENTS_RENDER
 	${PRIVATE_DIR}/Core/Components/Render/RenderCubeComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/RenderQuadComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/Lights/LightComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Render/Meshes/ModelRendererComponent.cpp
 )
 
 # COmponents source
@@ -74,6 +75,7 @@ set(RENDER
 	${PRIVATE_DIR}/Core/Render/Color.cpp
 	${PRIVATE_DIR}/Core/Render/Render.cpp
 	${PRIVATE_DIR}/Core/Render/Shader.cpp
+	${PRIVATE_DIR}/Core/Render/Mesh.cpp
 )
 
 #Scene mannager source
