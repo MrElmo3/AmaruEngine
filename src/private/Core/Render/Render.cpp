@@ -376,14 +376,14 @@ void Render::DrawQuadLine(glm::vec2 center, glm::vec2 scale, glm::vec3 color) {
 }
 
 void Render::DrawQuad(
-	glm::mat4* model, 
+	glm::mat4* modelMatrix, 
 	AMaterial* material, 
 	std::vector<glm::vec2>* uv) {
 
 	if (currentCamera == nullptr) return;
 	
 	material->Use();
-	material->shader->SetMatrix4("_model", *model);
+	material->shader->SetMatrix4("_model", *modelMatrix);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
@@ -411,7 +411,7 @@ void Render::DrawQuad(
 }
 
 void Render::DrawCube(
-	glm::mat4* model, 
+	glm::mat4* modelMatrix, 
 	AMaterial* material,
 	std::vector<glm::vec2>* uv) {
 
@@ -420,11 +420,11 @@ void Render::DrawCube(
 	material->Use();
 	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 	
-	material->shader->SetMatrix4("_model", *model);
+	material->shader->SetMatrix4("_model", *modelMatrix);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
-	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(*model)));
+	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(*modelMatrix)));
 	material->shader->SetMatrix3("_normalModel", normalMatrix);
 
 	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
@@ -480,18 +480,18 @@ void Render::DrawCube(
 
 glm::mat4 Render::GetModelMatrix(AObject* object){
 
-	glm::mat4 model = glm::mat4(1);
+	glm::mat4 modelMatrix = glm::mat4(1);
 
 	glm::quat rotation = object->GetWorldRotation();
 	glm::vec3 vectorRotation = glm::vec3(rotation.x, rotation.y, rotation.z);
 	float angle = 2 * glm::acos(rotation.w);
 	
-	model = glm::translate(model, object->GetWorldPosition());
+	modelMatrix = glm::translate(modelMatrix, object->GetWorldPosition());
 	if (vectorRotation != glm::vec3(0))
-		model = glm::rotate(model, angle, vectorRotation);
-	model = glm::scale(model, object->GetWorldScale());
+		modelMatrix = glm::rotate(modelMatrix, angle, vectorRotation);
+	modelMatrix = glm::scale(modelMatrix, object->GetWorldScale());
 
-	return model;
+	return modelMatrix;
 }
 
 void Render::SetCurrentCamera(CameraComponent* camera) {

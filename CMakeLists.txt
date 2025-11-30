@@ -34,7 +34,7 @@ set(COMPONENTS_RENDER
 	${PRIVATE_DIR}/Core/Components/Render/RenderCubeComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/RenderQuadComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/Lights/LightComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Render/Meshes/ModelRendererComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Render/ModelRendererComponent.cpp
 )
 
 # COmponents source

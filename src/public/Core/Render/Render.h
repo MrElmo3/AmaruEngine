@@ -93,23 +93,23 @@ public:
 
 	/**
 	 * @brief This method draws a quad in the world
-	 * @param model The model matrix
+	 * @param modelMatrix The model matrix
 	 * @param material The material to use
 	 * @param uv A vector with the uv for each vertex of the quad
 	 */
 	void DrawQuad(
-		glm::mat4* model,
+		glm::mat4* modelMatrix,
 		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
 	);
 
 	/**
 	 * @brief This method draws a cube in the world
-	 * @param model The model matrix
+	 * @param modelMatrix The model matrix
 	 * @param material The material to use
 	 */
 	void DrawCube(
-		glm::mat4* model,
+		glm::mat4* modelMatrix,
 		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
 	);

@@ -1,4 +1,4 @@
-#include <Core/Components/Render/Meshes/ModelRendererComponent.h>
+#include <Core/Components/Render/ModelRendererComponent.h>
 
 #include <Core/Materials/LitMaterial.h>
 #include <glm/gtc/matrix_transform.hpp>
