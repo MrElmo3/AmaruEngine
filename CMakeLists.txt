@@ -76,6 +76,7 @@ set(RENDER
 	${PRIVATE_DIR}/Core/Render/Render.cpp
 	${PRIVATE_DIR}/Core/Render/Shader.cpp
 	${PRIVATE_DIR}/Core/Render/Mesh.cpp
+	${PRIVATE_DIR}/Core/Render/Model.cpp
 )
 
 #Scene mannager source
@@ -84,6 +85,7 @@ set(SCENES
 	${PRIVATE_DIR}/Core/Scenes/TestCollisionScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestPhongLightScene.cpp
+	${PRIVATE_DIR}/Core/Scenes/TestModelLoadingScene.cpp
 )
 
 #Core source

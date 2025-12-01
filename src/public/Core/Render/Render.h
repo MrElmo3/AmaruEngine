@@ -8,6 +8,7 @@
 
 class ColorMaterial;
 class AMaterial;
+class Model;
 class AObject;
 class CameraComponent;
 class Shader;
@@ -114,7 +115,17 @@ public:
 		std::vector<glm::vec2>* uv = nullptr
 	);
 
+	/** 
+	 * @brief Draws a custom model loaded and used by 
+	 * the RenderModelComponent
+	 * @param model The loaded model to 
+	 * @param material 
+	 * @param modelMatrix 
+	 */
 	void DrawModel(
+		Model* model,
+		AMaterial* material,
+		glm::mat4* modelMatrix
 	);
 
 	/**

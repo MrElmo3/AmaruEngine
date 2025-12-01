@@ -7,7 +7,6 @@ class ModelRendererComponent : public IComponent {
 public:
 
 	Model* model;
-
 	bool enableRender = true;
 	AMaterial* material;
 
