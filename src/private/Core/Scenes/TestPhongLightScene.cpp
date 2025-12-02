@@ -10,6 +10,7 @@
 #include <Core/Objects/Light/SpotLight.h>
 #include <Core/Objects/General/CameraObject.h>
 #include <Core/Materials/UnlitMaterial.h>
+#include <Core/Render/Render.h>
 // #include <Game/Components/MovementComponent.h>
 // #include <Core/Components/Physics/3D/Rigidbody3DComponent.h>
 // #include <Core/Components/Input/InputComponent.h>
@@ -35,7 +36,11 @@ TestPhongLightScene::TestPhongLightScene() {
 	dynamic_cast<LitMaterial*>(testCube->GetRenderComponent()->material)
 		->SetColor(1.0f, 0.0f, 0.0f, 1.0f)
 		->SetDiffuse("Assets/Textures/container2.png")
-		->SetSpecular("Assets/Textures/container2_specular.png");
+		->SetSpecular("Assets/Textures/container2_specular.png")
+		->shader = Render::GetInstance().CreateShader(
+			"Assets/Shaders/BlinnPhong/BlinnPhong.vert",
+			"Assets/Shaders/BlinnPhong/BlinnPhong.frag"
+		);
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 	
