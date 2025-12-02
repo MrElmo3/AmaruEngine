@@ -20,7 +20,7 @@ void Mesh::SetupMesh() {
 	glBufferData(
 		GL_ARRAY_BUFFER,
 		vertices.size() * sizeof(Vertex),
-		vertices.data(),
+		&vertices[0],
 		GL_STATIC_DRAW
 	);
 

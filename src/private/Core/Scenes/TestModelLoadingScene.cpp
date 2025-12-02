@@ -11,8 +11,8 @@
 TestModelLoadingScene::TestModelLoadingScene() {
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(4, 0, 4);
-	cameraObject->RotateEuler(glm::vec3(0, -45, 0));
+	cameraObject->position = glm::vec3(0, 0, 4);
+	cameraObject->RotateEuler(glm::vec3(0, 0, 0));
 	cameraComponent->mainCamera = true;
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
@@ -23,10 +23,10 @@ TestModelLoadingScene::TestModelLoadingScene() {
 	ModelRendererComponent* modelRenderer = testModel->AddComponent<ModelRendererComponent>();
 	
 	auto* modelRendererMaterial  = new LitMaterial();
-	modelRendererMaterial->SetDiffuse("Assets/Textures/1001_albedo.jpg");
+	// modelRendererMaterial->SetDiffuse("Assets/Textures/1001_albedo.jpg");
 	modelRenderer->material = modelRendererMaterial;
 
-	modelRenderer->SetModel(new Model("Assets/Models/Survival_BackPack_2.fbx"));
+	modelRenderer->SetModel(new Model("Assets/Models/Untitled.fbx"));
 }
 
 void TestModelLoadingScene::Update(double deltaTime) {
