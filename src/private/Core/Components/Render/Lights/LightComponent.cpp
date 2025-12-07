@@ -27,6 +27,7 @@ void LightComponent::Use(Shader* shader, int index) {
 	else {
 		std::string lightString = "_activeLights[" + std::to_string(index) + "].";
 		shader->SetUInt(lightString + "type", (unsigned int)type);
+		shader->SetVector3(lightString + "color", color);
 		shader->SetVector3(lightString + "position", lightPosition);
 		shader->SetVector3(lightString + "ambient", ambient);
 		shader->SetVector3(lightString + "diffuse", diffuse);
@@ -78,7 +79,7 @@ LightComponent* LightComponent::SetRange(float _range) {
 		return this;
 	}
 	range = _range;
-	linearValue = 4.5/ range;
+	linearValue = 16/ range;
 	quadraticValue = 75.0 / (range * range);
 	return this;
 }

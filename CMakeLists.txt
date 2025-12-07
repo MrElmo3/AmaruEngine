@@ -81,6 +81,7 @@ set(SCENES
 	${PRIVATE_DIR}/Core/Scenes/TestCollisionScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestPhongLightScene.cpp
+	${PRIVATE_DIR}/Core/Scenes/TestPBRLightScene.cpp
 )
 
 #Core source

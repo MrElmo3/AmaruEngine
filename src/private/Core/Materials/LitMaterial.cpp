@@ -11,6 +11,16 @@ LitMaterial::LitMaterial() {
 }
 
 void LitMaterial::Use() {
+	if(isPBR){
+		this->shader->Use();
+		this->shader->SetVector3("_material.color", this->color);
+		this->shader->SetInt("_material.albedoMap", 0);
+		this->shader->SetInt("_material.normalMap", 1);
+		this->shader->SetTexture(albedo, 0);
+		this->shader->SetTexture(normal, 1);
+		return;
+	}
+
 	this->shader->Use();
 	this->shader->SetVector3("_material.color", this->color);
 	this->shader->SetInt("_material.diffuse", 0);
@@ -49,5 +59,35 @@ LitMaterial* LitMaterial::SetEmission(const std::string &texturePath) {
 
 LitMaterial* LitMaterial::SetShininess(const float shininess) {
 	this->shininess= shininess;
+	return this;
+}
+
+LitMaterial* LitMaterial::IsPBR(const bool isPBR){
+	this->isPBR = isPBR;
+	return this;
+}
+
+LitMaterial* LitMaterial::SetAlbedo(const std::string &texturePath) {
+	this->albedo = Render::GetInstance().GenerateTexture(texturePath);
+	return this;
+}
+
+LitMaterial* LitMaterial::SetNormal(const std::string &texturePath) {
+	this->normal = Render::GetInstance().GenerateTexture(texturePath);
+	return this;
+}
+
+LitMaterial* LitMaterial::SetMetallic(const std::string &texturePath) {
+	this->metallic= Render::GetInstance().GenerateTexture(texturePath);
+	return this;
+}
+
+LitMaterial* LitMaterial::SetRoughness(const std::string &texturePath) {
+	this->roughness= Render::GetInstance().GenerateTexture(texturePath);
+	return this;
+}
+
+LitMaterial* LitMaterial::SetAO(const std::string &texturePath) {
+	this->ao = Render::GetInstance().GenerateTexture(texturePath);
 	return this;
 }
