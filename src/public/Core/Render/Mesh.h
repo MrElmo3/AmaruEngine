@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-#include <core/Render/Shader.h>
+#include <Core/Render/Shader.h>
 
 struct Vertex;
 

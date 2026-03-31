@@ -76,6 +76,7 @@ set(RENDER
 	${PRIVATE_DIR}/Core/Render/Render.cpp
 	${PRIVATE_DIR}/Core/Render/Shader.cpp
 	${PRIVATE_DIR}/Core/Render/Mesh.cpp
+	${PRIVATE_DIR}/Core/Render/Model.cpp
 )
 
 #Scene mannager source
