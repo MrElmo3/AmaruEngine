@@ -13,6 +13,7 @@ public:
 
 public:
 	ModelRendererComponent(AObject* parent);
+	ModelRendererComponent(AObject* parent, std::string modePath);
 	~ModelRendererComponent() override;
 	void LateUpdate() override;
 

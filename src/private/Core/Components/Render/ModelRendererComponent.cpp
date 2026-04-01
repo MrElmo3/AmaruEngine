@@ -7,7 +7,13 @@
 
 ModelRendererComponent::ModelRendererComponent(AObject* parent) : IComponent(parent){
 	material = new LitMaterial();
+	model = nullptr;
 }
+
+ModelRendererComponent::ModelRendererComponent(AObject* parent, std::string modelPath) : ModelRendererComponent(parent){
+	model = new Model(modelPath);
+}
+
 
 ModelRendererComponent::~ModelRendererComponent() {
 	delete this->material;
