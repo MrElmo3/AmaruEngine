@@ -3,7 +3,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
-#include <Core/Scenes/TestPhongLightScene.h>
+#include <Core/Scenes/TestModelLoadingScene.h>
 
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
@@ -39,7 +39,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new TestPhongLightScene();
+	actualScene = new TestModelLoadingScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

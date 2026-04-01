@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Components/IComponent.h>
+#include <string>
 
 class AMaterial;
 class Model;
@@ -13,7 +14,6 @@ public:
 
 public:
 	ModelRendererComponent(AObject* parent);
-	ModelRendererComponent(AObject* parent, std::string modePath);
 	~ModelRendererComponent() override;
 	void LateUpdate() override;
 
@@ -22,4 +22,5 @@ private:
 
 public:
 	ModelRendererComponent* SetModel(Model* model);
+	ModelRendererComponent* SetModel(std::string modelPath);
 };
