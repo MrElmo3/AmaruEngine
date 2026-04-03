@@ -1,5 +1,6 @@
 #pragma once
 #include <Core/Components/IComponent.h>
+#include <string>
 
 class AMaterial;
 class Model;
@@ -20,4 +21,5 @@ private:
 
 public:
 	ModelRendererComponent* SetModel(Model* model);
+	ModelRendererComponent* SetModel(std::string modelPath);
 };

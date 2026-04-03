@@ -4,9 +4,12 @@
 #include <Core/Objects/AObject.h>
 #include <Core/Render/Render.h>
 #include <Core/Render/Model.h>
+#include <Core/Render/Shader.h>
+#include <string>
 
 ModelRendererComponent::ModelRendererComponent(AObject* parent) : IComponent(parent){
 	material = new LitMaterial();
+	model = nullptr;
 }
 
 ModelRendererComponent::~ModelRendererComponent() {
@@ -26,5 +29,10 @@ void ModelRendererComponent::Draw() {
 
 ModelRendererComponent* ModelRendererComponent::SetModel(Model* model){
 	this->model = model;
+	return this;
+}
+
+ModelRendererComponent* ModelRendererComponent::SetModel(std::string modelPath){
+	this->model = new Model(modelPath);
 	return this;
 }
