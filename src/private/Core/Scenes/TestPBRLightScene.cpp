@@ -61,7 +61,7 @@ TestPBRLightScene::TestPBRLightScene() {
 void TestPBRLightScene::Update(double deltaTime) {
 	ASceneController::Update(deltaTime);
 	
-	float rotationSpeed = 20.0f;
+	float rotationSpeed = 0.0f;
 	testCube->RotateEuler(testCube->Up() * rotationSpeed * (float)deltaTime);
 
 }

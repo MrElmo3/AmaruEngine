@@ -19,7 +19,7 @@ TestPhongLightScene::TestPhongLightScene() {
 
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(4, 0, 4);
+	cameraObject->position = glm::vec3(1.5, 0, 1.5);
 	cameraObject->RotateEuler(glm::vec3(0, -45, 0));
 	cameraComponent->mainCamera = true;
 
@@ -38,8 +38,8 @@ TestPhongLightScene::TestPhongLightScene() {
 		->SetDiffuse("Assets/Textures/container2.png")
 		->SetSpecular("Assets/Textures/container2_specular.png")
 		->shader = Render::GetInstance().CreateShader(
-			"Assets/Shaders/BlinnPhong/BlinnPhong.vert",
-			"Assets/Shaders/BlinnPhong/BlinnPhong.frag"
+			"Assets/Shaders/LitShader/Lit.vert",
+			"Assets/Shaders/LitShader/Lit.frag"
 		);
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
@@ -48,17 +48,17 @@ TestPhongLightScene::TestPhongLightScene() {
 	light2->position = glm::vec3(2, 0 , -2);
 	light2->SetRange(25);
 
-	SpotLight* light3 = new SpotLight("light3", nullptr, this);
-	light3->position = glm::vec3(0, 0, 2);
-	light3->scale = glm::vec3(0.1);
-	light3->SetRange(200)
-		->SetSpotRange(12.5, 17.5);
+	// SpotLight* light3 = new SpotLight("light3", nullptr, this);
+	// light3->position = glm::vec3(0, 0, 2);
+	// light3->scale = glm::vec3(0.1);
+	// light3->SetRange(200)
+	// 	->SetSpotRange(12.5, 17.5);
 }
 
 void TestPhongLightScene::Update(double deltaTime) {
 	ASceneController::Update(deltaTime);
 	
-	float rotationSpeed = 20.0f;
+	float rotationSpeed = 0.0f;
 	testCube->RotateEuler(testCube->Right() * rotationSpeed * (float)deltaTime);
 
 }

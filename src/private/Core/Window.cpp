@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <Core/Scenes/TestPBRLightScene.h>
+#include <Core/Scenes/TestPhongLightScene.h>
 
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
@@ -39,7 +40,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new TestPBRLightScene();
+	actualScene = new TestPhongLightScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

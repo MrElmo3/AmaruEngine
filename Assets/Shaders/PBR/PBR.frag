@@ -205,12 +205,14 @@ vec3 CalcLight(
 		}
 	}
 
-	// Cook-Torrance BRDF
+	// -  Cook-Torrance BRDF
+	//Normal distribution function (Microfacet model)
 	float NDF = DistributionGGX(
 		fragInfo.normal, 
 		halfwayDirection, 
 		fragInfo.roughness);
 	
+	//Geometry function (microfacet model)
 	float G = GeometrySmith(
 		fragInfo.normal, 
 		viewDirection, 
