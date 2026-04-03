@@ -4,7 +4,7 @@
 #include <Core/Render/Shader.h>
 
 struct Vertex;
-
+class AMaterial;
 class Mesh {
 public:
 	// mesh data
@@ -13,12 +13,16 @@ public:
 
 	Mesh(
 		std::vector<Vertex> vertices, 
-		std::vector<unsigned int> indices 
+		std::vector<unsigned int> indices ,
+		glm::mat4x4 meshTransform
 	);
     
-	void Draw();
+	void Draw(AMaterial* material, glm::mat4x4* parentTransform);
 
 private:
+
+	glm::mat4x4 meshTransform;
+
 	//render data
 	unsigned int VAO, VBO, EBO;
 

@@ -1,21 +1,26 @@
 #include <Core/Render/Model.h>
 #include <Core/Render/Mesh.h>
 #include <Util/Logger.h>
+#include <Util/Utility.h>
+#include <Core/Materials/AMaterial.h>
 
 Model::Model(std::string modelPath) {
 	LoadModel(modelPath);
 }
 
-void Model::Draw() {
+void Model::Draw(AMaterial* material, glm::mat4x4* parentTransform) {
 	for (unsigned int i = 0; i < meshes.size(); i++)
-		meshes[i].Draw();
+		meshes[i].Draw(material, parentTransform);
 }
 
 void Model::LoadModel(std::string modelPath) {
-	Assimp::Importer import;
-	const aiScene* scene = import.ReadFile(
+	Assimp::Importer importer;
+
+	const aiScene* scene = importer.ReadFile(
 		modelPath,
-		aiProcess_Triangulate | aiProcess_FlipUVs
+		aiProcess_Triangulate | 
+		aiProcess_FlipUVs |
+		aiProcess_GlobalScale
 	);
 
 	if (!scene || 
@@ -23,7 +28,7 @@ void Model::LoadModel(std::string modelPath) {
 		AI_SCENE_FLAGS_INCOMPLETE || 
 		!scene->mRootNode) {
 		
-		std::string error = import.GetErrorString();
+		std::string error = importer.GetErrorString();
 		Logger::Error("ERROR::ASSIMP::" + error);
 		return;
 	}
@@ -33,17 +38,22 @@ void Model::LoadModel(std::string modelPath) {
 }
 
 void Model::ProcessNode(aiNode *node, const aiScene* scene) {
+	
+	glm::mat4x4 nodeTransform = Utility::ConvertMatrix4x4AssimpToGLM(node->mTransformation);
+	glm::mat4x4 globalTransform = nodeTransform;
+	
 	for(unsigned int i = 0; i< node->mNumMeshes; i++){
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		meshes.push_back(ProcessMesh(mesh, scene));
+		meshes.push_back(ProcessMesh(mesh, nodeTransform));
 	}
+	
 	for(unsigned int i = 0; i < node->mNumChildren; i++){
 		ProcessNode(node->mChildren[i], scene);
 	}
 }
 
 
-Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene*) {
+Mesh Model::ProcessMesh(aiMesh *mesh, const glm::mat4x4 transform) {
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
 	
@@ -82,5 +92,5 @@ Mesh Model::ProcessMesh(aiMesh *mesh, const aiScene*) {
 		}
 	}
 
-	return Mesh(vertices, indices);
+	return Mesh(vertices, indices, transform);
 }

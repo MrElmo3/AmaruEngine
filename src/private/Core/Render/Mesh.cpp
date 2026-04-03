@@ -1,11 +1,14 @@
 #include <Core/Render/Mesh.h>
+#include <Core/Materials/AMaterial.h>
 
 Mesh::Mesh(
 	std::vector<Vertex> vertices, 
-	std::vector<unsigned int> indices) {
+	std::vector<unsigned int> indices,
+	glm::mat4x4 meshTransform) {
 	
 	this->vertices = vertices;
 	this->indices = indices;
+	this->meshTransform = meshTransform;
 	SetupMesh();
 }
 
@@ -58,9 +61,15 @@ void Mesh::SetupMesh() {
     glBindVertexArray(0);
 }
 
-void Mesh::Draw() {
+void Mesh::Draw(AMaterial* material, glm::mat4x4* parentTransform) {
 
-	
+	glm::mat4x4 transform = *parentTransform * meshTransform;
+
+	material->shader->SetMatrix4("_model", transform);
+
+	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(transform)));
+	material->shader->SetMatrix3("_normalModel", normalMatrix);
+
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

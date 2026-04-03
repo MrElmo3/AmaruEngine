@@ -511,16 +511,11 @@ void Render::DrawModel(
 	material->Use();
 	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 
-	material->shader->SetMatrix4("_model", *modelMatrix);
 	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
 	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
-
-	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(*modelMatrix)));
-	material->shader->SetMatrix3("_normalModel", normalMatrix);
-
 	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
 
-	model->Draw();
+	model->Draw(material, modelMatrix);
 }
 
 glm::mat4 Render::GetTransformMatrix(AObject* object) {
