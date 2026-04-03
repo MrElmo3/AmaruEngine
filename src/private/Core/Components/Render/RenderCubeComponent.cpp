@@ -21,6 +21,6 @@ void RenderCubeComponent::LateUpdate() {
 void RenderCubeComponent::Draw() {
 	if (!enableRender) return;
 	
-	glm::mat4 model = Render::GetInstance().GetModelMatrix(parent);
+	glm::mat4 model = Render::GetInstance().GetTransformMatrix(parent);
 	Render::GetInstance().DrawCube(&model, material, nullptr);
 }

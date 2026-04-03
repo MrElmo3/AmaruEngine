@@ -523,7 +523,7 @@ void Render::DrawModel(
 	model->Draw();
 }
 
-glm::mat4 Render::GetModelMatrix(AObject* object) {
+glm::mat4 Render::GetTransformMatrix(AObject* object) {
 
 	glm::mat4 modelMatrix = glm::mat4(1);
 

@@ -23,7 +23,7 @@ void ModelRendererComponent::LateUpdate() {
 void ModelRendererComponent::Draw() {
 	if(model == nullptr) return;
 	if (!enableRender) return;
-	glm::mat4 modelMatrix = Render::GetInstance().GetModelMatrix(parent);
+	glm::mat4 modelMatrix = Render::GetInstance().GetTransformMatrix(parent);
 	Render::GetInstance().DrawModel(model, material, &modelMatrix);
 }
 

@@ -139,7 +139,7 @@ public:
 	 * model matrix of an object
 	 * @param object the object to calculate the matrix
 	 */
-	glm::mat4 GetModelMatrix(AObject* object);
+	glm::mat4 GetTransformMatrix(AObject* object);
 
 	CameraComponent* GetCurrentCamera() const { return currentCamera; }
 };
