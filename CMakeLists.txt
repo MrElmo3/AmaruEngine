@@ -106,7 +106,6 @@ set(UTIL
 	${PRIVATE_DIR}/Util/Graph.cpp
 	${PRIVATE_DIR}/Util/Logger.cpp
 	${PRIVATE_DIR}/Util/Singleton.cpp
-	${PRIVATE_DIR}/Util/Utility.cpp
 )
 
 #Game Source Files
