@@ -13,28 +13,30 @@
 TestModelLoadingScene::TestModelLoadingScene() {
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(0, 0, 3);
+	cameraObject->position = glm::vec3(0, 0, 4);
 	cameraObject->RotateEuler(glm::vec3(0, 0, 0));
 	cameraComponent->mainCamera = true;
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 
 	testModel = new EmptyObject("testModel", nullptr, this);
-	testModel->scale = glm::vec3(1);
-	testModel->position = glm::vec3(0, -1, 0);
+	testModel->scale = glm::vec3(0.5);
+	testModel->position = glm::vec3(0, 0, 0);
+	testModel->RotateEuler(glm::vec3(0, 0, 0));
+
 	ModelRendererComponent* modelRenderer = testModel->AddComponent<ModelRendererComponent>();
 	
 	auto* modelRendererMaterial  = new LitMaterial();
-	// modelRendererMaterial->SetDiffuse("Assets/Textures/body1_Base_color.png");
+	modelRendererMaterial->SetDiffuse("Assets/Textures/1001_albedo.jpg");
 	modelRenderer->material = modelRendererMaterial;
 
-	modelRenderer->SetModel(new Model("Assets/Models/Reze.fbx"));
+	modelRenderer->SetModel(new Model("Assets/Models/Survival_BackPack_2.fbx"));
 }
 
 void TestModelLoadingScene::Update(double deltaTime) {
 	ASceneController::Update(deltaTime);
 	
-	float rotationSpeed = 20.0f;
+	float rotationSpeed = 00.0f;
 	testModel->RotateEuler(testModel->Up() * rotationSpeed * (float)deltaTime);
 
 }
