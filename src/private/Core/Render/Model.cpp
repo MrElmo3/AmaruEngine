@@ -19,7 +19,6 @@ void Model::LoadModel(std::string modelPath) {
 	const aiScene* scene = importer.ReadFile(
 		modelPath,
 		aiProcess_Triangulate | 
-		aiProcess_FlipUVs |
 		aiProcess_GlobalScale
 	);
 

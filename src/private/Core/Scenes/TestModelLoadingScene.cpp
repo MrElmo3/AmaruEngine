@@ -28,15 +28,15 @@ TestModelLoadingScene::TestModelLoadingScene() {
 	
 	auto* modelRendererMaterial  = new LitMaterial();
 	modelRendererMaterial->SetDiffuse("Assets/Textures/1001_albedo.jpg");
-	modelRenderer->material = modelRendererMaterial;
 
+	modelRenderer->material = modelRendererMaterial;
 	modelRenderer->SetModel(new Model("Assets/Models/Survival_BackPack_2.fbx"));
 }
 
 void TestModelLoadingScene::Update(double deltaTime) {
 	ASceneController::Update(deltaTime);
 	
-	float rotationSpeed = 00.0f;
+	float rotationSpeed = 60.0f;
 	testModel->RotateEuler(testModel->Up() * rotationSpeed * (float)deltaTime);
 
 }

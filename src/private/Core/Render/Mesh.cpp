@@ -1,5 +1,6 @@
 #include <Core/Render/Mesh.h>
 #include <Core/Materials/AMaterial.h>
+#include <Util/Logger.h>
 
 Mesh::Mesh(
 	std::vector<Vertex> vertices, 
@@ -43,22 +44,25 @@ void Mesh::SetupMesh() {
 		0, 3, GL_FLOAT, GL_FALSE, 
 		sizeof(Vertex), (void*)0
 	);
-	
-	// vertex UV
-    glEnableVertexAttribArray(1);	
-    glVertexAttribPointer(
-		1, 2, GL_FLOAT, GL_FALSE, 
-		sizeof(Vertex), (void*)offsetof(Vertex, TexCoords)
-	);
 
 	// vertex Normal
-	glEnableVertexAttribArray(2);	
+	glEnableVertexAttribArray(1);	
     glVertexAttribPointer(
-		2, 3, GL_FLOAT, GL_FALSE, 
+		1, 3, GL_FLOAT, GL_FALSE, 
 		sizeof(Vertex), (void*)offsetof(Vertex, Normal)
 	);
+	
+	// vertex UV
+    glEnableVertexAttribArray(2);	
+    glVertexAttribPointer(
+		2, 2, GL_FLOAT, GL_FALSE, 
+		sizeof(Vertex), (void*)offsetof(Vertex, TexCoords)
+	);
+	
+	glBindVertexArray(0);
 
-    glBindVertexArray(0);
+	if(vertices.empty())
+		Logger::Log(std::to_string(sizeof(Vertex)));
 }
 
 void Mesh::Draw(AMaterial* material, glm::mat4x4* parentTransform) {
