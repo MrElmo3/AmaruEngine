@@ -128,6 +128,11 @@ public:
 		glm::mat4* modelMatrix
 	);
 
+	/// @brief Sets the current material to the 
+	/// @param material 
+	/// @param objectTransform 
+	void SetCurrentMaterial(AMaterial* material, glm::mat4x4 objectTransform);
+
 	/**
 	 * @brief This method sets the current camera
 	 * @param camera The camera to set as the current camera
