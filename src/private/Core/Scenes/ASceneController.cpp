@@ -3,6 +3,7 @@
 #include <thread>
 #include <GLFW/glfw3.h>
 #include <Core/Global.h>
+#include <Core/Render/Render.h>
 #include <Core/Physics/PhysicsEngine2D.h>
 #include <Core/Physics/PhysicsEngine3D.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
@@ -75,6 +76,7 @@ void ASceneController::Update(double deltaTime){
 }
 
 void ASceneController::LateUpdate(){
+	Render::GetInstance().SetCameraValues();
 	for (auto element : objects){
 		if (!element->isEnabled) continue;
 		element->LateUpdate();

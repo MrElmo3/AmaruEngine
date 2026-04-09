@@ -1,4 +1,4 @@
-#version 330 core
+#version 420 core
 out vec4 FragColor;
 
 struct Material {
@@ -9,7 +9,7 @@ struct Material {
 	float shininess;
 };
 
-//enum
+//enumglBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
 const uint Directional = 0u;
 const uint Point = 1u;
 const uint Spot = 2u;
@@ -39,7 +39,11 @@ in vec2 uv;
 in vec3 normal;
 in vec3 fragPosition;
 
-uniform vec3 _viewPosition = vec3(0.0, 0.0, 0.0);
+layout (std140, binding = 0) uniform CameraBlock {
+	mat4 _view;
+	mat4 _projection;
+	vec3 _viewPosition;
+};
 
 uniform Material _material;
 

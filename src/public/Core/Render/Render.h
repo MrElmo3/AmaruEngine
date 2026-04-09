@@ -22,9 +22,13 @@ private:
 
 	CameraComponent* currentCamera;
 
+	AMaterial* currentMaterial;
+
 	std::vector<Shader*> shaders;
 
 	std::map<std::string, unsigned int> textures;
+
+	unsigned int cameraUBO;
 
 	unsigned int VAOCube;
 	unsigned int VBOCubePos;
@@ -51,6 +55,7 @@ public:
 	~Render();
 
 private:
+	void InitUniformCameraBuffer();
 	void InitQuad();
 	void InitLine();
 	void InitCube();
@@ -74,6 +79,8 @@ public:
 	 * @return Returns the ID of the generated texture
 	 */
 	unsigned int GenerateTexture(const std::string texturePath);
+
+	void SetCameraValues();
 
 	/**
 	 * @brief This method draws a line segment in the world using the
@@ -128,10 +135,12 @@ public:
 		glm::mat4* modelMatrix
 	);
 
-	/// @brief Sets the current material to the 
-	/// @param material 
-	/// @param objectTransform 
-	void SetCurrentMaterial(AMaterial* material, glm::mat4x4 objectTransform);
+	/**
+	 * @brief Sets a material to use in the renderer if its different from the current material
+	 * 
+	 * @param material The material to set.
+	 */
+	void SetCurrentMaterial(AMaterial* material);
 
 	/**
 	 * @brief This method sets the current camera

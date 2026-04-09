@@ -18,10 +18,10 @@
 Render::Render() {
 
 	gizmosMaterial = new ColorMaterial();
-
 	InitQuad();
 	InitLine();
 	InitCube();
+	InitUniformCameraBuffer();
 }
 
 Render::~Render() {
@@ -110,6 +110,14 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return generatedTexture;
+}
+
+void Render::InitUniformCameraBuffer() {
+	glGenBuffers(1, &cameraUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
+	glBufferData(GL_UNIFORM_BUFFER, 2* sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 0, cameraUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void Render::InitLine() {
@@ -338,6 +346,16 @@ void Render::InitCube() {
 	);
 }
 
+void Render::SetCameraValues() {
+	glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
+
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(currentCamera->GetViewMatrix()));
+	glBufferSubData(GL_UNIFORM_BUFFER, 64, sizeof(glm::mat4), glm::value_ptr(currentCamera->GetProjectionMatrix())); 
+	glBufferSubData(GL_UNIFORM_BUFFER, 128, sizeof(glm::vec3), glm::value_ptr(currentCamera->parent->GetWorldPosition())); 
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
 void Render::DrawLineSegment(
 	glm::vec3 start, 
 	glm::vec3 end, 
@@ -350,8 +368,6 @@ void Render::DrawLineSegment(
 	gizmosMaterial->Use();
 
 	gizmosMaterial->shader->SetMatrix4("_model", glm::mat4(1.0f));
-	gizmosMaterial->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
-	gizmosMaterial->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	glLineWidth(1);
 
@@ -405,8 +421,6 @@ void Render::DrawQuad(
 
 	material->Use();
 	material->shader->SetMatrix4("_model", *modelMatrix);
-	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
-	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	glBindVertexArray(VAOQuad);
 
@@ -443,13 +457,9 @@ void Render::DrawCube(
 	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 
 	material->shader->SetMatrix4("_model", *modelMatrix);
-	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
-	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
 
 	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(*modelMatrix)));
 	material->shader->SetMatrix3("_normalModel", normalMatrix);
-
-	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
 
 	glBindVertexArray(VAOCube);
 
@@ -508,14 +518,21 @@ void Render::DrawModel(
 
 	if (!currentCamera) return;
 
-	material->Use();
+	SetCurrentMaterial(material);
 	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 
-	material->shader->SetMatrix4("_view", currentCamera->GetViewMatrix());
-	material->shader->SetMatrix4("_projection", currentCamera->GetProjectionMatrix());
-	material->shader->SetVector3("_viewPosition", currentCamera->parent->GetWorldPosition());
-
 	model->Draw(material, modelMatrix);
+}
+
+void Render::SetCurrentMaterial(AMaterial* material) {
+	if (currentMaterial == nullptr || currentMaterial != material) {
+		currentMaterial = material;
+		currentMaterial->Use();
+	}
+}
+
+void Render::SetCurrentCamera(CameraComponent* camera) {
+	currentCamera = camera;
 }
 
 glm::mat4 Render::GetTransformMatrix(AObject* object) {
@@ -532,8 +549,4 @@ glm::mat4 Render::GetTransformMatrix(AObject* object) {
 	modelMatrix = glm::scale(modelMatrix, object->GetWorldScale());
 
 	return modelMatrix;
-}
-
-void Render::SetCurrentCamera(CameraComponent* camera) {
-	currentCamera = camera;
 }
