@@ -12,16 +12,17 @@
 #include <Core/Materials/AMaterial.h>
 #include <Core/Components/Render/CameraComponent.h>
 #include <glm/gtc/matrix_transform.hpp>
+#include <Core/Render/LightData.h>
 #include <Util/Logger.h>
 #include <Core/Render/Model.h>
 
 Render::Render() {
-
 	gizmosMaterial = new ColorMaterial();
 	InitQuad();
 	InitLine();
 	InitCube();
 	InitUniformCameraBuffer();
+	InitUniformLightBuffer();
 }
 
 Render::~Render() {
@@ -115,8 +116,16 @@ unsigned int Render::GenerateTexture(const std::string texturePath) {
 void Render::InitUniformCameraBuffer() {
 	glGenBuffers(1, &cameraUBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
-	glBufferData(GL_UNIFORM_BUFFER, 2* sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+	glBufferData(GL_UNIFORM_BUFFER, (2* sizeof(glm::mat4)) + sizeof(glm::vec4), NULL, GL_STATIC_DRAW);
 	glBindBufferBase(GL_UNIFORM_BUFFER, 0, cameraUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
+void Render::InitUniformLightBuffer() {
+	glGenBuffers(1, &lightUBO);
+	glBindBuffer(GL_UNIFORM_BUFFER, lightUBO);
+	glBufferData(GL_UNIFORM_BUFFER,  sizeof(LightData) * 8, NULL, GL_STATIC_DRAW);
+	glBindBufferBase(GL_UNIFORM_BUFFER, 1, lightUBO);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -348,11 +357,16 @@ void Render::InitCube() {
 
 void Render::SetCameraValues() {
 	glBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
-
 	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(currentCamera->GetViewMatrix()));
 	glBufferSubData(GL_UNIFORM_BUFFER, 64, sizeof(glm::mat4), glm::value_ptr(currentCamera->GetProjectionMatrix())); 
 	glBufferSubData(GL_UNIFORM_BUFFER, 128, sizeof(glm::vec3), glm::value_ptr(currentCamera->parent->GetWorldPosition())); 
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
 
+void Render::SetLightValues() {
+	std::vector<LightData> lightData = Window::GetInstance().GetActualScene()->GetSceneLightsData();
+	glBindBuffer(GL_UNIFORM_BUFFER, lightUBO);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(LightData) * 8, lightData.data());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -454,7 +468,6 @@ void Render::DrawCube(
 	if (!currentCamera) return;
 
 	material->Use();
-	Window::GetInstance().GetActualScene()->UseLights(material->shader);
 
 	material->shader->SetMatrix4("_model", *modelMatrix);
 
@@ -515,12 +528,8 @@ void Render::DrawModel(
 	AMaterial* material,
 	glm::mat4* modelMatrix
 ) {
-
 	if (!currentCamera) return;
-
 	SetCurrentMaterial(material);
-	Window::GetInstance().GetActualScene()->UseLights(material->shader);
-
 	model->Draw(material, modelMatrix);
 }
 

@@ -10,12 +10,13 @@ struct Material {
 };
 
 //enumglBindBuffer(GL_UNIFORM_BUFFER, cameraUBO);
+const uint DISABLE = 0u;
 const uint DIRECTIONAL = 1u;
 const uint POINT = 2u;
 const uint SPOT = 3u;
 
 //number of active lights differents to directional
-const int MAX_LIGHTS = 4;
+const int MAX_LIGHTS = 8;
 
 struct Light {
 	vec3 position;
@@ -35,7 +36,7 @@ struct Light {
 
 	vec3 specular;
 	float quadraticAtenuation;
-}
+};
 
 in vec2 uv;
 in vec3 normal;
@@ -49,7 +50,7 @@ layout (std140, binding = 0) uniform CameraBlock {
 
 layout (std140, binding = 1) uniform LightBlock {
 	Light _activeLights[MAX_LIGHTS];
-}
+};
 
 uniform Material _material;
 
@@ -60,10 +61,12 @@ void main() {
 	vec3 norm = normalize(normal);
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 
-	for (int i = 0; i < MAX_LIGHTS; i++) {
-		Light = currentLight = _activeLights[i];
+	vec3 result;
 
-		if(currentLight == 0){
+	for (int i = 0; i < MAX_LIGHTS; i++) {
+		Light currentLight = _activeLights[i];
+
+		if(currentLight.type == DISABLE){
 			continue;
 		}
 		result += CalcLight(currentLight, norm, viewDirection, fragPosition);

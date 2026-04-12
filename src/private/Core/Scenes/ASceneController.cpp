@@ -7,6 +7,7 @@
 #include <Core/Physics/PhysicsEngine2D.h>
 #include <Core/Physics/PhysicsEngine3D.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
+#include <Core/Render/LightData.h>
 #include <Util/Logger.h>
 
 
@@ -77,6 +78,7 @@ void ASceneController::Update(double deltaTime){
 
 void ASceneController::LateUpdate(){
 	Render::GetInstance().SetCameraValues();
+	Render::GetInstance().SetLightValues();
 	for (auto element : objects){
 		if (!element->isEnabled) continue;
 		element->LateUpdate();
@@ -89,19 +91,18 @@ void ASceneController::End(){
 	}
 }
 
-void ASceneController::UseLights(Shader* shader) {
-	//directional light
-	if(directionalLight != nullptr)
-		directionalLight->Use(shader);
+std::vector<LightData> ASceneController::GetSceneLightsData() {
+	std::vector<LightData> lightData(8, LightData{});
 
-	//other lights
-	int i = 0;
+	if(directionalLight != nullptr)
+		lightData[0] = directionalLight->GetLightData();
+
+	int uboIndex = 1;
 	for (auto light : activeLights) {
-		if (light == nullptr) continue;
-		light->Use(shader, i);
-		++i;
-		if(i >= 4) break;
+		if(uboIndex >= 8) break;
+		lightData[uboIndex] = light->GetLightData();
+		uboIndex++;
 	}
-	
-	
+
+	return lightData;
 }

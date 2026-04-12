@@ -29,6 +29,7 @@ private:
 	std::map<std::string, unsigned int> textures;
 
 	unsigned int cameraUBO;
+	unsigned int lightUBO;
 
 	unsigned int VAOCube;
 	unsigned int VBOCubePos;
@@ -56,6 +57,7 @@ public:
 
 private:
 	void InitUniformCameraBuffer();
+	void InitUniformLightBuffer();
 	void InitQuad();
 	void InitLine();
 	void InitCube();
@@ -80,7 +82,16 @@ public:
 	 */
 	unsigned int GenerateTexture(const std::string texturePath);
 
+	
+	/**
+	 * @brief Set the camera values to an UBO in the GPU
+	 */
 	void SetCameraValues();
+
+	/**
+	 * @brief Set the light values to an UBO in the GPU
+	 */
+	void SetLightValues();
 
 	/**
 	 * @brief This method draws a line segment in the world using the

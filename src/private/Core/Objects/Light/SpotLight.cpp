@@ -6,7 +6,7 @@
 SpotLight::SpotLight(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
 	lightComponent = AddComponent<LightComponent>();
-	lightComponent->SetType(LightType::Spot)
+	lightComponent->SetType(LightType::SPOT)
 		->SetSpotRange(25, 35)
 		->SetRange(25);
 }
@@ -18,11 +18,6 @@ SpotLight* SpotLight::SetColor(glm::vec3 color) {
 
 SpotLight* SpotLight::SetColor(float r, float g, float b) {
 	lightComponent->SetColor(r, g, b);
-	return this;
-}
-
-SpotLight* SpotLight::SetIntensity(float intensity) {
-	lightComponent->SetIntensity(intensity);
 	return this;
 }
 

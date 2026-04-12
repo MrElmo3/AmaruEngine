@@ -2,6 +2,7 @@
 #include <set>
 #include "Core/Objects/AObject.h"
 
+struct LightData;
 class LightComponent;
 class Shader;
 class ASceneController {
@@ -77,12 +78,11 @@ public:
 	virtual void End();
 
 	/**
-	 * @brief Method for use the lights inside this scene.
-	 * @param shader The shader that is in use.
+	 * @brief Method for get all of the data of the scene lights.
 	 * 
 	 * DO NOT USE OUT OF THE RENDER SYSTEM
 	 */
-	void UseLights(Shader* shader);
+	std::vector<LightData> GetSceneLightsData();
 
 protected:
 	/**
