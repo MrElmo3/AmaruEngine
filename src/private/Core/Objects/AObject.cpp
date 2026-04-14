@@ -123,7 +123,7 @@ void AObject::AddChild(AObject* child) {
 
 void AObject::Rotate(glm::quat rotation) {
 	rotation = glm::normalize(rotation);
-	this->rotationQuat = rotation * this->rotationQuat;
+	this->rotationQuat = this->rotationQuat * rotation;
 }
 
 void AObject::RotateEuler(glm::vec3 rotation) {

@@ -8,6 +8,7 @@
 
 class ColorMaterial;
 class AMaterial;
+class Model;
 class AObject;
 class CameraComponent;
 class Shader;
@@ -20,22 +21,27 @@ class Render : public Singleton<Render> {
 private:
 
 	CameraComponent* currentCamera;
-	
+
+	AMaterial* currentMaterial;
+
 	std::vector<Shader*> shaders;
 
 	std::map<std::string, unsigned int> textures;
+
+	unsigned int cameraUBO;
+	unsigned int lightUBO;
 
 	unsigned int VAOCube;
 	unsigned int VBOCubePos;
 	unsigned int VBOCubeNorm;
 	unsigned int EBOCube;
-	
+
 	unsigned int VAOQuad;
 	unsigned int VBOQuadPos;
 	unsigned int VBOQuadUv;
 	unsigned int VBOQuadNorm;
 	unsigned int EBOQuad;
-	
+
 	unsigned int VAOLine;
 	unsigned int VBOLine;
 
@@ -50,12 +56,14 @@ public:
 	~Render();
 
 private:
+	void InitUniformCameraBuffer();
+	void InitUniformLightBuffer();
 	void InitQuad();
 	void InitLine();
 	void InitCube();
 
 public:
-	
+
 	/**
 	 * @brief This method creates a shader program
 	 * @param vertexPath The path of the vertex shader
@@ -63,7 +71,7 @@ public:
 	 * @return An object of the Shader class representing the shader program
 	 */
 	Shader* CreateShader(
-		const std::string vertexPath, 
+		const std::string vertexPath,
 		const std::string fragmentPath
 	);
 
@@ -74,8 +82,19 @@ public:
 	 */
 	unsigned int GenerateTexture(const std::string texturePath);
 
+	
 	/**
-	 * @brief This method draws a line segment in the world using the 
+	 * @brief Set the camera values to an UBO in the GPU
+	 */
+	void SetCameraValues();
+
+	/**
+	 * @brief Set the light values to an UBO in the GPU
+	 */
+	void SetLightValues();
+
+	/**
+	 * @brief This method draws a line segment in the world using the
 	 * gizmos material
 	 * @param start The start point of the line
 	 * @param end The end point of the line
@@ -93,26 +112,46 @@ public:
 
 	/**
 	 * @brief This method draws a quad in the world
-	 * @param model The model matrix
+	 * @param modelMatrix The model matrix
 	 * @param material The material to use
 	 * @param uv A vector with the uv for each vertex of the quad
 	 */
 	void DrawQuad(
-		glm::mat4* model, 
-		AMaterial* material, 
+		glm::mat4* modelMatrix,
+		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
 	);
 
 	/**
 	 * @brief This method draws a cube in the world
-	 * @param model The model matrix
+	 * @param modelMatrix The model matrix
 	 * @param material The material to use
 	 */
 	void DrawCube(
-		glm::mat4* model, 
+		glm::mat4* modelMatrix,
 		AMaterial* material,
 		std::vector<glm::vec2>* uv = nullptr
 	);
+
+	/** 
+	 * @brief Draws a custom model loaded and used by 
+	 * the RenderModelComponent
+	 * @param model The loaded model to 
+	 * @param material 
+	 * @param modelMatrix 
+	 */
+	void DrawModel(
+		Model* model,
+		AMaterial* material,
+		glm::mat4* modelMatrix
+	);
+
+	/**
+	 * @brief Sets a material to use in the renderer if its different from the current material
+	 * 
+	 * @param material The material to set.
+	 */
+	void SetCurrentMaterial(AMaterial* material);
 
 	/**
 	 * @brief This method sets the current camera
@@ -121,12 +160,12 @@ public:
 	void SetCurrentCamera(CameraComponent* camera);
 
 	/**
-	 * @brief Encapsulates the logic of calculation of the 
+	 * @brief Encapsulates the logic of calculation of the
 	 * model matrix of an object
 	 * @param object the object to calculate the matrix
 	 */
-	glm::mat4 GetModelMatrix(AObject* object);
-	
+	glm::mat4 GetTransformMatrix(AObject* object);
+
 	CameraComponent* GetCurrentCamera() const { return currentCamera; }
 };
 

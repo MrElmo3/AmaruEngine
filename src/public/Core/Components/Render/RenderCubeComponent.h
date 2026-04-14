@@ -7,6 +7,7 @@ class AMaterial;
 
 class RenderCubeComponent : public IComponent {
 public:
+
 	bool enableRender = true;
 	AMaterial* material;
 	

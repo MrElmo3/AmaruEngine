@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 project(AmaruEngine VERSION 0.0.1)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(BUILD_DIR ${CMAKE_SOURCE_DIR}/build/Assets)
 set(PRIVATE_DIR ${CMAKE_SOURCE_DIR}/src/private)
@@ -33,6 +34,7 @@ set(COMPONENTS_RENDER
 	${PRIVATE_DIR}/Core/Components/Render/RenderCubeComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/RenderQuadComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Render/Lights/LightComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Render/ModelRendererComponent.cpp
 )
 
 # COmponents source
@@ -73,6 +75,8 @@ set(RENDER
 	${PRIVATE_DIR}/Core/Render/Color.cpp
 	${PRIVATE_DIR}/Core/Render/Render.cpp
 	${PRIVATE_DIR}/Core/Render/Shader.cpp
+	${PRIVATE_DIR}/Core/Render/Mesh.cpp
+	${PRIVATE_DIR}/Core/Render/Model.cpp
 )
 
 #Scene mannager source
@@ -81,6 +85,7 @@ set(SCENES
 	${PRIVATE_DIR}/Core/Scenes/TestCollisionScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestPhongLightScene.cpp
+	${PRIVATE_DIR}/Core/Scenes/TestModelLoadingScene.cpp
 	${PRIVATE_DIR}/Core/Scenes/TestPBRLightScene.cpp
 )
 
@@ -102,7 +107,6 @@ set(UTIL
 	${PRIVATE_DIR}/Util/Graph.cpp
 	${PRIVATE_DIR}/Util/Logger.cpp
 	${PRIVATE_DIR}/Util/Singleton.cpp
-	${PRIVATE_DIR}/Util/Utility.cpp
 )
 
 #Game Source Files
@@ -145,9 +149,22 @@ target_include_directories(AmaruEngine PUBLIC
 	src/public)
 
 add_subdirectory(libs/glfw-3.4)
+
+set(ASSIMP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+add_subdirectory(external/assimp)
+
 target_link_libraries(AmaruEngine glfw)
+
+if(POLICY CMP0072)
+  cmake_policy(SET CMP0072 NEW)
+endif()
+
 find_package(OpenGL REQUIRED)
+
 target_link_libraries(AmaruEngine OpenGL::GL)
+target_link_libraries(AmaruEngine assimp)
 
 add_custom_target(copy_assets ALL
 	COMMAND ${CMAKE_COMMAND} -E copy_directory

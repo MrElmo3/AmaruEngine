@@ -1,17 +1,20 @@
-#version 330 core
+#version 420 core
 
 layout(location = 0) in vec3 _position;
-layout(location = 1) in vec2 _uv;
-layout(location = 2) in vec3 _normal;
+layout(location = 1) in vec3 _normal;
+layout(location = 2) in vec2 _uv;
 
 out vec2 uv;
 out vec3 normal;
 out vec3 fragPosition;
 
-uniform mat4 _model;
-uniform mat4 _view;
-uniform mat4 _projection;
+layout (std140, binding = 0) uniform CameraBlock {
+	mat4 _view;
+	mat4 _projection;
+	vec3 _viewPosition;
+};
 
+uniform mat4 _model;
 uniform mat3 _normalModel;
 
 void main(){
