@@ -39,7 +39,7 @@ struct Light {
 };
 
 in vec2 uv;
-in vec3 normal;
+in vec3 normalModel;
 in vec3 fragPosition;
 
 layout (std140, binding = 0) uniform CameraBlock {
@@ -58,7 +58,7 @@ uniform Material _material;
 vec3 CalcLight(Light light, vec3 normal, vec3 viewDirection, vec3 fragPosition);
 
 void main() {
-	vec3 norm = normalize(normal);
+	vec3 norm = normalize(normalModel);
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 
 	vec3 result;
@@ -104,7 +104,7 @@ vec3 CalcLight(Light light, vec3 normal, vec3 viewDirection, vec3 fragPosition) 
 
 	if(light.type != DIRECTIONAL) {
 		// atenuation
-		float distance    = length(light.position - fragPosition);
+		float distance = length(light.position - fragPosition);
 		float atenuation = 1.0 / (light.constantAtenuation + 
 			light.linearAtenuation * distance + 
   			light.quadraticAtenuation * (distance * distance)

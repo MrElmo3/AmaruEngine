@@ -40,7 +40,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new TestModelLoadingScene();
+	actualScene = new TestPBRLightScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

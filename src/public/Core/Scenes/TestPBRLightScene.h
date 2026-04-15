@@ -6,7 +6,7 @@ class Cube;
 class TestPBRLightScene : public ASceneController {
 
 private:
-	Cube* testCube;
+	AObject* testCube;
 	float value;
 
 public:

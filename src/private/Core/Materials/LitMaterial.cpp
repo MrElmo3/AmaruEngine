@@ -14,10 +14,18 @@ void LitMaterial::Use() {
 	if(isPBR){
 		this->shader->Use();
 		this->shader->SetVector3("_material.color", this->color);
+
 		this->shader->SetInt("_material.albedoMap", 0);
 		this->shader->SetInt("_material.normalMap", 1);
+		this->shader->SetInt("_material.metallicMap", 2);
+		this->shader->SetInt("_material.roughnessMap", 2);
+		this->shader->SetInt("_material.aoMap", 4);
+
 		this->shader->SetTexture(albedo, 0);
 		this->shader->SetTexture(normal, 1);
+		this->shader->SetTexture(metallic, 2);
+		this->shader->SetTexture(roughness, 3);
+		this->shader->SetTexture(ao, 4);
 		return;
 	}
 
