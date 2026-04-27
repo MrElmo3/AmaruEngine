@@ -37,7 +37,6 @@ void ASceneController::Start(){
 		if (!element->isEnabled) continue;
 		element->Start();
 	}
-
 }
 
 void ASceneController::SceneUpdate(){

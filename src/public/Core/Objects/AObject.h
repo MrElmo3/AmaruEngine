@@ -116,9 +116,9 @@ public:
 	 */
 	void RotateEuler(glm::vec3 rotation);
 
-	[[nodiscard]] glm::vec3 Forward() const;
-	[[nodiscard]] glm::vec3 Right() const;
-	[[nodiscard]] glm::vec3 Up() const;
+	glm::vec3 Forward() const;
+	glm::vec3 Right() const;
+	glm::vec3 Up() const;
 	
 	// Getters and setters
 	void SetRotation(glm::quat rotation);
@@ -126,9 +126,9 @@ public:
 	void SetWorldRotation(glm::quat rotation);
 	void SetWorldScale(glm::vec3 scale);
 	
-	[[nodiscard]] glm::vec3 GetWorldPosition()	const { return worldPosition; }
-	[[nodiscard]] glm::quat GetWorldRotation()	const { return glm::normalize(worldRotation); }
-	[[nodiscard]] glm::vec3 GetWorldScale()		const { return worldScale; }
+	glm::vec3 GetWorldPosition()	const { return worldPosition; }
+	glm::quat GetWorldRotation()	const { return glm::normalize(worldRotation); }
+	glm::vec3 GetWorldScale()		const { return worldScale; }
 
 	// Static functions
 
