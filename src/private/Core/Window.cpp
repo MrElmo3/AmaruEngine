@@ -5,6 +5,7 @@
 #include <iostream>
 #include <Core/Scenes/TestPBRLightScene.h>
 #include <Core/Scenes/TestModelLoadingScene.h>
+#include <Core/Scenes/TestCollisionScene.h>
 
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
@@ -40,7 +41,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new TestPBRLightScene();
+	actualScene = new TestColisionScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

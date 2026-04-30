@@ -396,7 +396,7 @@ void Render::DrawLineSegment(
 	glBufferSubData(
 		GL_ARRAY_BUFFER,
 		0,
-		vertices.size() * sizeof(glm::vec2),
+		vertices.size() * sizeof(float),
 		vertices.data()
 	);
 
