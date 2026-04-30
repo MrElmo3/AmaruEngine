@@ -7,8 +7,8 @@
 
 BoxColliderComponent::BoxColliderComponent(AObject* parent)
 	: ACollider3DComponent(parent) {
-	center = glm::vec3(0.0);
-	halfSize = glm::vec3(0.5);
+	// center = glm::vec3(0.0);
+	// halfSize = glm::vec3(0.5);
 }
 
 BoxColliderComponent::BoxColliderComponent(
@@ -17,21 +17,21 @@ BoxColliderComponent::BoxColliderComponent(
 	glm::vec3 halfSize)
 	: BoxColliderComponent(parent) {
 
-	this->center = center;
-	this->halfSize = halfSize;
+	// this->center = center;
+	// this->halfSize = halfSize;
 }
 
 BoxColliderComponent::~BoxColliderComponent() {
 }
 
 void BoxColliderComponent::FixedUpdate() {
-	worldCenter = parent->GetWorldPosition() + center;
+	// worldCenter = parent->GetWorldPosition() + center;
 
-	worldHalfSize = glm::vec3(
-		halfSize.x * parent->GetWorldScale().x,
-		halfSize.y * parent->GetWorldScale().y,
-		halfSize.z * parent->GetWorldScale().z
-	);
+	// worldHalfSize = glm::vec3(
+	// 	halfSize.x * parent->GetWorldScale().x,
+	// 	halfSize.y * parent->GetWorldScale().y,
+	// 	halfSize.z * parent->GetWorldScale().z
+	// );
 }
 
 void BoxColliderComponent::LateUpdate() {
@@ -44,11 +44,11 @@ void BoxColliderComponent::LateUpdate() {
 }
 
 BoxColliderComponent* BoxColliderComponent::SetCenter(glm::vec3 center){
-	this->center = center;
-	return this;
+	// this->center = center;
+	// return this;
 }
 
 BoxColliderComponent* BoxColliderComponent::SetHalfSize(glm::vec3 halfSize){
-	this->halfSize = halfSize;
-	return this;
+	// this->halfSize = halfSize;
+	// return this;
 }

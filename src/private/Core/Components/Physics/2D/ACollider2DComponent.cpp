@@ -1,1 +1,1 @@
-#include "../../../../../public/Core/Components/Physics/2D/ACollider2DComponent.h"
+#include <Core/Components/Physics/2D/ACollider2DComponent.h>
