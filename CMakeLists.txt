@@ -13,19 +13,20 @@ set(ASSETS_SRC_DIR ${CMAKE_SOURCE_DIR}/Assets)
 
 # Input components Source
 set(COMPONENTS_INPUT
-	${PRIVATE_DIR}/Core/Components/Input/FollowMouseComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Input/InputComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Input/FollowMouseComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Input/InputComponent.cpp
 )
 
 # Physcis components source
 set(COMPONENTS_PHYSICS
-	${PRIVATE_DIR}/Core/Components/Physics/AColliderComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Physics/ACollider.cpp
+	${PRIVATE_DIR}/Core/Components/Physics/2D/APhysics2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/ACollider2DComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Physics/2D/Rigidbody2DComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Physics/2D/Rigidbody2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/SquareColliderComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Physics/3D/ACollider3DComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Physics/3D/BoxColliderComponent.cpp
-	${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Physics/3D/ACollider3DComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Physics/3D/BoxColliderComponent.cpp
+	# ${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp
 )
 
 # Render components source
@@ -66,8 +67,8 @@ set(OBJECTS
 
 #Physics engine source
 set(PHYSICS
-	${PRIVATE_DIR}/Core/Physics/PhysicsEngine2D.cpp
-	${PRIVATE_DIR}/Core/Physics/PhysicsEngine3D.cpp
+	# ${PRIVATE_DIR}/Core/Physics/PhysicsEngine2D.cpp
+	# ${PRIVATE_DIR}/Core/Physics/PhysicsEngine3D.cpp
 )
 
 #Render engine source
@@ -136,7 +137,7 @@ set(SOURCES
 
 	${CORE}
 	${UTIL}
-	${GAME}
+	# ${GAME}
 )
 
 add_executable(

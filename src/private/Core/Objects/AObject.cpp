@@ -32,7 +32,7 @@ AObject::~AObject() = default;
 
 void AObject::Awake() {
 	for (auto element : components) {
-		if (!element->isEnabled) continue;
+		if (!element->IsEnabled()) continue;
 		element->Awake();
 	}
 	for (auto element : children) {
@@ -43,7 +43,7 @@ void AObject::Awake() {
 
 void AObject::Start() {
 	for (auto element : components) {
-		if (!element->isEnabled) continue;
+		if (!element->IsEnabled()) continue;
 		element->Start();
 	}
 	for (auto element : children) {
@@ -55,7 +55,7 @@ void AObject::Start() {
 void AObject::FixedUpdate() {
 
 	for (auto element : components) {
-		if (!element->isEnabled) continue;
+		if (!element->IsEnabled()) continue;
 		element->FixedUpdate();
 	}
 
@@ -86,7 +86,7 @@ void AObject::Update(const double deltaTime) {
 	}
 
 	for (auto element : components) {
-		if (!element->isEnabled) continue;
+		if (!element->IsEnabled()) continue;
 		element->Update(deltaTime);
 	}
 
@@ -98,7 +98,7 @@ void AObject::Update(const double deltaTime) {
 
 void AObject::LateUpdate() {
 	for (auto element : components) {
-		if (!element->isEnabled) continue;
+		if (!element->IsEnabled()) continue;
 		element->LateUpdate();
 	}
 	for (auto element : children) {

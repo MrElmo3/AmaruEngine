@@ -6,8 +6,8 @@
 Cube::Cube(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
 
-	renderComponent = AddComponent<RenderCubeComponent>();
-	colliderComponent = AddComponent<BoxColliderComponent>();
+	// renderComponent = AddComponent<RenderCubeComponent>();
+	// colliderComponent = AddComponent<BoxColliderComponent>();
 }
 
 void Cube::Update(double deltaTime) {

@@ -1,15 +1,15 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
-
-#include "Core/Components/IComponent.h"
+#include <Core/Components/IComponent.h>
+#include <Core/Components/Physics/2D/APhysics2DComponent.h>
 
 class ACollider2DComponent;
 
-class Rigidbody2DComponent : public IComponent {
+class Rigidbody2DComponent : public APhysics2DComponent{
 
 private:
-	std::vector<ACollider2DComponent*> colliders;
+	
 
 public:
 	glm::vec2 velocity;

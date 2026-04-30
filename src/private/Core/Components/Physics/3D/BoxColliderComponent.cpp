@@ -5,8 +5,7 @@
 #include "Core/Render/Render.h"
 
 
-BoxColliderComponent::BoxColliderComponent(AObject* parent)
-	: ACollider3DComponent(parent) {
+BoxColliderComponent::BoxColliderComponent(AObject* parent) {
 	// center = glm::vec3(0.0);
 	// halfSize = glm::vec3(0.5);
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include <Core/Objects/AObject.h>
 
-class BoxColliderComponent;
+// class BoxColliderComponent;
 class RenderCubeComponent;
 
 class Cube : public AObject {
@@ -12,12 +12,12 @@ public:
 
 protected:
 	RenderCubeComponent* renderComponent;
-	BoxColliderComponent* colliderComponent;
+	// BoxColliderComponent* colliderComponent;
 
 protected:
 	void Update(double deltaTime) override;
 
 public:
 	RenderCubeComponent* GetRenderComponent() const { return renderComponent; }
-	BoxColliderComponent* GetBoxColliderComponent() const { return colliderComponent; }
+	// BoxColliderComponent* GetBoxColliderComponent() const { return colliderComponent; }
 };

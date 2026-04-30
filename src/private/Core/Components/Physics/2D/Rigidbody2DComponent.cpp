@@ -5,7 +5,7 @@
 #include "Core/Objects/AObject.h"
 #include "Core/Physics/PhysicsEngine2D.h"
 
-Rigidbody2DComponent::Rigidbody2DComponent(AObject* parent) : IComponent(parent) {
+Rigidbody2DComponent::Rigidbody2DComponent(AObject* parent) : APhysics2DComponent(parent) {
 	// velocity = glm::vec2(0.0f);
 }
 
@@ -13,6 +13,7 @@ Rigidbody2DComponent::~Rigidbody2DComponent() {
 }
 
 void Rigidbody2DComponent::Awake() {
+	APhysics2DComponent::AwakePhysics();
 	// for (IComponent* component : parent->components) {
 	// 	ACollider2DComponent* collider = dynamic_cast<ACollider2DComponent*>(component);
 	// 	if (collider != nullptr) {

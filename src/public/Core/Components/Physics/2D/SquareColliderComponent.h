@@ -20,6 +20,13 @@ public:
 	void FixedUpdate() override;
 	void LateUpdate() override;
 
+protected:
+	void UpdateVertexPoints() override;
+
+public:
+	glm::vec3 GetSupportPoint(glm::vec2 direction);
+	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
+
 	glm::vec2 GetWorldCenter() const { return worldCenter; }
 	glm::vec2 GetWorldHalfSize() const { return worldHalfSize; }
 

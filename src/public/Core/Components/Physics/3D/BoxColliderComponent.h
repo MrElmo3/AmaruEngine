@@ -1,12 +1,12 @@
 #pragma once
 #include <glm/glm.hpp>
-
+#include <Core/Objects/AObject.h>
 #include "ACollider3DComponent.h"
 
-class BoxColliderComponent : public ACollider3DComponent {
-private:
-	glm::vec3 center;
-	glm::vec3 halfSize;
+class BoxColliderComponent {
+// private:
+// 	glm::vec3 center;
+// 	glm::vec3 halfSize;
 
 	glm::vec3 worldCenter;
 	glm::vec3 worldHalfSize;
@@ -14,10 +14,10 @@ private:
 public:
 	BoxColliderComponent(AObject* parent);
 	BoxColliderComponent(AObject* parent, glm::vec3 center, glm::vec3 halfSize);
-	~BoxColliderComponent() override;
+	~BoxColliderComponent();
 
-	void FixedUpdate() override;
-	void LateUpdate() override;
+	void FixedUpdate();
+	void LateUpdate();
 
 	glm::vec3 GetWorldCenter() const { return worldCenter; }
 	glm::vec3 GetWorldHalfSize() const { return worldHalfSize; }

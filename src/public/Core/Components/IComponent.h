@@ -3,8 +3,10 @@
 class AObject;
 
 class IComponent {
-public:
+protected:
 	bool isEnabled = true;
+
+public:
 	
 	AObject* parent;
 	IComponent() : parent(nullptr) {}
@@ -16,4 +18,6 @@ public:
 	virtual void Update(double deltaTime) {}
 	virtual void LateUpdate() {}
 	virtual void End() {}
+	virtual void SetEnable(bool isEnable) { this->isEnabled = isEnable; }
+	bool IsEnabled() { return isEnabled; }
 };

@@ -34,11 +34,11 @@ TestColisionScene::TestColisionScene() {
 	// movement->SetSpeed(1);
 	// movement->SetDirection(glm::vec2(1, -1));
 
-	auto* staticSquare = new Square("staticSquare", nullptr, this);
-	staticSquare->GetRenderComponent()->enableRender = false;
+	square1 = new Square("staticSquare", nullptr, this);
+	square1->GetRenderComponent()->enableRender = false;
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	staticSquare->scale = glm::vec3(0.5f);
+	square1->scale = glm::vec3(0.5f);
 
 	// auto* sumSquare = new Square("sumSquare", nullptr, this );
 	// sumSquare->GetRenderComponent()->enableRender = false;
@@ -61,6 +61,9 @@ TestColisionScene::TestColisionScene() {
 }
 
 void TestColisionScene::Update(double deltaTime) {
+
+	square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
+
 	// std::cout<<deltaTime<<'\n';
 
 	// auto* testSquare = dynamic_cast<Square*>(objects[0]);

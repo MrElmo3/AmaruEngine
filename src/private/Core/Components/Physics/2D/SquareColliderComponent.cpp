@@ -17,8 +17,9 @@ SquareColliderComponent::SquareColliderComponent(
 	glm::vec2 halfSize)
 	: SquareColliderComponent(parent) {
 
-	// this->center = center;
-	// this->halfSize = halfSize;
+	this->center = center;
+	this->halfSize = halfSize;
+
 }
 
 SquareColliderComponent::~SquareColliderComponent() {
@@ -31,23 +32,51 @@ void SquareColliderComponent::FixedUpdate() {
 		halfSize.x * parent->GetWorldScale().x,
 		halfSize.y * parent->GetWorldScale().y
 	);
+	UpdateVertexPoints();
+}
+
+void SquareColliderComponent::UpdateVertexPoints() {
+	vertexPoints = {
+		glm::vec3(worldCenter.x - worldHalfSize.x, worldCenter.y - worldHalfSize.y, 0), //bottom left
+		glm::vec3(worldCenter.x + worldHalfSize.x, worldCenter.y - worldHalfSize.y, 0), //bottom right
+		glm::vec3(worldCenter.x + worldHalfSize.x, worldCenter.y + worldHalfSize.y, 0), //top right
+		glm::vec3(worldCenter.x - worldHalfSize.x, worldCenter.y + worldHalfSize.y, 0), //top left
+	};
+}
+
+glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec2 direction) {
+	return GetSupportPoint(glm::vec3(direction, 0.f));
+}
+
+glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
+	float maxDotProduct = 0.f;
+	int index = -1;
+
+	for(int i = 0; i < vertexPoints.size(); i++) {
+		float currentDotProduct = glm::dot(direction, vertexPoints[i]);
+
+		if(maxDotProduct < currentDotProduct) {
+			maxDotProduct = currentDotProduct;
+			index = i;
+		}
+	}
+	return vertexPoints[index];
 }
 
 void SquareColliderComponent::LateUpdate() {
 	if (Global::DEBUG) {
-		Render::GetInstance().DrawQuadLine(
-			worldCenter,
-			worldHalfSize * 2.001f,
-			Color::GREEN);
+		DrawDebugOutline();
 	}
 }
 
 SquareColliderComponent* SquareColliderComponent::SetCenter(glm::vec2 center) {
 	this->center = center;
+	UpdateVertexPoints();
 	return this;
 }
 
 SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize) {
 	this->halfSize = halfSize;
+	UpdateVertexPoints();
 	return this;
 }

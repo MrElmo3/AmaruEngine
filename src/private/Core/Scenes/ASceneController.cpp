@@ -9,9 +9,12 @@
 #include <Core/Components/Render/Lights/LightComponent.h>
 #include <Core/Render/LightData.h>
 #include <Util/Logger.h>
+#include <Core/Physics/APhysicsEngine.h>
+#include <Core/Objects/AObject.h>
 
 
 ASceneController::ASceneController(){
+	scenePhysicsType = DISABLED;
 }
 
 ASceneController::~ASceneController(){
@@ -28,8 +31,8 @@ void ASceneController::Awake(){
 		if (!element->isEnabled) continue;
 		element->Awake();
 	}
-	PhysicsEngine3D::Awake(objects);
-	PhysicsEngine2D::Awake(objects);
+	// PhysicsEngine3D::Awake(objects);
+	// PhysicsEngine2D::Awake(objects);
 }
 
 void ASceneController::Start(){
@@ -64,8 +67,8 @@ void ASceneController::FixedUpdate() {
 		if (!element->isEnabled) continue;
 		element->FixedUpdate();
 	}
-	PhysicsEngine3D::Update();
-	PhysicsEngine2D::Update();
+	// PhysicsEngine3D::Update();
+	// PhysicsEngine2D::Update();
 }
 
 void ASceneController::Update(double deltaTime){

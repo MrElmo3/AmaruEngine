@@ -1,8 +1,8 @@
 #include "Core/Components/Physics/3D/Rigidbody3DComponent.h"
 
 #include <vector>
-#include "Core/Components/Physics/3D/ACollider3DComponent.h"
-#include "Core/Components/Physics/3D/BoxColliderComponent.h"
+// #include "Core/Components/Physics/3D/ACollider3DComponent.h"
+// #include "Core/Components/Physics/3D/BoxColliderComponent.h"
 #include "Core/Physics/PhysicsEngine3D.h"
 #include "Core/Objects/AObject.h"
 

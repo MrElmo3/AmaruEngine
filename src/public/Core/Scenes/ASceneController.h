@@ -1,6 +1,6 @@
 #pragma once
+#include <Core/Physics/APhysicsEngine.h>
 #include <set>
-#include "Core/Objects/AObject.h"
 
 struct LightData;
 class LightComponent;
@@ -17,6 +17,11 @@ private:
 	double physicsTimeOffset = 0.0;
 	
 public:
+	/**
+	 * @brief Indicates if the physics engine is allowed in 
+	 */
+	PhysicsType scenePhysicsType;
+
 	/**
 	 * @brief The list of objects in the scene
 	 */

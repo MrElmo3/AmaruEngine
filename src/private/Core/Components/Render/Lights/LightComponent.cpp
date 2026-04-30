@@ -2,6 +2,7 @@
 #include <Core/Components/Render/Lights/LightComponent.h>
 #include <Util/Logger.h>
 #include <Core/Render/Shader.h>
+#include <Core/Objects/AObject.h>
 #include <string>
 
 LightComponent::LightComponent(AObject* _parent) : IComponent(_parent){
