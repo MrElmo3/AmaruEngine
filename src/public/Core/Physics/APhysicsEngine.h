@@ -13,6 +13,9 @@ class AObject;
 class APhysicsEngine{
 
 public:
-	virtual void Awake(std::vector<AObject*> objects) {};
+	virtual void Awake(std::vector<AObject*> objects);
 	virtual void UpdatePhysics() {};
+	
+private:
+	virtual void RegisterObject(AObject* object) {};
 };

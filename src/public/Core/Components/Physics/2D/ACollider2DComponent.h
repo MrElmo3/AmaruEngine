@@ -9,6 +9,9 @@ public:
 	 */
 	glm::vec2 position;
 
+	/**
+	 * @brief world position of the center of the 2D collider
+	 */
 	glm::vec2 worldPosition;
 
 	ACollider2DComponent(AObject* parent, glm::vec2 position);

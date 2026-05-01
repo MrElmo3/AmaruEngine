@@ -11,19 +11,25 @@ class Rigidbody2DComponent;
  * This class encasulates all the physics calculations for 2D objects.
  */
 class PhysicsEngine2D : public APhysicsEngine {
+
+private:
+	class PhysicsProxy {
+	public:
+		AObject* baseObject;
+		Rigidbody2DComponent* rigidbody;
+		std::vector<ACollider2DComponent*> colliders;
+	};
+
+	std::vector<PhysicsProxy*> physicObjects;
+
+	//!We need a quadtree here
 	
 public:
-	/**
-	 * This class represents a 2D raycast hit.
-	 */
-	class Raycast2D {
-	public:
-		bool hit = false;
-		float time;
-		glm::vec2 position;
-	};
+	virtual void UpdatePhysics() override;
 	
 private:
+	virtual void RegisterObject(AObject* object) override;
+
 	/**
 	 * A list of all rigidbodies in the scene.
 	 */

@@ -89,7 +89,7 @@ public:
 	/**
 	 * @brief Gets a component of the object.
 	 * @tparam T The type of the component.
-	 * @return The component of the object.
+	 * @return The first component found of the object.
 	 */
 	template<typename T>
 	std::enable_if_t<std::is_base_of_v<IComponent, T>, T*>
@@ -100,6 +100,18 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	template<typename T>
+	std::enable_if_t<std::is_base_of_v<IComponent, T>, std::vector<T*>>
+	GetComponentsOfType() {
+		std::vector<T*> returnComponents = std::vector<T*>();
+		for (IComponent* component : components) {
+			if (T* t = dynamic_cast<T*>(component)) {
+				returnComponents.push_back(t);
+			}
+		}
+		return returnComponents;
 	}
 
 	void AddChild(AObject* child);

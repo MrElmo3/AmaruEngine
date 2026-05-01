@@ -16,7 +16,7 @@
 
 TestColisionScene::TestColisionScene() {
 
-	scenePhysicsType = PhysicsType::ENABLE_3D;
+	scenePhysicsType = PhysicsType::ENABLE_2D;
 
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
@@ -41,6 +41,8 @@ TestColisionScene::TestColisionScene() {
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
 	square1->scale = glm::vec3(0.5f);
+	auto addedComponent = square1->AddComponent<SquareColliderComponent>();
+	addedComponent->SetPosition(glm::vec2(0, 0.25f));
 
 	// auto* sumSquare = new Square("sumSquare", nullptr, this );
 	// sumSquare->GetRenderComponent()->enableRender = false;
@@ -64,7 +66,7 @@ TestColisionScene::TestColisionScene() {
 
 void TestColisionScene::Update(double deltaTime) {
 
-	// square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
+	square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
 
 	// std::cout<<deltaTime<<'\n';
 

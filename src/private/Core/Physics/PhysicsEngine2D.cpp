@@ -1,17 +1,41 @@
 #include <Core/Physics/PhysicsEngine2D.h>
 
-
 // #include "Core/Global.h"
-// #include "Core/Components/Physics/2D/ACollider2DComponent.h"
-// #include "Core/Components/Physics/2D/Rigidbody2DComponent.h"
-// #include "Core/Components/Physics/2D/SquareColliderComponent.h"
-// #include "Core/Objects/AObject.h"
+#include <Core/Components/Physics/2D/ACollider2DComponent.h>
+#include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
+#include <Core/Objects/AObject.h>
 
-// std::vector<Rigidbody2DComponent*> PhysicsEngine2D::rigidbodies =
-// 	std::vector<Rigidbody2DComponent*>();
+void PhysicsEngine2D::RegisterObject(AObject* object){
+	Rigidbody2DComponent* objectRigidbody = object->GetComponent<Rigidbody2DComponent>();
+	std::vector<ACollider2DComponent*> objectColliders = object->GetComponentsOfType<ACollider2DComponent>();
 
-// std::vector<ACollider2DComponent*> PhysicsEngine2D::colliders =
-// 	std::vector<ACollider2DComponent*>();
+	if(objectRigidbody == nullptr && objectColliders.size() == 0) return;
+
+	PhysicsProxy* newPhysicObject = new PhysicsProxy();
+	newPhysicObject->baseObject = object;
+	newPhysicObject->rigidbody = objectRigidbody;
+	newPhysicObject->colliders = objectColliders;
+
+	physicObjects.push_back(newPhysicObject);
+}
+
+void PhysicsEngine2D::UpdatePhysics() {
+	//	Move the objects
+	//		Apply forces (Update aceleration and velocities)
+	//		Move the object to the position
+
+	//	Update the Quad/Octree positions
+	
+	//	Check collisions
+	//		GetNearColliders
+	//		Check if the RB Colliders colied with one of the near colliders
+	//		If so, ResolveColision
+	//			Calculates Manifold
+	//			Updates RB's velocity
+	//			Repell RB
+
+
+}
 
 // void PhysicsEngine2D::Awake(std::vector<AObject*> objects) {
 // 	for (AObject* object : objects) {
