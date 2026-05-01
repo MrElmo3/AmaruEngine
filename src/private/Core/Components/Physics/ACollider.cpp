@@ -13,7 +13,7 @@ void ACollider::UpdateVertexPoints() {}
 void ACollider::DrawDebugOutline() {
 	glm::vec3 debugColliderColor = Color::GREEN;
 
-	for (uint i = 0; i < vertexPoints.size(); i++)
+	for (unsigned int i = 0; i < vertexPoints.size(); i++)
 	{
 		if(i == vertexPoints.size() - 1){
 			Render::GetInstance().DrawLineSegment(

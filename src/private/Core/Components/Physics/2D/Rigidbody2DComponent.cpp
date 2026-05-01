@@ -26,9 +26,7 @@ void Rigidbody2DComponent::End() {
 	// colliders.clear();
 }
 
-void Rigidbody2DComponent::PhysicsUpdate(
-	std::vector<ACollider2DComponent*> nearColliders,
-	float fixedDeltaTime) {
+void Rigidbody2DComponent::PhysicsUpdate(float fixedDeltaTime) {
 	
 	// for (ACollider2DComponent* externalCollider : nearColliders) {
 	// 	for (ACollider2DComponent* rbCollider: colliders) {

@@ -19,22 +19,24 @@ enum RigidbodyConstraints {
 };
 
 class ACollider;
-class ARigidbodyComponent {
+class ARigidbody {
 
 protected:
 	std::vector<ACollider*> colliders;
 
 public:
 	glm::vec3 velocity;
+	glm::vec3 aceleration;
+	
 	glm::vec3 angularVelocity;
+	glm::vec3 angularAceleration;
+
 	float mass = 1.f;
 	float gravityScale = 1.f;
+
 	RigidbodyConstraints constraints = RigidbodyConstraints::NONE;
 
-
 protected:
-	void PhysicsUpdate(float fixedDeltaTime);
-
+	virtual void PhysicsUpdate(float fixedDeltaTime);
 	void SetForce(glm::vec3 force);
-
 };
