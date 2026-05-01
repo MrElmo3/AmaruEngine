@@ -21,6 +21,7 @@ Rigidbody2DComponent::~Rigidbody2DComponent() {
 	angularVelocity = 0;
 	angularAceleration = 0;
 	centerOfMass = glm::vec2(0);
+	APhysics2DComponent::~APhysics2DComponent();
 }
 
 void Rigidbody2DComponent::AddForce(glm::vec2 force) {

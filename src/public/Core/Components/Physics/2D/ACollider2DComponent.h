@@ -13,6 +13,7 @@ public:
 
 	ACollider2DComponent(AObject* parent, glm::vec2 position);
 	ACollider2DComponent(AObject* parent);
+	virtual ~ACollider2DComponent() override;
 
 	virtual void FixedUpdate() override;
 

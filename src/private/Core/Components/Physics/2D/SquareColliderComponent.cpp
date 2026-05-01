@@ -21,6 +21,9 @@ SquareColliderComponent::SquareColliderComponent(AObject* parent)
 }
 
 SquareColliderComponent::~SquareColliderComponent() {
+	halfSize = glm::vec2(0);
+	worldHalfSize = glm::vec2(0);
+	ACollider2DComponent::~ACollider2DComponent();
 }
 
 void SquareColliderComponent::FixedUpdate() {

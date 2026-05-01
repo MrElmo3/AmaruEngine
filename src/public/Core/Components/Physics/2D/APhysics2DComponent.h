@@ -8,9 +8,9 @@ protected:
 
 public: 
 	APhysics2DComponent(AObject* parent);
-	~APhysics2DComponent();
-	void Awake() override;
-	void SetEnable(bool isEnable) override;
+	virtual ~APhysics2DComponent() override;
+	virtual void Awake() override;
+	virtual void SetEnable(bool isEnable) override;
 
 protected:
 	void AwakePhysics();

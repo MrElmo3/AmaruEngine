@@ -23,7 +23,7 @@ public:
 	Rigidbody2DConstraints RigidbodyConstraints = Rigidbody2DConstraints::NONE;
 
 	Rigidbody2DComponent(AObject* parent);
-	~Rigidbody2DComponent() override;
+	virtual ~Rigidbody2DComponent() override;
 
 	void AddForce(glm::vec2 force);
 };

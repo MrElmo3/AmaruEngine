@@ -16,6 +16,8 @@
 
 TestColisionScene::TestColisionScene() {
 
+	scenePhysicsType = PhysicsType::ENABLE_3D;
+
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
 	cameraObject->position = glm::vec3(0, 0, 2);
@@ -62,7 +64,7 @@ TestColisionScene::TestColisionScene() {
 
 void TestColisionScene::Update(double deltaTime) {
 
-	square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
+	// square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
 
 	// std::cout<<deltaTime<<'\n';
 
