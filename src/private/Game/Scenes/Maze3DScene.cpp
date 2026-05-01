@@ -18,8 +18,8 @@ Maze3DScene::Maze3DScene() {
 	// AddObject(player);
 
 	auto* maze = new Maze("Maze", nullptr, this);
-	AddObject(maze);
+	// AddObject(maze);
 	
 	auto* player = new Player("Maze", nullptr, this);
-	AddObject(player);
+	// AddObject(player);
 }

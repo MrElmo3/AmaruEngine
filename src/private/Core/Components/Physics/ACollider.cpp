@@ -1,12 +1,16 @@
 #include <Core/Components/Physics/ACollider.h>
 #include <Core/Render/Render.h>
 #include <Core/Render/Color.h>
+#include <Util/Logger.h>
 
 ACollider::ACollider() {}
 
 ACollider::~ACollider() {}
 
-glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){}
+glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){ 
+	Logger::Warning("GetSupportPoint its not well defined or direction is 0");
+	return glm::vec3(NAN);
+}
 
 void ACollider::UpdateVertexPoints() {}
 

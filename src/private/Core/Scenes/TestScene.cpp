@@ -25,7 +25,7 @@ TestScene::TestScene() {
 		// ->SetColor(glm::vec3(1, 0.5, 1));
 		// ->SetTexture("Assets/Textures/HL.jpg");
 	
-	AddObject(square2);
+	// AddObject(square2);
 
 	auto* cameraObject = new EmptyObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->AddComponent<CameraComponent>();
@@ -33,7 +33,7 @@ TestScene::TestScene() {
 	cameraComponent->orthographic = true;
 	cameraComponent->mainCamera = true;
 	cameraComponent->orthoSize = 2.0f;
-	AddObject(cameraObject);
+	// AddObject(cameraObject);
 
 	// CubeObject* cube = new CubeObject(nullptr, "Cube");
 	// cube->scale = glm::vec3(1, 1, 1);

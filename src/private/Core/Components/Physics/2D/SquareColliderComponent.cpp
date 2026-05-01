@@ -5,42 +5,41 @@
 #include "Core/Render/Color.h"
 #include "Core/Render/Render.h"
 
-SquareColliderComponent::SquareColliderComponent(AObject* parent)
-	: ACollider2DComponent(parent) {
-	center = glm::vec2(0.0);
-	halfSize = glm::vec2(0.5);
-}
-
 SquareColliderComponent::SquareColliderComponent(
 	AObject* parent,
-	glm::vec2 center,
+	glm::vec2 position,
 	glm::vec2 halfSize)
-	: SquareColliderComponent(parent) {
-
-	this->center = center;
+	: ACollider2DComponent(parent, position) {
 	this->halfSize = halfSize;
+}
 
+SquareColliderComponent::SquareColliderComponent(AObject* parent, glm::vec2 position)
+	:  SquareColliderComponent(parent, position, glm::vec2(0.5f)) {}
+
+SquareColliderComponent::SquareColliderComponent(AObject* parent)
+	: SquareColliderComponent(parent, glm::vec2(0)) {
 }
 
 SquareColliderComponent::~SquareColliderComponent() {
 }
 
 void SquareColliderComponent::FixedUpdate() {
-	worldCenter = parent->GetWorldPosition() + glm::vec3(center, 0) ;
+	UpdateWorldHalfSize();
+	ACollider2DComponent::FixedUpdate();
+}
 
-	worldHalfSize = glm::vec2(
-		halfSize.x * parent->GetWorldScale().x,
-		halfSize.y * parent->GetWorldScale().y
-	);
-	UpdateVertexPoints();
+void SquareColliderComponent::LateUpdate() {
+	if (Global::DEBUG) {
+		DrawDebugOutline();
+	}
 }
 
 void SquareColliderComponent::UpdateVertexPoints() {
 	vertexPoints = {
-		glm::vec3(worldCenter.x - worldHalfSize.x, worldCenter.y - worldHalfSize.y, 0), //bottom left
-		glm::vec3(worldCenter.x + worldHalfSize.x, worldCenter.y - worldHalfSize.y, 0), //bottom right
-		glm::vec3(worldCenter.x + worldHalfSize.x, worldCenter.y + worldHalfSize.y, 0), //top right
-		glm::vec3(worldCenter.x - worldHalfSize.x, worldCenter.y + worldHalfSize.y, 0), //top left
+		glm::vec3(worldPosition.x - worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom left
+		glm::vec3(worldPosition.x + worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom right
+		glm::vec3(worldPosition.x + worldHalfSize.x, worldPosition.y + worldHalfSize.y, 0), //top right
+		glm::vec3(worldPosition.x - worldHalfSize.x, worldPosition.y + worldHalfSize.y, 0), //top left
 	};
 }
 
@@ -49,6 +48,8 @@ glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec2 direction) {
 }
 
 glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
+	if(glm::length(direction) < 0.0001f) ACollider::GetSupportPoint(direction);
+	
 	float maxDotProduct = 0.f;
 	int index = -1;
 
@@ -63,20 +64,15 @@ glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	return vertexPoints[index];
 }
 
-void SquareColliderComponent::LateUpdate() {
-	if (Global::DEBUG) {
-		DrawDebugOutline();
-	}
-}
-
-SquareColliderComponent* SquareColliderComponent::SetCenter(glm::vec2 center) {
-	this->center = center;
-	UpdateVertexPoints();
-	return this;
-}
-
 SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize) {
 	this->halfSize = halfSize;
 	UpdateVertexPoints();
 	return this;
 }
+
+void SquareColliderComponent::UpdateWorldHalfSize() {
+	worldHalfSize = glm::vec2(
+		halfSize.x * parent->GetWorldScale().x,
+		halfSize.y * parent->GetWorldScale().y
+	);
+};

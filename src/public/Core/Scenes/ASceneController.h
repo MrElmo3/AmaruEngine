@@ -1,10 +1,12 @@
 #pragma once
 #include <Core/Physics/APhysicsEngine.h>
+#include <vector>
 #include <set>
 
 struct LightData;
 class LightComponent;
 class Shader;
+class AObject;
 class ASceneController {
 
 	friend class AObject;
@@ -20,7 +22,12 @@ public:
 	/**
 	 * @brief Indicates if the physics engine is allowed in 
 	 */
-	PhysicsType scenePhysicsType;
+	PhysicsType scenePhysicsType = PhysicsType::DISABLED;
+
+	/**
+	 * @brief Indicates if the physics engine is allowed in 
+	 */
+	APhysicsEngine* physicsEngine;
 
 	/**
 	 * @brief The list of objects in the scene
@@ -89,7 +96,7 @@ public:
 	 */
 	std::vector<LightData> GetSceneLightsData();
 
-protected:
+private:
 	/**
 	 * Adds an object to this scene
 	 * @param object The object to add

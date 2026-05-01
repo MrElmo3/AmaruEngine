@@ -6,7 +6,9 @@ Square::Square(const std::string &_name, AObject* _parent, ASceneController* _sc
 	: AObject(_name, _parent, _scene){
 
 	renderComponent = AddComponent<RenderQuadComponent>();
-	colliderComponent =  AddComponent<SquareColliderComponent>()
-		->SetCenter(glm::vec2(0.f))
-		->SetHalfSize(glm::vec2(0.5f));
+
+	colliderComponent =  AddComponent<SquareColliderComponent>();
+	colliderComponent
+		->SetHalfSize(glm::vec2(0.5f))
+		->SetPosition(glm::vec2(0.f));
 }

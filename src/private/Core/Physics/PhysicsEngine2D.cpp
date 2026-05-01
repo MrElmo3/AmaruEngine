@@ -1,4 +1,5 @@
-// #include "Core/Physics/PhysicsEngine2D.h"
+#include <Core/Physics/PhysicsEngine2D.h>
+
 
 // #include "Core/Global.h"
 // #include "Core/Components/Physics/2D/ACollider2DComponent.h"

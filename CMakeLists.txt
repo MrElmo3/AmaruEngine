@@ -67,8 +67,8 @@ set(OBJECTS
 
 #Physics engine source
 set(PHYSICS
-	# ${PRIVATE_DIR}/Core/Physics/PhysicsEngine2D.cpp
-	# ${PRIVATE_DIR}/Core/Physics/PhysicsEngine3D.cpp
+	${PRIVATE_DIR}/Core/Physics/PhysicsEngine2D.cpp
+	${PRIVATE_DIR}/Core/Physics/PhysicsEngine3D.cpp
 )
 
 #Render engine source

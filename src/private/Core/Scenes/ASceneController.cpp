@@ -4,35 +4,39 @@
 #include <GLFW/glfw3.h>
 #include <Core/Global.h>
 #include <Core/Render/Render.h>
+#include <Core/Physics/APhysicsEngine.h>
 #include <Core/Physics/PhysicsEngine2D.h>
 #include <Core/Physics/PhysicsEngine3D.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
 #include <Core/Render/LightData.h>
 #include <Util/Logger.h>
-#include <Core/Physics/APhysicsEngine.h>
 #include <Core/Objects/AObject.h>
 
 
-ASceneController::ASceneController(){
-	scenePhysicsType = DISABLED;
-}
+ASceneController::ASceneController(){}
 
-ASceneController::~ASceneController(){
-}
+ASceneController::~ASceneController(){}
 
 void ASceneController::AddObject(AObject* object){
 	objects.push_back(object);
 }
 
 void ASceneController::Awake(){
+
+	if(scenePhysicsType == PhysicsType::ENABLE_2D){
+		physicsEngine = new PhysicsEngine2D();
+	}
+	else if(scenePhysicsType == PhysicsType::ENABLE_3D){
+		physicsEngine = new PhysicsEngine3D();
+	}
+
 	previous = glfwGetTime();
 	
 	for (auto element : objects){
 		if (!element->isEnabled) continue;
 		element->Awake();
 	}
-	// PhysicsEngine3D::Awake(objects);
-	// PhysicsEngine2D::Awake(objects);
+	if(physicsEngine != nullptr) physicsEngine->Awake(objects);
 }
 
 void ASceneController::Start(){
@@ -67,8 +71,7 @@ void ASceneController::FixedUpdate() {
 		if (!element->isEnabled) continue;
 		element->FixedUpdate();
 	}
-	// PhysicsEngine3D::Update();
-	// PhysicsEngine2D::Update();
+	if(physicsEngine != nullptr) physicsEngine->UpdatePhysics();
 }
 
 void ASceneController::Update(double deltaTime){
