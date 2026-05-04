@@ -2,17 +2,11 @@
 
 #include <Core/Global.h>
 #include <Core/Components/Render/RenderQuadComponent.h>
-#include <Core/Components/Input/FollowMouseComponent.h>
-#include <Core/Components/Input/InputComponent.h>
-#include <Game/Components/MovementComponent.h>
 #include <Core/Components/Physics/2D/SquareColliderComponent.h>
-#include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
 #include <Core/Objects/2D/Square.h>
-#include <Core/Objects/3D/Cube.h>
-#include <Core/Render/Color.h>
-#include <Core/Render/Render.h>
 #include <Core/Components/Render/CameraComponent.h>
 #include <Core/Objects/General/CameraObject.h>
+#include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
 
 TestColisionScene::TestColisionScene() {
 
@@ -23,7 +17,7 @@ TestColisionScene::TestColisionScene() {
 	cameraObject->position = glm::vec3(0, 0, 2);
 	cameraComponent->mainCamera = true;
 	cameraComponent->orthographic = true;
-	cameraComponent->orthoSize = 2.0f;
+	cameraComponent->orthoSize = 4.0f;
 	
 	// auto* testSquare = new Square("squareMouse", nullptr, this);
 	// testSquare->GetRenderComponent()->enableRender = true;
@@ -40,50 +34,23 @@ TestColisionScene::TestColisionScene() {
 	square1->GetRenderComponent()->enableRender = false;
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	square1->position = glm::vec3(0, 4, 0);
 	square1->scale = glm::vec3(0.5f);
-	auto addedComponent = square1->AddComponent<SquareColliderComponent>();
-	addedComponent->SetPosition(glm::vec2(0, 0.25f));
+	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
+	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
+	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
 
-	// auto* sumSquare = new Square("sumSquare", nullptr, this );
-	// sumSquare->GetRenderComponent()->enableRender = false;
-	// sumSquare->GetColliderComponent()->isTrigger = true;
-	// sumSquare->position = glm::vec3(staticSquare->GetWorldPosition());
-	// sumSquare->scale = staticSquare->scale + testSquare->scale ;
-	// AddObject(sumSquare);
-
-	// SquareObject* resultSquare = new SquareObject(nullptr, "resultSquare");
-	// resultSquare->GetRenderComponent()->enableRender = false;
-	// resultSquare->scale = Vector3(0.3);
-	// AddObject(resultSquare);
-
-	// SquareObject* startSquare = new SquareObject(nullptr, "startSquare");
-	// startSquare->GetRenderComponent()->enableRender = false;
-	// startSquare->position = Vector2(1.5, 1.7);
-	// startSquare->scale = Vector3(0.3);
-	// AddObject(startSquare);
-	
+	squareFloor = new Square("squareFloor", nullptr, this);
+	squareFloor->position = glm::vec3(0, -2, 0);
+	squareFloor->scale = glm::vec3(5, 1, 1);
+	squareFloor->GetRenderComponent()->enableRender = false;
 }
 
 void TestColisionScene::Update(double deltaTime) {
 
-	square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
+	// square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
 
 	// std::cout<<deltaTime<<'\n';
-
-	// auto* testSquare = dynamic_cast<Square*>(objects[0]);
-	// Rigidbody2DComponent* rbTestSquare = nullptr;
-	// for (IComponent* component : testSquare->components) {
-	// 	rbTestSquare = dynamic_cast<Rigidbody2DComponent*>(component);
-	// 	if (rbTestSquare != nullptr) {
-	// 		break;
-	// 	}
-	// }
-	
-	// Render::GetInstance().DrawLineSegment(
-	// 	testSquare->GetGlobalPosition(),
-	// 	testSquare->GetGlobalPosition() + rbTestSquare->velocity * Global::FIXED_DELTA_TIME,
-	// 	Color::RED
-	// 	);
 	
 	ASceneController::Update(deltaTime);
 

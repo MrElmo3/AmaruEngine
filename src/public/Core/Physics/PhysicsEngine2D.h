@@ -13,22 +13,28 @@ class Rigidbody2DComponent;
 class PhysicsEngine2D : public APhysicsEngine {
 
 private:
-	class PhysicsProxy {
+	class PhysicObject {
 	public:
 		AObject* baseObject;
 		Rigidbody2DComponent* rigidbody;
 		std::vector<ACollider2DComponent*> colliders;
 	};
 
-	std::vector<PhysicsProxy*> physicObjects;
+	std::vector<PhysicObject*> physicObjects;
 
 	//!We need a quadtree here
 	
-public:
-	virtual void UpdatePhysics() override;
-	
 private:
 	virtual void RegisterObject(AObject* object) override;
+
+	virtual void MoveObjects() override;
+	void MoveRigidbody(Rigidbody2DComponent* rigidbody);
+	void UpdateAceleration(Rigidbody2DComponent* rigidbody);
+	void UpdateVelocity(Rigidbody2DComponent* rigidbody);
+	void UpdatePosition(Rigidbody2DComponent* rigidbody);
+
+	virtual void CheckCollisions() override;
+	// void CheckPhysicsObjectColision
 
 	/**
 	 * A list of all rigidbodies in the scene.

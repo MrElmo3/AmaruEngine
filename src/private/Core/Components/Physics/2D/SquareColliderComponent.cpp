@@ -38,6 +38,9 @@ void SquareColliderComponent::LateUpdate() {
 }
 
 void SquareColliderComponent::UpdateVertexPoints() {
+	//TODO 
+	//- Add local and global vertex, need to use the model transform to move the points 
+	//- propperly (sames as the vertex shader)
 	vertexPoints = {
 		glm::vec3(worldPosition.x - worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom left
 		glm::vec3(worldPosition.x + worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom right

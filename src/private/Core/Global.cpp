@@ -17,3 +17,6 @@ const glm::vec3 Global::UP = glm::vec3(0, 1, 0);
 const float Global::AMBIENT_LIGHT_STRENGTH = 0.1f;
 const float Global::SPECULAR_LIGHT_STRENGTH = 0.5f;
 const unsigned int Global::SHININESS = 4;
+
+//Physics
+const glm::vec3 Global::GRAVITY = 9.81f * glm::vec3(0.f, -1.f, 0.f);

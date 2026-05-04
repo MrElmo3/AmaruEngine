@@ -1,6 +1,6 @@
 #include <Core/Physics/PhysicsEngine2D.h>
 
-// #include "Core/Global.h"
+#include <Core/Global.h>
 #include <Core/Components/Physics/2D/ACollider2DComponent.h>
 #include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
 #include <Core/Objects/AObject.h>
@@ -11,7 +11,7 @@ void PhysicsEngine2D::RegisterObject(AObject* object){
 
 	if(objectRigidbody == nullptr && objectColliders.size() == 0) return;
 
-	PhysicsProxy* newPhysicObject = new PhysicsProxy();
+	PhysicObject* newPhysicObject = new PhysicObject();
 	newPhysicObject->baseObject = object;
 	newPhysicObject->rigidbody = objectRigidbody;
 	newPhysicObject->colliders = objectColliders;
@@ -19,13 +19,39 @@ void PhysicsEngine2D::RegisterObject(AObject* object){
 	physicObjects.push_back(newPhysicObject);
 }
 
-void PhysicsEngine2D::UpdatePhysics() {
-	//	Move the objects
-	//		Apply forces (Update aceleration and velocities)
-	//		Move the object to the position
+void PhysicsEngine2D::MoveObjects() {
+	for(auto physicObject : physicObjects){
+		if(physicObject->rigidbody != nullptr)
+			MoveRigidbody(physicObject->rigidbody);
+	}
+}
+
+void PhysicsEngine2D::MoveRigidbody(Rigidbody2DComponent* rigidbody) {
+	UpdateAceleration(rigidbody);
+	UpdateVelocity(rigidbody);
+	UpdatePosition(rigidbody);
+}
+
+void PhysicsEngine2D::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
+	rigidbody->forceAccumulator = Global::GRAVITY * rigidbody->gravityScale;
+	rigidbody->aceleration = rigidbody->forceAccumulator / rigidbody->mass;
+	rigidbody->forceAccumulator = glm::vec3(0);
+}
+
+void PhysicsEngine2D::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
+	rigidbody->velocity += rigidbody->aceleration * Global::FIXED_DELTA_TIME;
+}
+
+void PhysicsEngine2D::UpdatePosition(Rigidbody2DComponent* rigidbody) {
+	rigidbody->parent->position += glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME, 0.f);
+}
+
+void PhysicsEngine2D::CheckCollisions() {
+	// for(int i = 0; i < physicObjects)
+}
 
 	//	Update the Quad/Octree positions
-	
+
 	//	Check collisions
 	//		GetNearColliders
 	//		Check if the RB Colliders colied with one of the near colliders
@@ -35,73 +61,6 @@ void PhysicsEngine2D::UpdatePhysics() {
 	//			Repell RB
 
 
-}
-
-// void PhysicsEngine2D::Awake(std::vector<AObject*> objects) {
-// 	for (AObject* object : objects) {
-// 		AddObjectRigidbodyAndCollider(object);
-// 	}
-// }
-
-// void PhysicsEngine2D::Update() {
-// 	for (int i = 0; i < rigidbodies.size(); i++) {
-// 		std::vector<ACollider2DComponent*> nearColliders = GetNearColliders(rigidbodies[i]);
-// 		rigidbodies[i]->PhysicsUpdate(nearColliders, Global::FIXED_DELTA_TIME);
-// 	}
-// }
-
-// void PhysicsEngine2D::AddObjectRigidbodyAndCollider(AObject* object) {
-// 	for (IComponent* component : object->components) {
-
-// 		Rigidbody2DComponent* rigidbody = dynamic_cast<Rigidbody2DComponent*>(component);
-// 		if (rigidbody != nullptr) {
-// 			AddRigidbody(rigidbody);
-// 			continue;
-// 		}
-
-// 		ACollider2DComponent* collider = dynamic_cast<ACollider2DComponent*>(component);
-// 		if (collider != nullptr) {
-// 			AddCollider(collider);
-// 			continue;
-// 		}
-// 	}
-
-// 	for (AObject* child : object->children) {
-// 		AddObjectRigidbodyAndCollider(child);
-// 	}
-// }
-
-// void PhysicsEngine2D::AddRigidbody(Rigidbody2DComponent* rigidbody) {
-// 	rigidbodies.push_back(rigidbody);
-// }
-
-// void PhysicsEngine2D::AddCollider(ACollider2DComponent* collider) {
-// 	colliders.push_back(collider);
-// }
-
-// std::vector<ACollider2DComponent*> PhysicsEngine2D::GetNearColliders(Rigidbody2DComponent* rigidbody) {
-// 	std::vector<ACollider2DComponent*> nearColliders = std::vector<ACollider2DComponent*>();
-
-// 	// glm::vec2 maxDistance = rigidbody->velocity != glm::vec2(0) ?
-// 	// 	rigidbody->velocity : rigidbody->parent->GetWorldScale();
-	
-// 	// for (ACollider2DComponent* collider : colliders) {
-// 	// 	if (rigidbody->parent == collider->parent) continue;
-
-// 	// 	glm::vec3 distance = rigidbody->parent->GetWorldPosition() - collider->parent->GetWorldPosition();
-		
-// 	// 	if (glm::length(distance) <= glm::length(maxDistance)) {
-// 	// 		nearColliders.push_back(collider);
-// 	// 	}
-// 	// }
-
-// 	return nearColliders;
-// }
-
-// void PhysicsEngine2D::CalcMinAndMax(glm::vec2& min, glm::vec2& max, glm::vec2 center, glm::vec2 halfSize) {
-// 	min = center - halfSize;
-// 	max = center + halfSize;
-// }
 
 // bool PhysicsEngine2D::PointIntersectsSquareCollider(glm::vec2 point, SquareColliderComponent* collider) {
 // 	glm::vec2 min, max;

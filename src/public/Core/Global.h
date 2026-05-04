@@ -47,4 +47,6 @@ public:
 	static const float SPECULAR_LIGHT_STRENGTH;
 	static const unsigned int SHININESS;
 
+	//--- Physics ---
+	static const glm::vec3 GRAVITY;
 };

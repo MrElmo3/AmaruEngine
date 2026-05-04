@@ -7,6 +7,7 @@ public:
 	TestColisionScene();
 
 	Square* square1;
+	Square* squareFloor;
 	
 	void Update(double deltaTime) override;
 };

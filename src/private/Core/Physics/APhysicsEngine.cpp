@@ -5,3 +5,9 @@ void APhysicsEngine::Awake(std::vector<AObject*> objects){
 		RegisterObject(object);
 	}
 }
+
+void APhysicsEngine::UpdatePhysics() {
+	MoveObjects();
+	UpdateTree();
+	CheckCollisions();
+}

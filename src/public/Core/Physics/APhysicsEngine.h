@@ -11,11 +11,13 @@ enum class PhysicsType {
 
 class AObject;
 class APhysicsEngine{
-
 public:
 	virtual void Awake(std::vector<AObject*> objects);
-	virtual void UpdatePhysics() {};
-	
+	virtual void UpdatePhysics();
+
 private:
 	virtual void RegisterObject(AObject* object) {};
+	virtual void MoveObjects() {};
+	virtual void UpdateTree() {};
+	virtual void CheckCollisions() {};
 };
