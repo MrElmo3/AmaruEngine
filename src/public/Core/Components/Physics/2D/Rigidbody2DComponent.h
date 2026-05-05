@@ -25,5 +25,9 @@ public:
 	Rigidbody2DComponent(AObject* parent);
 	virtual ~Rigidbody2DComponent() override;
 
+private:
+	bool ParentHasRigidbody();
+
+public:
 	void AddForce(glm::vec2 force);
 };

@@ -3,6 +3,7 @@
 void APhysicsEngine::Awake(std::vector<AObject*> objects){
 	for (auto* object : objects) {
 		RegisterObject(object);
+		
 	}
 }
 

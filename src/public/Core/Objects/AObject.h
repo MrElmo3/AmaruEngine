@@ -102,11 +102,9 @@ public:
 		return component;
 	}
 
-	/**
-	 * @brief Gets a component of the object.
-	 * @tparam T The type of the component.
-	 * @return The first component found of the object.
-	 */
+	/// @brief Gets a component of the object.
+	/// @tparam T The type of the component that inherits from IComponent.
+	///@return The first component found of the object.
 	template<typename T>
 	std::enable_if_t<std::is_base_of_v<IComponent, T>, T*>
 	GetComponent() {
@@ -118,6 +116,9 @@ public:
 		return nullptr;
 	}
 
+	/// @brief Searchs all of the components for a specific type of component T.
+	/// @tparam T The type of the component that inherits from IComponent.
+	/// @return A vector of all of the components recolected.
 	template<typename T>
 	std::enable_if_t<std::is_base_of_v<IComponent, T>, std::vector<T*>>
 	GetComponentsOfType() {
@@ -130,25 +131,35 @@ public:
 		return returnComponents;
 	}
 
+	/// @brief Searchs recursievly all of the children for a sp[ecific type of component T.
+	/// @tparam T The type of the component that inherits from IComponent.
+	/// @return A vector of all of the components recolected.
+	template<typename T>
+	std::enable_if_t<std::is_base_of_v<IComponent, T>, std::vector<T*>>
+	GetAllComponentsInChildren() {
+		std::vector<T*> returnComponents = GetComponentsOfType<T>();
+
+		for (auto& child : children) {
+			std::vector<T*> childComponents = GetAllComponentsInChildren<T>();
+			returnComponents.insert(returnComponents.end(), childComponents.begin(), childComponents.end());
+		}
+		return returnComponents;
+	}
+
 	void AddChild(AObject* child);
 
-	/**
-	 * @brief Translates the object in the local space.
-	 * 
-	 * @param positionDelta The amount to translate the object.
-	 */
+	/// @brief Translates the object in the local space.
+	/// @param positionDelta The amount to translate the object.
 	void Translate(glm::vec3 positionDelta);
 
-	/**
-	 * @brief Rotates the object in the local space.
-	 * @param rotation The quaternion to apply.
-	 */
+	
+	/// @brief Rotates the object in the local space.
+	/// @param rotation The quaternion to apply.
 	void Rotate(glm::quat rotationDelta);
 
-	/**
-	 * @brief Rotates the object in the local space.
-	 * @param rotation The euler angles to apply.
-	 */
+	
+	/// @brief Rotates the object in the local space.
+	/// @param rotation The euler angles to apply.
 	void RotateEuler(glm::vec3 rotationDelta);
 
 	glm::vec3 Forward() const { return GetWorldRotation() * Global::FORWARD; }

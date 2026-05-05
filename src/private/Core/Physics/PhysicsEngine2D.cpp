@@ -6,14 +6,18 @@
 #include <Core/Objects/AObject.h>
 
 void PhysicsEngine2D::RegisterObject(AObject* object){
-	Rigidbody2DComponent* objectRigidbody = object->GetComponent<Rigidbody2DComponent>();
-	std::vector<ACollider2DComponent*> objectColliders = object->GetComponentsOfType<ACollider2DComponent>();
+	Rigidbody2DComponent* rigidbody = object->GetComponent<Rigidbody2DComponent>();
+	std::vector<ACollider2DComponent*> objectColliders = 
+		rigidbody != nullptr ? 
+		object->GetAllComponentsInChildren<ACollider2DComponent>() :
+		object->GetComponentsOfType<ACollider2DComponent>();
 
-	if(objectRigidbody == nullptr && objectColliders.size() == 0) return;
+	if(rigidbody == nullptr && objectColliders.size() == 0) return;
+	if(!rigidbody->PhysicsEnabled()) return;
 
 	PhysicObject* newPhysicObject = new PhysicObject();
 	newPhysicObject->baseObject = object;
-	newPhysicObject->rigidbody = objectRigidbody;
+	newPhysicObject->rigidbody = rigidbody;
 	newPhysicObject->colliders = objectColliders;
 
 	physicObjects.push_back(newPhysicObject);
@@ -33,7 +37,7 @@ void PhysicsEngine2D::MoveRigidbody(Rigidbody2DComponent* rigidbody) {
 }
 
 void PhysicsEngine2D::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
-	rigidbody->forceAccumulator = Global::GRAVITY * rigidbody->gravityScale;
+	rigidbody->forceAccumulator += Global::GRAVITY * rigidbody->gravityScale;
 	rigidbody->aceleration = rigidbody->forceAccumulator / rigidbody->mass;
 	rigidbody->forceAccumulator = glm::vec3(0);
 }

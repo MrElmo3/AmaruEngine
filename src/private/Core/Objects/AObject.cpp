@@ -144,6 +144,7 @@ void AObject::SetRotation(glm::quat rotation) {
 
 void AObject::SetScale(glm::vec3 scale) {
 	this->scale = scale;
+	MarkDirty();
 }
 
 void AObject::SetWorldPosition(const glm::vec3 position) {
@@ -157,12 +158,13 @@ void AObject::SetWorldPosition(const glm::vec3 position) {
 	else {
 		this->position = position;
 	}
-	this->worldPosition = position;
+	MarkDirty();
 }
 
 void AObject::SetWorldRotation(glm::quat rotation) {
 	// rotation = glm::normalize(rotation);
 	// this->rotationQuat = rotation;
+	MarkDirty();
 }
 
 void AObject::SetWorldScale(const glm::vec3 scale) {
@@ -176,7 +178,7 @@ void AObject::SetWorldScale(const glm::vec3 scale) {
 	else {
 		this->scale = scale;
 	}
-	this->scale = scale;
+	MarkDirty();
 }
 
 void AObject::UpdateWorldValues() {
