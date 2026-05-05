@@ -27,7 +27,7 @@ void ACollider2DComponent::LateUpdate() {
 ACollider2DComponent* ACollider2DComponent::SetPosition(glm::vec2 position) {
 	this->position = position;
 	UpdateWorldPosition();
-	UpdateVertexPoints();
+	UpdateLocalVertexPoints();
 	return this;
 }
 

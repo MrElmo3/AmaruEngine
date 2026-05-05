@@ -12,7 +12,7 @@ glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){
 	return glm::vec3(NAN);
 }
 
-void ACollider::UpdateVertexPoints() {}
+void ACollider::UpdateLocalVertexPoints() {}
 
 void ACollider::UpdateWorldVertexPoints() {}
 

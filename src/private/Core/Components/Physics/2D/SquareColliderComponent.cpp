@@ -38,7 +38,7 @@ void SquareColliderComponent::LateUpdate() {
 	}
 }
 
-void SquareColliderComponent::UpdateVertexPoints() {
+void SquareColliderComponent::UpdateLocalVertexPoints() {
 	vertexPoints = {
 		glm::vec3(position.x - halfSize.x, position.y - halfSize.y, 0), //bottom left
 		glm::vec3(position.x + halfSize.x, position.y - halfSize.y, 0), //bottom right
@@ -70,7 +70,7 @@ glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
 
 SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize) {
 	this->halfSize = halfSize;
-	UpdateVertexPoints();
+	UpdateLocalVertexPoints();
 	return this;
 }
 

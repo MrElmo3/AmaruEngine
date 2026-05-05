@@ -16,7 +16,7 @@ public:
 	virtual glm::vec3 GetSupportPoint(glm::vec3 direction);
 
 protected:
-	virtual void UpdateVertexPoints();
+	virtual void UpdateLocalVertexPoints();
 	virtual void UpdateWorldVertexPoints();
 	void DrawDebugOutline();
 };

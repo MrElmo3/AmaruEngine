@@ -17,7 +17,7 @@ public:
 	virtual void LateUpdate() override;
 
 protected:
-	virtual void UpdateVertexPoints() override;
+	virtual void UpdateLocalVertexPoints() override;
 
 private:
 	void UpdateWorldHalfSize();
