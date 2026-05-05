@@ -19,7 +19,7 @@ TestPhongLightScene::TestPhongLightScene() {
 
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(1.5, 0, 1.5);
+	cameraObject->SetPosition(glm::vec3(1.5, 0, 1.5));
 	cameraObject->RotateEuler(glm::vec3(0, -45, 0));
 	cameraComponent->mainCamera = true;
 
@@ -31,8 +31,8 @@ TestPhongLightScene::TestPhongLightScene() {
 	// 	->SetRotationSpeed(5.0f);
 	
 	testCube = new Cube( "Square2", nullptr, this);
-	testCube->scale = glm::vec3(1, 1, 1);
-	testCube->position = glm::vec3(0, 0, 0);
+	testCube->SetScale(glm::vec3(1, 1, 1));
+	testCube->SetPosition(glm::vec3(0, 0, 0));
 	dynamic_cast<LitMaterial*>(testCube->GetRenderComponent()->material)
 		->SetColor(1.0f, 0.0f, 0.0f, 1.0f)
 		->SetDiffuse("Assets/Textures/container2.png")
@@ -45,12 +45,12 @@ TestPhongLightScene::TestPhongLightScene() {
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 	
 	PointLight* light2 = new PointLight("light2", nullptr, this);
-	light2->position = glm::vec3(2, 0 , -2);
+	light2->SetPosition(glm::vec3(2, 0 , -2));
 	light2->SetRange(25);
 
 	// SpotLight* light3 = new SpotLight("light3", nullptr, this);
-	// light3->position = glm::vec3(0, 0, 2);
-	// light3->scale = glm::vec3(0.1);
+	// light3->SetPosition(glm::vec3(0, 0, 2);
+	// light3->SetScale(glm::vec3(0.1);
 	// light3->SetRange(200)
 	// 	->SetSpotRange(12.5, 17.5);
 }

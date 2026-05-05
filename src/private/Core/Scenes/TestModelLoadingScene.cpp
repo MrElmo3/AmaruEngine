@@ -13,15 +13,15 @@
 TestModelLoadingScene::TestModelLoadingScene() {
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(0, 0, 4);
+	cameraObject->SetPosition(glm::vec3(0, 0, 4));
 	cameraObject->RotateEuler(glm::vec3(0, 0, 0));
 	cameraComponent->mainCamera = true;
 
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 
 	testModel = new EmptyObject("testModel", nullptr, this);
-	testModel->scale = glm::vec3(0.5);
-	testModel->position = glm::vec3(0, 0, 0);
+	testModel->SetScale(glm::vec3(0.5));
+	testModel->SetPosition(glm::vec3(0, 0, 0));
 	testModel->RotateEuler(glm::vec3(0, 0, 0));
 
 	ModelRendererComponent* modelRenderer = testModel->AddComponent<ModelRendererComponent>();

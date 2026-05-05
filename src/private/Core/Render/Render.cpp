@@ -543,19 +543,3 @@ void Render::SetCurrentMaterial(AMaterial* material) {
 void Render::SetCurrentCamera(CameraComponent* camera) {
 	currentCamera = camera;
 }
-
-glm::mat4 Render::GetTransformMatrix(AObject* object) {
-
-	glm::mat4 modelMatrix = glm::mat4(1);
-
-	glm::quat rotation = object->GetWorldRotation();
-	glm::vec3 vectorRot = glm::vec3(rotation.x, rotation.y, rotation.z);
-	float angle = 2 * glm::acos(rotation.w);
-
-	modelMatrix = glm::translate(modelMatrix, object->GetWorldPosition());
-	if (vectorRot != glm::vec3(0))
-		modelMatrix = glm::rotate(modelMatrix, angle, vectorRot);
-	modelMatrix = glm::scale(modelMatrix, object->GetWorldScale());
-
-	return modelMatrix;
-}

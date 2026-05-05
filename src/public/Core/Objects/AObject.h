@@ -3,19 +3,20 @@
 #include <string>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
+#include <Core/Global.h>
 
-#include "Core/Components/IComponent.h"
-
+class IComponent;
 class ASceneController;
 
 class AObject {
-	friend class ASceneController;
+friend class ASceneController;
 public:
 	std::string name;
 
 public:
 	bool isEnabled = true;
-	
+
+protected:
 	/**
 	 * Local position
 	 */
@@ -24,14 +25,13 @@ public:
 	/**
 	 * Local rotation
 	 */
-	glm::quat rotationQuat = { 1, 0, 0, 0};
+	glm::quat rotation = { 1, 0, 0, 0};
 
 	/**
 	 * Local scale
 	 */
 	glm::vec3 scale = { 1, 1, 1 };
 
-protected:
 	/**
 	 * World position
 	 */
@@ -42,10 +42,16 @@ protected:
 	 */
 	glm::quat worldRotation = { 1, 0, 0, 0 };
 
-	/**
-	 * World scale
-	 */
+	
+	/// @brief World scale
 	glm::vec3 worldScale = { 1, 1, 1 };
+
+	
+	/// @brief World transform matrix of the object.
+	glm::mat4 worldTransform;
+
+	/// @brief Flag used when the object changes its position, rotation or scale.
+	bool isDirty = true;
 
 public:
 	
@@ -72,6 +78,16 @@ protected:
 	virtual void Update(double deltaTime);
 	virtual void LateUpdate();
 	virtual void End();
+
+private:
+	/// @brief Marks this object, its components and its children as dirty;
+	void MarkDirty();
+
+	/// @brief Updates the World values if is dirty.
+	void UpdateWorldValues();
+
+	/// @brief Updated the matrix transform if is dirty.
+	void UpdateTransform();	
 
 public:
 
@@ -117,31 +133,50 @@ public:
 	void AddChild(AObject* child);
 
 	/**
+	 * @brief Translates the object in the local space.
+	 * 
+	 * @param positionDelta The amount to translate the object.
+	 */
+	void Translate(glm::vec3 positionDelta);
+
+	/**
 	 * @brief Rotates the object in the local space.
 	 * @param rotation The quaternion to apply.
 	 */
-	void Rotate(glm::quat rotation);
+	void Rotate(glm::quat rotationDelta);
 
 	/**
 	 * @brief Rotates the object in the local space.
 	 * @param rotation The euler angles to apply.
 	 */
-	void RotateEuler(glm::vec3 rotation);
+	void RotateEuler(glm::vec3 rotationDelta);
 
-	glm::vec3 Forward() const;
-	glm::vec3 Right() const;
-	glm::vec3 Up() const;
+	glm::vec3 Forward() const { return GetWorldRotation() * Global::FORWARD; }
+	glm::vec3 Right() 	const { return GetWorldRotation() * Global::RIGHT; }
+	glm::vec3 Up() 		const { return GetWorldRotation() * Global::UP; }
 	
 	// Getters and setters
+	void SetPosition(glm::vec3 position);
 	void SetRotation(glm::quat rotation);
+	void SetScale(glm::vec3 size);
+
 	void SetWorldPosition(glm::vec3 position);
 	void SetWorldRotation(glm::quat rotation);
 	void SetWorldScale(glm::vec3 scale);
 	
+	glm::vec3 GetPosition()		const { return position; }
+	glm::quat GetRotation()		const { return glm::normalize(rotation); }
+	glm::vec3 GetScale()		const { return scale; }
+
 	glm::vec3 GetWorldPosition()	const { return worldPosition; }
 	glm::quat GetWorldRotation()	const { return glm::normalize(worldRotation); }
 	glm::vec3 GetWorldScale()		const { return worldScale; }
 
+	glm::mat4 GetTransformMatrix() 	const { return worldTransform; }
+
+	bool IsDirty() { return isDirty; }
+
+public:
 	// Static functions
 
 	/**

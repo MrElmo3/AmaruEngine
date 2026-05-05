@@ -32,20 +32,18 @@ void SquareColliderComponent::FixedUpdate() {
 }
 
 void SquareColliderComponent::LateUpdate() {
+	ACollider2DComponent::LateUpdate();
 	if (Global::DEBUG) {
 		DrawDebugOutline();
 	}
 }
 
 void SquareColliderComponent::UpdateVertexPoints() {
-	//TODO 
-	//- Add local and global vertex, need to use the model transform to move the points 
-	//- propperly (sames as the vertex shader)
 	vertexPoints = {
-		glm::vec3(worldPosition.x - worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom left
-		glm::vec3(worldPosition.x + worldHalfSize.x, worldPosition.y - worldHalfSize.y, 0), //bottom right
-		glm::vec3(worldPosition.x + worldHalfSize.x, worldPosition.y + worldHalfSize.y, 0), //top right
-		glm::vec3(worldPosition.x - worldHalfSize.x, worldPosition.y + worldHalfSize.y, 0), //top left
+		glm::vec3(position.x - halfSize.x, position.y - halfSize.y, 0), //bottom left
+		glm::vec3(position.x + halfSize.x, position.y - halfSize.y, 0), //bottom right
+		glm::vec3(position.x + halfSize.x, position.y + halfSize.y, 0), //top right
+		glm::vec3(position.x - halfSize.x, position.y + halfSize.y, 0), //top left
 	};
 }
 

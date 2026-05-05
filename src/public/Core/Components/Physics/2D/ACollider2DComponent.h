@@ -18,10 +18,12 @@ public:
 	ACollider2DComponent(AObject* parent);
 	virtual ~ACollider2DComponent() override;
 
-	virtual void FixedUpdate() override;
+	// virtual void FixedUpdate() override;
+	virtual void LateUpdate() override;
 
 private:
 	void UpdateWorldPosition();
+	void UpdateWorldVertexPoints() override;
 	
 public:
 	ACollider2DComponent* SetPosition(glm::vec2 position);

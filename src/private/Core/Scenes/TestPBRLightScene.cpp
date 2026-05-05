@@ -21,7 +21,7 @@ TestPBRLightScene::TestPBRLightScene() {
 
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(0, 0, 4);
+	cameraObject->SetPosition(glm::vec3(0, 0, 4));
 	cameraObject->RotateEuler(glm::vec3(0, 0, 0));
 	cameraComponent->mainCamera = true;
 
@@ -33,8 +33,8 @@ TestPBRLightScene::TestPBRLightScene() {
 	// 	->SetRotationSpeed(5.0f);
 	
 	testCube = new EmptyObject("testModel", nullptr, this);
-	testCube->scale = glm::vec3(0.5);
-	testCube->position = glm::vec3(0, 0, 0);
+	testCube->SetScale(glm::vec3(0.5));
+	testCube->SetPosition(glm::vec3(0, 0, 0));
 	testCube->RotateEuler(glm::vec3(0, 0, 0));
 
 	ModelRendererComponent* modelRenderer = testCube->AddComponent<ModelRendererComponent>();
@@ -57,7 +57,7 @@ TestPBRLightScene::TestPBRLightScene() {
 	DirectionalLight* light = new DirectionalLight("light", nullptr, this);
 	
 	PointLight* light2 = new PointLight("light2", nullptr, this);
-	light2->position = glm::vec3(1, 0 , -1);
+	light2->SetPosition(glm::vec3(1, 0 , -1));
 	light2->SetRange(10);
 
 	// SpotLight* light3 = new SpotLight("light3", nullptr, this);

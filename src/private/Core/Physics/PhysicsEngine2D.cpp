@@ -43,7 +43,7 @@ void PhysicsEngine2D::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
 }
 
 void PhysicsEngine2D::UpdatePosition(Rigidbody2DComponent* rigidbody) {
-	rigidbody->parent->position += glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME, 0.f);
+	rigidbody->parent->Translate(glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME, 0.f));
 }
 
 void PhysicsEngine2D::CheckCollisions() {

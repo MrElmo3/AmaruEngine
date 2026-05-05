@@ -14,24 +14,25 @@ glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){
 
 void ACollider::UpdateVertexPoints() {}
 
+void ACollider::UpdateWorldVertexPoints() {}
+
 void ACollider::DrawDebugOutline() {
 	glm::vec3 debugColliderColor = Color::GREEN;
-	float extraOffset = 1.f;
 
-	for (unsigned int i = 0; i < vertexPoints.size(); i++)
+	for (unsigned int i = 0; i < worldVertexPoints.size(); i++)
 	{
-		if(i == vertexPoints.size() - 1){
+		if(i == worldVertexPoints.size() - 1){
 			Render::GetInstance().DrawLineSegment(
-				vertexPoints[i] * extraOffset,
-				vertexPoints[0] * extraOffset,
+				worldVertexPoints[i],
+				worldVertexPoints[0],
 				debugColliderColor
 			);
 			continue;
 		}
 
 		Render::GetInstance().DrawLineSegment(
-			vertexPoints[i] * extraOffset,
-			vertexPoints[i+1] * extraOffset,
+			worldVertexPoints[i],
+			worldVertexPoints[i+1],
 			debugColliderColor
 		);
 	}

@@ -14,7 +14,7 @@ TestColisionScene::TestColisionScene() {
 
 	auto* cameraObject = new CameraObject("Camera", nullptr, this);
 	auto* cameraComponent = cameraObject->GetCameraComponent();
-	cameraObject->position = glm::vec3(0, 0, 2);
+	cameraObject->SetPosition(glm::vec3(0, 0, 2));
 	cameraComponent->mainCamera = true;
 	cameraComponent->orthographic = true;
 	cameraComponent->orthoSize = 4.0f;
@@ -25,8 +25,8 @@ TestColisionScene::TestColisionScene() {
 	// testSquare->AddComponent<Rigidbody2DComponent>();
 	// testSquare->AddComponent<InputComponent>();
 	// MovementComponent* movement =  testSquare->AddComponent<MovementComponent>();
-	// testSquare->position = glm::vec3(-0.5, 0.5, 0);
-	// testSquare->scale = glm::vec3(0.3f);
+	// testSquare->SetPosition(glm::vec3(-0.5, 0.5, 0);
+	// testSquare->SetScale(glm::vec3(0.3f);
 	// movement->SetSpeed(1);
 	// movement->SetDirection(glm::vec2(1, -1));
 
@@ -34,15 +34,16 @@ TestColisionScene::TestColisionScene() {
 	square1->GetRenderComponent()->enableRender = false;
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	square1->position = glm::vec3(0, 4, 0);
-	square1->scale = glm::vec3(0.5f);
+	square1->SetPosition(glm::vec3(0, 4, 0));
+	square1->SetScale(glm::vec3(0.5f));
+	square1->Forward();
 	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
 	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
 	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
 
 	squareFloor = new Square("squareFloor", nullptr, this);
-	squareFloor->position = glm::vec3(0, -2, 0);
-	squareFloor->scale = glm::vec3(5, 1, 1);
+	squareFloor->SetPosition(glm::vec3(0, -2, 0));
+	squareFloor->SetScale(glm::vec3(5, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
 }
 

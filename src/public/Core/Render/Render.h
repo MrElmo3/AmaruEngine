@@ -159,13 +159,6 @@ public:
 	 */
 	void SetCurrentCamera(CameraComponent* camera);
 
-	/**
-	 * @brief Encapsulates the logic of calculation of the
-	 * model matrix of an object
-	 * @param object the object to calculate the matrix
-	 */
-	glm::mat4 GetTransformMatrix(AObject* object);
-
 	CameraComponent* GetCurrentCamera() const { return currentCamera; }
 };
 

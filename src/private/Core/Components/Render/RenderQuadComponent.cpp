@@ -22,6 +22,6 @@ void RenderQuadComponent::LateUpdate() {
 void RenderQuadComponent::Draw() const {
 	if (!enableRender) return;
 
-	glm::mat4 model = Render::GetInstance().GetTransformMatrix(parent);
+	glm::mat4 model = parent->GetTransformMatrix();
 	Render::GetInstance().DrawQuad(&model, material);
 }
