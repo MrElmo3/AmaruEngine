@@ -140,7 +140,7 @@ public:
 		std::vector<T*> returnComponents = GetComponentsOfType<T>();
 
 		for (auto& child : children) {
-			std::vector<T*> childComponents = GetAllComponentsInChildren<T>();
+			std::vector<T*> childComponents = child->GetAllComponentsInChildren<T>();
 			returnComponents.insert(returnComponents.end(), childComponents.begin(), childComponents.end());
 		}
 		return returnComponents;
@@ -184,6 +184,8 @@ public:
 	glm::vec3 GetWorldScale()		const { return worldScale; }
 
 	glm::mat4 GetTransformMatrix() 	const { return worldTransform; }
+
+	std::vector<AObject*> GetChildren() const { return children; }
 
 	bool IsDirty() { return isDirty; }
 

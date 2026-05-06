@@ -20,8 +20,27 @@ ACollider2DComponent::~ACollider2DComponent() {
 }
 
 void ACollider2DComponent::LateUpdate() {
-	if(isDirty) UpdateWorldVertexPoints();
+	if(isDirty) UpdateWorldValues();
 	APhysics2DComponent::LateUpdate();
+	if (Global::DEBUG) {
+		DrawDebugOutline();
+	}
+}
+
+std::pair<glm::vec3, glm::vec3> ACollider2DComponent::GetAABBContainer() {
+	if(isDirty) UpdateWorldValues();
+	return ACollider::GetAABBContainer();
+}
+
+void ACollider2DComponent::UpdateWorldVertexPoints() {
+	worldVertexPoints.clear();
+	for(auto vertex : vertexPoints){
+		worldVertexPoints.push_back(parent->GetTransformMatrix() * glm::vec4(vertex, 1));
+	}
+}
+
+glm::vec3 ACollider2DComponent::GetSupportPoint(glm::vec2 direction) {
+	return GetSupportPoint(glm::vec3(direction, 0.f));
 }
 
 ACollider2DComponent* ACollider2DComponent::SetPosition(glm::vec2 position) {
@@ -36,9 +55,3 @@ void ACollider2DComponent::UpdateWorldPosition() {
 	MarkDirty();
 }
 
-void ACollider2DComponent::UpdateWorldVertexPoints() {
-	worldVertexPoints.clear();
-	for(auto vertex : vertexPoints){
-		worldVertexPoints.push_back(parent->GetTransformMatrix() * glm::vec4(vertex, 1));
-	}
-}

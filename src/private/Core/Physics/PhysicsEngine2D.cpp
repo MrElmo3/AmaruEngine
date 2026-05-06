@@ -4,23 +4,48 @@
 #include <Core/Components/Physics/2D/ACollider2DComponent.h>
 #include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
 #include <Core/Objects/AObject.h>
+#include <Core/Render/Render.h>
+#include <Core/Render/Color.h>
+
+void PhysicsEngine2D::PhysicObject::UpdateLimits() {
+	bottomLeft = glm::vec2(std::numeric_limits<float>::infinity());
+	topRight = glm::vec2(-std::numeric_limits<float>::infinity());
+
+	if(colliders.empty())return;
+
+	for(auto collider : colliders){
+		auto [cMin, cMax] = collider->GetAABBContainer();
+		bottomLeft 	= glm::vec2(std::min(bottomLeft.x, cMin.x), std::min(bottomLeft.y, cMin.y));
+		topRight 	= glm::vec2(std::max(topRight.x, cMax.x), std::max(topRight.y, cMax.y));
+	}
+}
 
 void PhysicsEngine2D::RegisterObject(AObject* object){
 	Rigidbody2DComponent* rigidbody = object->GetComponent<Rigidbody2DComponent>();
-	std::vector<ACollider2DComponent*> objectColliders = 
-		rigidbody != nullptr ? 
-		object->GetAllComponentsInChildren<ACollider2DComponent>() :
-		object->GetComponentsOfType<ACollider2DComponent>();
+	
+	if(rigidbody != nullptr && rigidbody->PhysicsEnabled()){
+		PhysicObject* newPhysicObject = new PhysicObject();
+		newPhysicObject->baseObject = object;
+		newPhysicObject->rigidbody = rigidbody;
+		newPhysicObject->colliders = object->GetAllComponentsInChildren<ACollider2DComponent>();
+		newPhysicObject->UpdateLimits();
+		physicObjects.push_back(newPhysicObject);
+		return;
+	}
 
-	if(rigidbody == nullptr && objectColliders.size() == 0) return;
-	if(!rigidbody->PhysicsEnabled()) return;
+	auto colliders = object->GetComponentsOfType<ACollider2DComponent>();
+	if(!colliders.empty()){
+		PhysicObject* newPhysicObject = new PhysicObject();
+		newPhysicObject->baseObject = object;
+		newPhysicObject->rigidbody = nullptr;
+		newPhysicObject->colliders = colliders;
+		newPhysicObject->UpdateLimits();
+		physicObjects.push_back(newPhysicObject);
+	}
 
-	PhysicObject* newPhysicObject = new PhysicObject();
-	newPhysicObject->baseObject = object;
-	newPhysicObject->rigidbody = rigidbody;
-	newPhysicObject->colliders = objectColliders;
-
-	physicObjects.push_back(newPhysicObject);
+	for (auto child : object->GetChildren()) {
+		RegisterObject(child);
+	}
 }
 
 void PhysicsEngine2D::MoveObjects() {
@@ -37,7 +62,7 @@ void PhysicsEngine2D::MoveRigidbody(Rigidbody2DComponent* rigidbody) {
 }
 
 void PhysicsEngine2D::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
-	rigidbody->forceAccumulator += Global::GRAVITY * rigidbody->gravityScale;
+	rigidbody->forceAccumulator += glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y) * rigidbody->gravityScale ;
 	rigidbody->aceleration = rigidbody->forceAccumulator / rigidbody->mass;
 	rigidbody->forceAccumulator = glm::vec3(0);
 }
@@ -48,6 +73,16 @@ void PhysicsEngine2D::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
 
 void PhysicsEngine2D::UpdatePosition(Rigidbody2DComponent* rigidbody) {
 	rigidbody->parent->Translate(glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME, 0.f));
+}
+
+void PhysicsEngine2D::UpdateTree() {
+	UpdateContainers();
+}
+
+void PhysicsEngine2D::UpdateContainers() {
+	for (auto physicObject : physicObjects) {
+		physicObject->UpdateLimits();
+	}
 }
 
 void PhysicsEngine2D::CheckCollisions() {

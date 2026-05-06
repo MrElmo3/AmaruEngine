@@ -4,7 +4,7 @@
 
 class APhysics2DComponent : public IComponent {
 protected:
-	bool physicsEnabled = true;
+	bool enabledPhysics = true;
 
 public: 
 	APhysics2DComponent(AObject* parent);
@@ -12,7 +12,7 @@ public:
 	virtual void Awake() override;
 	virtual void SetEnable(bool isEnable) override;
 
-	bool PhysicsEnabled() { return physicsEnabled; }
+	bool PhysicsEnabled() { return enabledPhysics; }
 
 protected:
 	void AwakePhysics();

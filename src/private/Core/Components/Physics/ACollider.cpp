@@ -12,6 +12,11 @@ glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){
 	return glm::vec3(NAN);
 }
 
+void ACollider::UpdateWorldValues() {
+	UpdateWorldVertexPoints();
+	UpdateAABBContainer();
+}
+
 void ACollider::UpdateLocalVertexPoints() {}
 
 void ACollider::UpdateWorldVertexPoints() {}
@@ -36,5 +41,32 @@ void ACollider::DrawDebugOutline() {
 			debugColliderColor
 		);
 	}
-	
+}
+
+void ACollider::UpdateAABBContainer() {
+	aabbMin = glm::vec3(std::numeric_limits<float>::infinity());
+	aabbMax = glm::vec3(-std::numeric_limits<float>::infinity());
+	std::vector<glm::vec3> directions = { 
+		{1, 0, 0},
+		{0, 1, 0},
+		{0, 0, 1},
+		{-1, 0, 0}, 
+		{0, -1, 0},
+		{0, 0, -1}
+	};
+
+	for(auto direction : directions) {
+		glm::vec3 supportPoint = GetSupportPoint(direction);
+		if(std::isnan(supportPoint.x)) continue;
+		aabbMin = glm::vec3(
+			std::min(aabbMin.x, supportPoint.x), 
+			std::min(aabbMin.y, supportPoint.y), 
+			std::min(aabbMin.z, supportPoint.z)
+		);
+		aabbMax = glm::vec3(
+			std::max(aabbMax.x, supportPoint.x), 
+			std::max(aabbMax.y, supportPoint.y), 
+			std::max(aabbMax.z, supportPoint.z)
+		);
+	}
 }

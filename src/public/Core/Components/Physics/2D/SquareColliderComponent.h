@@ -14,7 +14,6 @@ public:
 	~SquareColliderComponent() override;
 
 	virtual void FixedUpdate() override;
-	virtual void LateUpdate() override;
 
 protected:
 	virtual void UpdateLocalVertexPoints() override;
@@ -23,7 +22,6 @@ private:
 	void UpdateWorldHalfSize();
 
 public:
-	glm::vec3 GetSupportPoint(glm::vec2 direction);
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
 	glm::vec2 GetWorldHalfSize() const { return worldHalfSize; }
 

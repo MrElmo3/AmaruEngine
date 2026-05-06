@@ -18,7 +18,6 @@ public:
 	ACollider2DComponent(AObject* parent);
 	virtual ~ACollider2DComponent() override;
 
-	// virtual void FixedUpdate() override;
 	virtual void LateUpdate() override;
 
 private:
@@ -26,6 +25,8 @@ private:
 	void UpdateWorldVertexPoints() override;
 	
 public:
+	std::pair<glm::vec3, glm::vec3> GetAABBContainer() override;
+	glm::vec3 GetSupportPoint(glm::vec2 direction);
 	ACollider2DComponent* SetPosition(glm::vec2 position);
 	glm::vec2 GetWorldPosition() const { return worldPosition; }
 };

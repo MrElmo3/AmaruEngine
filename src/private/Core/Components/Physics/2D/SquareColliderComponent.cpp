@@ -31,13 +31,6 @@ void SquareColliderComponent::FixedUpdate() {
 	ACollider2DComponent::FixedUpdate();
 }
 
-void SquareColliderComponent::LateUpdate() {
-	ACollider2DComponent::LateUpdate();
-	if (Global::DEBUG) {
-		DrawDebugOutline();
-	}
-}
-
 void SquareColliderComponent::UpdateLocalVertexPoints() {
 	vertexPoints = {
 		glm::vec3(position.x - halfSize.x, position.y - halfSize.y, 0), //bottom left
@@ -47,25 +40,22 @@ void SquareColliderComponent::UpdateLocalVertexPoints() {
 	};
 }
 
-glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec2 direction) {
-	return GetSupportPoint(glm::vec3(direction, 0.f));
-}
-
 glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	if(glm::length(direction) < 0.0001f) ACollider::GetSupportPoint(direction);
+	if(glm::length(glm::vec2(direction.x, direction.y)) < 0.0001f) return glm::vec3(NAN);
 	
-	float maxDotProduct = 0.f;
+	float maxDotProduct = -std::numeric_limits<float>::infinity();
 	int index = -1;
 
-	for(int i = 0; i < vertexPoints.size(); i++) {
-		float currentDotProduct = glm::dot(direction, vertexPoints[i]);
+	for(int i = 0; i < worldVertexPoints.size(); i++) {
+		float currentDotProduct = glm::dot(direction, worldVertexPoints[i]);
 
 		if(maxDotProduct < currentDotProduct) {
 			maxDotProduct = currentDotProduct;
 			index = i;
 		}
 	}
-	return vertexPoints[index];
+	return worldVertexPoints[index];
 }
 
 SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize) {

@@ -13,18 +13,24 @@ class Rigidbody2DComponent;
 class PhysicsEngine2D : public APhysicsEngine {
 
 private:
-	class PhysicObject {
+	
+class PhysicObject {
 	public:
 		AObject* baseObject;
 		Rigidbody2DComponent* rigidbody;
 		std::vector<ACollider2DComponent*> colliders;
+	
+		glm::vec2 topRight;
+		glm::vec2 bottomLeft;
+	
+		void UpdateLimits();
 	};
 
 	std::vector<PhysicObject*> physicObjects;
 
 	//!We need a quadtree here
 	
-private:
+protected:
 	virtual void RegisterObject(AObject* object) override;
 
 	virtual void MoveObjects() override;
@@ -32,6 +38,9 @@ private:
 	void UpdateAceleration(Rigidbody2DComponent* rigidbody);
 	void UpdateVelocity(Rigidbody2DComponent* rigidbody);
 	void UpdatePosition(Rigidbody2DComponent* rigidbody);
+
+	virtual void UpdateTree() override;
+	void UpdateContainers();
 
 	virtual void CheckCollisions() override;
 	// void CheckPhysicsObjectColision

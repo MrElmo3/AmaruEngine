@@ -8,22 +8,22 @@ APhysics2DComponent::APhysics2DComponent(AObject* parent) : IComponent(parent) {
 void APhysics2DComponent::AwakePhysics() {
 	PhysicsType scenePhysicsType =  Window::GetInstance().GetActualScene()->scenePhysicsType;
 	if(scenePhysicsType != PhysicsType::ENABLE_2D){
-		physicsEnabled = false;
+		enabledPhysics = false;
 	}
 }
 
 APhysics2DComponent::~APhysics2DComponent() {
-	physicsEnabled = false;
+	enabledPhysics = false;
 	IComponent::~IComponent();
 }
 
 void APhysics2DComponent::Awake() {
 	APhysics2DComponent::AwakePhysics();
-	isEnabled = physicsEnabled;
+	isEnabled = enabledPhysics;
 }
 
 void APhysics2DComponent::SetEnable(bool isEnable) {
-	if(!physicsEnabled) {
+	if(!enabledPhysics) {
 		return;
 	}
 	IComponent::SetEnable(isEnable);
