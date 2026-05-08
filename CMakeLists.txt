@@ -65,13 +65,23 @@ set(OBJECTS
 	${PRIVATE_DIR}/Core/Objects/Light/SpotLight.cpp
 )
 
+set(PHYSICS_2D
+	${PRIVATE_DIR}/Core/Physics/Physics2D/Quadtree.cpp
+	${PRIVATE_DIR}/Core/Physics/Physics2D/PhysicsEngine.cpp
+	${PRIVATE_DIR}/Core/Physics/Physics2D/PhysicObject.cpp
+)
+
+set(PHYSICS_3D
+	${PRIVATE_DIR}/Core/Physics/Physics3D/Octree.cpp
+	${PRIVATE_DIR}/Core/Physics/Physics3D/PhysicsEngine.cpp
+	# ${PRIVATE_DIR}/Core/Physics/Physics3D/PhysicsObject.cpp
+)
+
 #Physics engine source
 set(PHYSICS
 	${PRIVATE_DIR}/Core/Physics/APhysicsEngine.cpp
-	${PRIVATE_DIR}/Core/Physics/Trees/Quadtree.cpp
-	${PRIVATE_DIR}/Core/Physics/Trees/Octree.cpp
-	${PRIVATE_DIR}/Core/Physics/PhysicsEngine2D.cpp
-	${PRIVATE_DIR}/Core/Physics/PhysicsEngine3D.cpp
+	${PHYSICS_2D}
+	${PHYSICS_3D}
 )
 
 #Render engine source

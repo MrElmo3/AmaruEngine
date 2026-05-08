@@ -49,6 +49,29 @@ TestColisionScene::TestColisionScene() {
 	squareFloor->SetPosition(glm::vec3(0, -2, 0));
 	squareFloor->SetScale(glm::vec3(5, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
+
+	//Tree  test
+
+	square1 = new Square("square 1", nullptr, this);
+	square1->GetRenderComponent()->enableRender = false;
+	// staticSquare->GetColliderComponent()->isTrigger = true;
+	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	square1->SetPosition(glm::vec3(2.5, 2, 0));
+	square1->SetScale(glm::vec3(0.5f));
+
+	square1 = new Square("square 2", nullptr, this);
+	square1->GetRenderComponent()->enableRender = false;
+	// staticSquare->GetColliderComponent()->isTrigger = true;
+	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	square1->SetPosition(glm::vec3(-2.5, 2, 0));
+	square1->SetScale(glm::vec3(0.5f));
+
+	square1 = new Square("square 3", nullptr, this);
+	square1->GetRenderComponent()->enableRender = false;
+	// staticSquare->GetColliderComponent()->isTrigger = true;
+	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	square1->SetPosition(glm::vec3(-2.5, -2, 0));
+	square1->SetScale(glm::vec3(0.5f));
 }
 
 void TestColisionScene::Update(double deltaTime) {

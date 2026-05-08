@@ -5,8 +5,8 @@
 #include <Core/Global.h>
 #include <Core/Render/Render.h>
 #include <Core/Physics/APhysicsEngine.h>
-#include <Core/Physics/PhysicsEngine2D.h>
-#include <Core/Physics/PhysicsEngine3D.h>
+#include <Core/Physics/Physics2D/PhysicsEngine.h>
+#include <Core/Physics/Physics3D/PhysicsEngine.h>
 #include <Core/Components/Render/Lights/LightComponent.h>
 #include <Core/Render/LightData.h>
 #include <Util/Logger.h>
@@ -24,10 +24,10 @@ void ASceneController::AddObject(AObject* object){
 void ASceneController::Awake(){
 
 	if(scenePhysicsType == PhysicsType::ENABLE_2D){
-		physicsEngine = new PhysicsEngine2D();
+		physicsEngine = new Physics2D::PhysicsEngine();
 	}
 	else if(scenePhysicsType == PhysicsType::ENABLE_3D){
-		physicsEngine = new PhysicsEngine3D();
+		physicsEngine = new Physics3D::PhysicsEngine();
 	}
 
 	previous = glfwGetTime();
