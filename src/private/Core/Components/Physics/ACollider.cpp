@@ -3,7 +3,9 @@
 #include <Core/Render/Color.h>
 #include <Util/Logger.h>
 
-ACollider::ACollider() {}
+ACollider::ACollider() {
+	debugColor = Color::GREEN;
+}
 
 ACollider::~ACollider() {}
 
@@ -14,6 +16,7 @@ glm::vec3 ACollider::GetSupportPoint(glm::vec3 direction){
 
 void ACollider::UpdateWorldValues() {
 	UpdateWorldVertexPoints();
+	UpdateCenterValue();
 	UpdateAABBContainer();
 }
 
@@ -21,8 +24,16 @@ void ACollider::UpdateLocalVertexPoints() {}
 
 void ACollider::UpdateWorldVertexPoints() {}
 
+void ACollider::UpdateCenterValue() {
+	center = glm::vec3(0);
+	for (auto worldPoint : worldVertexPoints) {
+		center += worldPoint;
+	}
+	center /= (float)worldVertexPoints.size();
+}
+
 void ACollider::DrawDebugOutline() {
-	glm::vec3 debugColliderColor = Color::GREEN;
+	glm::vec3 debugColliderColor = debugColor;
 
 	for (unsigned int i = 0; i < worldVertexPoints.size(); i++)
 	{

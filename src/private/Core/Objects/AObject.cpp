@@ -214,7 +214,7 @@ void AObject::UpdateTransform() {
 }
 
 void AObject::MarkDirty() {
-	if (isDirty) return;  // already dirty, stop propagating
+	if (isDirty) return; 
     isDirty = true;
 
 	for(auto& component : components) {

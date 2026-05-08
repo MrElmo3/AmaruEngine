@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <Util/Singleton.h>
 #include <glm/glm.hpp>
 
 enum class PhysicsType {
@@ -10,6 +9,7 @@ enum class PhysicsType {
 };
 
 class AObject;
+class ACollider;
 class APhysicsEngine {
 
 public:
@@ -21,4 +21,10 @@ protected:
 	virtual void MoveObjects() {};
 	virtual void UpdateTree() {};
 	virtual void CheckCollisions() {};
+	bool GJKCheck(ACollider* colliderA, ACollider* colliderB);
+
+private:
+	bool HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction);
+	bool LineCase(std::vector<glm::vec3>& simplex, glm::vec3& direction);
+	bool TriangleCase(std::vector<glm::vec3>& simplex, glm::vec3& direction);
 };

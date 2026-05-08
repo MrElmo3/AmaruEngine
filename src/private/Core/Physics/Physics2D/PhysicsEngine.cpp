@@ -5,6 +5,7 @@
 #include <Core/Components/Physics/2D/ACollider2DComponent.h>
 #include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
 #include <Core/Objects/AObject.h>
+#include <Core/Render/Color.h>
 
 namespace Physics2D {
 
@@ -79,12 +80,31 @@ namespace Physics2D {
 	}
 
 	void PhysicsEngine::CheckCollisions() {
-			//	Check collisions
-		//		GetNearColliders
-		//		Check if the RB Colliders colied with one of the near colliders
+		for (auto object : physicObjects) {
+			if(object->rigidbody == nullptr) continue;
+			std::vector<PhysicObject*> nearObjects;
+			quadtree->GetNearObjects(object, nearObjects);
+			for (auto nearObject : nearObjects) {
+				CheckCollision(object, nearObject);
+			}
+		}
+
 		//		If so, ResolveColision
 		//			Calculates Manifold
 		//			Updates RB's velocity
 		//			Repell RB
+	}
+
+	bool PhysicsEngine::CheckCollision(PhysicObject* objectA, PhysicObject* objectB){
+		for (auto colliderA : objectA->colliders) {
+			for (auto colliderB : objectB->colliders) {
+				if(GJKCheck(colliderA, colliderB)) {
+					colliderA->debugColor = Color::RED;
+					colliderB->debugColor = Color::RED;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
