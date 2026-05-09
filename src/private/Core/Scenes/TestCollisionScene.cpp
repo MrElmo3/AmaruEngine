@@ -18,7 +18,7 @@ TestColisionScene::TestColisionScene() {
 	cameraComponent->mainCamera = true;
 	cameraComponent->orthographic = true;
 	cameraComponent->orthoSize = 4.0f;
-	
+
 	// auto* testSquare = new Square("squareMouse", nullptr, this);
 	// testSquare->GetRenderComponent()->enableRender = true;
 	// // testSquare->AddComponent(new FollowMouseComponent(testSquare));
@@ -39,7 +39,7 @@ TestColisionScene::TestColisionScene() {
 	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
 	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
 	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
-	rigidbody->gravityScale = 0.06f;
+	rigidbody->gravityScale = 0.01f;
 
 	auto childSquare = new Square("childSquare", square1);
 	childSquare->SetPosition(glm::vec3(2.5, -2, 0));
@@ -80,7 +80,7 @@ void TestColisionScene::Update(double deltaTime) {
 	// square1->position += glm::vec3(deltaTime * -1.f, 0.f, 0.f);
 
 	// std::cout<<deltaTime<<'\n';
-	
+
 	ASceneController::Update(deltaTime);
 
 }
