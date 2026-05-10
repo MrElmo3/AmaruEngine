@@ -17,14 +17,27 @@ public:
 	virtual void UpdatePhysics();
 
 protected:
+
+	struct GJKResult {
+		bool Collide;
+		std::vector<glm::vec3>* Simplex;
+	};
+
+	struct CollisionManifold {
+		glm::vec3 PenetrationVector;
+		float Depth;
+	};
+
 	virtual void RegisterObject(AObject* object) {};
 	virtual void MoveObjects() {};
 	virtual void UpdateTree() {};
 	virtual void CheckCollisions() {};
-	bool GJKCheck(ACollider* colliderA, ACollider* colliderB);
+	GJKResult GJKCheck(ACollider* colliderA, ACollider* colliderB);
+	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>* simplex);
 
 private:
 	bool HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction);
 	bool LineCase(std::vector<glm::vec3>& simplex, glm::vec3& direction);
 	bool TriangleCase(std::vector<glm::vec3>& simplex, glm::vec3& direction);
+	bool TetrahedronCase(std::vector<glm::vec3>& simplex, glm::vec3& direction);
 };

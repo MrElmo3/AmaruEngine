@@ -98,7 +98,11 @@ namespace Physics2D {
 	bool PhysicsEngine::CheckCollision(PhysicObject* objectA, PhysicObject* objectB){
 		for (auto colliderA : objectA->colliders) {
 			for (auto colliderB : objectB->colliders) {
-				if(GJKCheck(colliderA, colliderB)) {
+				PhysicsEngine::GJKResult result = GJKCheck(colliderA, colliderB);
+				if(result.Collide) {
+
+					//TODO: EPA check goes here
+
 					colliderA->debugColor = Color::RED;
 					colliderB->debugColor = Color::RED;
 					return true;
