@@ -1,0 +1,5 @@
+BasedOnStyle: WebKit
+BreakBeforeBraces: Attach
+UseTab: Always
+TabWidth: 4
+IndentWidth: 4

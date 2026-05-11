@@ -1,6 +1,6 @@
 #pragma once
-#include <vector>
 #include <glm/glm.hpp>
+#include <vector>
 
 enum class PhysicsType {
 	DISABLED = 0,
@@ -17,10 +17,9 @@ public:
 	virtual void UpdatePhysics();
 
 protected:
-
 	struct GJKResult {
 		bool Collide;
-		std::vector<glm::vec3>* Simplex;
+		std::vector<glm::vec3> Simplex;
 	};
 
 	struct CollisionManifold {
@@ -28,12 +27,12 @@ protected:
 		float Depth;
 	};
 
-	virtual void RegisterObject(AObject* object) {};
-	virtual void MoveObjects() {};
-	virtual void UpdateTree() {};
-	virtual void CheckCollisions() {};
+	virtual void RegisterObject(AObject* object) { };
+	virtual void MoveObjects() { };
+	virtual void UpdateTree() { };
+	virtual void CheckCollisions() { };
 	GJKResult GJKCheck(ACollider* colliderA, ACollider* colliderB);
-	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>* simplex);
+	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex);
 
 private:
 	bool HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction);

@@ -55,8 +55,8 @@ void ACollider::DrawDebugOutline() {
 }
 
 void ACollider::UpdateAABBContainer() {
-	aabbMin = glm::vec3(std::numeric_limits<float>::infinity());
-	aabbMax = glm::vec3(-std::numeric_limits<float>::infinity());
+	aabbMin = glm::vec3(FLT_MAX);
+	aabbMax = glm::vec3(-FLT_MAX);
 	std::vector<glm::vec3> directions = { 
 		{1, 0, 0},
 		{0, 1, 0},

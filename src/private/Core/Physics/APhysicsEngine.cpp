@@ -1,6 +1,7 @@
-#include <Core/Physics/APhysicsEngine.h>
-#include <Core/Objects/AObject.h>
 #include <Core/Components/Physics/ACollider.h>
+#include <Core/Objects/AObject.h>
+#include <Core/Physics/APhysicsEngine.h>
+#include <algorithm>
 
 void APhysicsEngine::Awake(std::vector<AObject*> objects) {
 	for (auto* object : objects) {
@@ -35,18 +36,20 @@ APhysicsEngine::GJKResult APhysicsEngine::GJKCheck(ACollider* colliderA, ACollid
 		};
 
 		simplex.push_back(targetPoint);
-		
+
 		if (HandleSimplex(simplex, direction)) {
 			result.Collide = true;
-			result.Simplex = &simplex;
+			result.Simplex = simplex;
 			return result;
 		};
 	}
 }
 
 bool APhysicsEngine::HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction) {
-	if (simplex.size() == 2) return LineCase(simplex, direction);
-	if (simplex.size() == 3) return TriangleCase(simplex, direction);
+	if (simplex.size() == 2)
+		return LineCase(simplex, direction);
+	if (simplex.size() == 3)
+		return TriangleCase(simplex, direction);
 	return TetrahedronCase(simplex, direction);
 }
 
@@ -54,7 +57,7 @@ bool APhysicsEngine::LineCase(std::vector<glm::vec3>& simplex, glm::vec3& direct
 
 	auto TripleProduct = [](glm::vec3 vectorA, glm::vec3 vectorB, glm::vec3 vectorC) -> glm::vec3 {
 		return glm::cross(glm::cross(vectorA, vectorB), vectorC);
-		};
+	};
 
 	glm::vec3 pointA = simplex[1];
 	glm::vec3 pointB = simplex[0];
@@ -75,7 +78,7 @@ bool APhysicsEngine::TriangleCase(std::vector<glm::vec3>& simplex, glm::vec3& di
 
 	auto TripleProduct = [](glm::vec3 vectorA, glm::vec3 vectorB, glm::vec3 vectorC) -> glm::vec3 {
 		return glm::cross(glm::cross(vectorA, vectorB), vectorC);
-		};
+	};
 
 	glm::vec3 pointA = simplex[2];
 	glm::vec3 pointB = simplex[1];
@@ -89,7 +92,7 @@ bool APhysicsEngine::TriangleCase(std::vector<glm::vec3>& simplex, glm::vec3& di
 	glm::vec3 perpAB = TripleProduct(vectorAC, vectorAB, vectorAB);
 	glm::vec3 perpAC = TripleProduct(vectorAB, vectorAC, vectorAC);
 
-	if(glm::dot(perpABC, vectorAO) == 0.f){
+	if (glm::dot(perpABC, vectorAO) == 0.f) {
 		if (glm::length(perpAB) < 1e-10f || glm::length(perpAC) < 1e-10f)
 			return true;
 		if (glm::dot(perpAB, vectorAO) > 0) {
@@ -105,18 +108,17 @@ bool APhysicsEngine::TriangleCase(std::vector<glm::vec3>& simplex, glm::vec3& di
 		return true;
 	}
 
-	if(glm::dot(perpABC, vectorAO) > 0){
+	if (glm::dot(perpABC, vectorAO) > 0) {
 		direction = glm::normalize(perpABC);
 		return false;
-	}
-	else {
+	} else {
 		direction = glm::normalize(-perpABC);
 		return false;
 	}
 }
 
 bool APhysicsEngine::TetrahedronCase(std::vector<glm::vec3>& simplex, glm::vec3& direction) {
-	
+
 	glm::vec3 pointA = simplex[3];
 	glm::vec3 pointB = simplex[2];
 	glm::vec3 pointC = simplex[1];
@@ -125,21 +127,24 @@ bool APhysicsEngine::TetrahedronCase(std::vector<glm::vec3>& simplex, glm::vec3&
 	glm::vec3 vectorAB = pointB - pointA;
 	glm::vec3 vectorAC = pointC - pointA;
 	glm::vec3 vectorAD = pointD - pointA;
-	glm::vec3 vectorAO  = -pointA;
+	glm::vec3 vectorAO = -pointA;
 
 	glm::vec3 perpBAC = glm::cross(vectorAB, vectorAC);
 	glm::vec3 perpCAD = glm::cross(vectorAC, vectorAD);
 	glm::vec3 perpDAB = glm::cross(vectorAD, vectorAB);
 
-	if (glm::dot(perpBAC, vectorAD) > 0) perpBAC = -perpBAC;
-	if (glm::dot(perpCAD, vectorAB) > 0) perpCAD = -perpCAD;
-	if (glm::dot(perpDAB, vectorAC) > 0) perpDAB = -perpDAB;
+	if (glm::dot(perpBAC, vectorAD) > 0)
+		perpBAC = -perpBAC;
+	if (glm::dot(perpCAD, vectorAB) > 0)
+		perpCAD = -perpCAD;
+	if (glm::dot(perpDAB, vectorAC) > 0)
+		perpDAB = -perpDAB;
 
 	if (glm::length(perpBAC) < 1e-10f || glm::length(perpCAD) < 1e-10f || glm::length(perpDAB) < 1e-10f)
-			return true;
-	
+		return true;
+
 	if (glm::dot(perpBAC, vectorAO) > 0) {
-		simplex = { simplex[1], simplex[2] , simplex[3] };
+		simplex = { simplex[1], simplex[2], simplex[3] };
 		direction = glm::normalize(perpBAC);
 		return false;
 	}
@@ -154,8 +159,73 @@ bool APhysicsEngine::TetrahedronCase(std::vector<glm::vec3>& simplex, glm::vec3&
 		direction = glm::normalize(perpCAD);
 		return false;
 	}
-	
+
 	return true;
 }
 
 
+//TODO: implement EPA for 3D polytopes.
+APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
+	ACollider* colliderA,
+	ACollider* colliderB,
+	std::vector<glm::vec3>& simplex) {
+
+	auto SupportDifference = [](ACollider* a, ACollider* b, glm::vec3 dir) -> glm::vec3 {
+		return a->GetSupportPoint(dir) - b->GetSupportPoint(-dir);
+	};
+
+	// Ensures the counter clockwise order using the Shoelace formula to calculate the area
+	auto EnsureOrder = [](std::vector<glm::vec3>& poly) {
+		float area = 0.0f;
+		for (int i = 0; i < poly.size(); i++) {
+			glm::vec3 a = poly[i];
+			glm::vec3 b = poly[(i + 1) % poly.size()];
+			area += (a.x * b.y - b.x * a.y);
+		}
+		if (area < 0)
+			std::reverse(poly.begin(), poly.end());
+	};
+
+	auto EdgeNormal = [](glm::vec3 a, glm::vec3 b) -> glm::vec3 {
+		glm::vec3 edge = b - a;
+		return glm::normalize(glm::vec3(edge.y, -edge.x, 0));
+	};
+
+	auto EdgeDistance = [&EdgeNormal](glm::vec3 a, glm::vec3 b) -> float {
+		glm::vec3 normal = EdgeNormal(a, b);
+		return glm::dot(normal, a);
+	};
+
+	EnsureOrder(simplex);
+
+	const float TOLERANCE = 1e-4f;
+
+	while (true) {
+		int closestIndex = 0;
+		float closestDistance = FLT_MAX;
+		glm::vec3 closestNormal;
+
+		for (int j = 0; j < simplex.size(); j++) {
+			glm::vec3 a = simplex[j];
+			glm::vec3 b = simplex[(j + 1) % simplex.size()];
+
+			float dist = EdgeDistance(a, b);
+			glm::vec3 n = EdgeNormal(a, b);
+
+			if (dist < closestDistance) {
+				closestDistance = dist;
+				closestNormal = n;
+				closestIndex = j;
+			}
+		}
+
+		glm::vec3 support = SupportDifference(colliderA, colliderB, closestNormal);
+		float supportDist = glm::dot(support, closestNormal);
+
+		if (supportDist - closestDistance < TOLERANCE) {
+			return { closestNormal, closestDistance };
+		}
+
+		simplex.insert(simplex.begin() + closestIndex + 1, support);
+	}
+}

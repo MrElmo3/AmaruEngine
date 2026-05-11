@@ -44,7 +44,7 @@ glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	if(glm::length(direction) < 0.0001f) ACollider::GetSupportPoint(direction);
 	if(glm::length(glm::vec2(direction.x, direction.y)) < 0.0001f) return glm::vec3(NAN);
 	
-	float maxDotProduct = -std::numeric_limits<float>::infinity();
+	float maxDotProduct = -FLT_MAX;
 	int index = -1;
 
 	for(int i = 0; i < worldVertexPoints.size(); i++) {
