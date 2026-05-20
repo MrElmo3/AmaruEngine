@@ -39,7 +39,7 @@ TestColisionScene::TestColisionScene() {
 	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
 	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
 	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
-	rigidbody->gravityScale = 0.01f;
+	rigidbody->gravityScale = 0.5f;
 
 	auto childSquare = new Square("childSquare", square1);
 	childSquare->SetPosition(glm::vec3(2.5, -2, 0));

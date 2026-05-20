@@ -91,19 +91,19 @@ void PhysicsEngine::CheckCollisions() {
 	}
 
 	//		If so, ResolveColision
-	//			Calculates Manifold
 	//			Updates RB's velocity
 	//			Repell RB
 }
 
-bool PhysicsEngine::CheckCollision(PhysicObject* objectA, PhysicObject* objectB) {
-	for (auto colliderA : objectA->colliders) {
-		for (auto colliderB : objectB->colliders) {
+bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB) {
+	for (auto colliderA : physicObjectA->colliders) {
+		for (auto colliderB : physicObjectB->colliders) {
 			PhysicsEngine::GJKResult result = GJKCheck(colliderA, colliderB);
-			if (result.Collide) {
 
-				PhysicsEngine::CollisionManifold manifold = 
-					EPA(colliderA, colliderB, result.Simplex);
+			if (result.Collide) {
+				PhysicsEngine::CollisionManifold manifold = EPA(colliderA, colliderB, result.Simplex);
+
+				ResolveCollision2D(physicObjectA, physicObjectB, manifold);
 
 				colliderA->debugColor = Color::RED;
 				colliderB->debugColor = Color::RED;
@@ -113,4 +113,35 @@ bool PhysicsEngine::CheckCollision(PhysicObject* objectA, PhysicObject* objectB)
 	}
 	return false;
 }
+
+void PhysicsEngine::ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+	if (physicObjectA->rigidbody != nullptr && physicObjectB->rigidbody != nullptr) {
+		Resolve2RBCollision(physicObjectA, physicObjectB, manifold);
+		return;
+	}
+
+	if (physicObjectA->rigidbody != nullptr) {
+		Resolve1RBCollision(physicObjectA, manifold);
+		return;
+	}
+
+	if (physicObjectB->rigidbody != nullptr) {
+		Resolve1RBCollision(physicObjectB, manifold);
+		return;
+	}
+};
+
+void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionManifold manifold) {
+	auto baseObject = physicObject->baseObject;
+	auto rb = physicObject->rigidbody;
+	baseObject->Translate(manifold.Depth * -manifold.PenetrationVector);
+	rb->velocity = glm::vec2(0);
+	rb->aceleration = glm::vec2(0);
+	rb->angularAceleration = 0;
+	rb->angularVelocity = 0;
+};
+
+void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+}
+
 }

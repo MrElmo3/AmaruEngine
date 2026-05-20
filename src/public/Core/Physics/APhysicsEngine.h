@@ -27,10 +27,10 @@ protected:
 		float Depth;
 	};
 
-	virtual void RegisterObject(AObject* object) { };
-	virtual void MoveObjects() { };
-	virtual void UpdateTree() { };
-	virtual void CheckCollisions() { };
+	virtual void RegisterObject(AObject* object) { }
+	virtual void MoveObjects() { }
+	virtual void UpdateTree() { }
+	virtual void CheckCollisions() { }
 	GJKResult GJKCheck(ACollider* colliderA, ACollider* colliderB);
 	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex);
 
