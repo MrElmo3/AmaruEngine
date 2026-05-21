@@ -198,6 +198,22 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 
 	EnsureOrder(simplex);
 
+	struct SupportPoint {
+		glm::vec3 diff;
+		glm::vec3 onA;
+		glm::vec3 onB;
+	};
+
+	std::vector<SupportPoint> poly;
+	for (auto& v : simplex) {
+		glm::vec3 dir = glm::normalize(v);
+		glm::vec3 onA = colliderA->GetSupportPoint(dir);
+		glm::vec3 onB = colliderB->GetSupportPoint(-dir);
+		poly.push_back({ v, onA, onB });
+	}
+
+
+
 	const float TOLERANCE = 1e-4f;
 
 	while (true) {
@@ -223,7 +239,24 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 		float supportDist = glm::dot(support, closestNormal);
 
 		if (supportDist - closestDistance < TOLERANCE) {
-			return { closestNormal, closestDistance };
+
+			const SupportPoint& spA = poly[closestIndex];
+			const SupportPoint& spB = poly[(closestIndex + 1) % poly.size()];
+
+			glm::vec3 edge = spB.diff - spA.diff;
+			float edgeLenSq = glm::dot(edge, edge);
+			float t = 0.5f;
+
+			if (edgeLenSq > TOLERANCE) {
+				t = glm::clamp(-glm::dot(spA.diff, edge) / edgeLenSq, 0.0f, 1.0f);
+			}
+
+			glm::vec3 contactOnA = spA.onA + t * (spB.onA - spA.onA);
+			glm::vec3 contactOnB = spA.onB + t * (spB.onB - spA.onB);
+
+			glm::vec3 contactPoint = (contactOnA + contactOnB) * 0.5f;
+
+			return { closestNormal, closestDistance, contactPoint };
 		}
 
 		simplex.insert(simplex.begin() + closestIndex + 1, support);

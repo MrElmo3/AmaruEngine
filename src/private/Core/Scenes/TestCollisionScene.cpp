@@ -48,6 +48,7 @@ TestColisionScene::TestColisionScene() {
 
 	squareFloor = new Square("squareFloor", nullptr, this);
 	squareFloor->SetPosition(glm::vec3(0, -2, 0));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 25));
 	squareFloor->SetScale(glm::vec3(5, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
 

@@ -25,6 +25,7 @@ protected:
 	struct CollisionManifold {
 		glm::vec3 PenetrationVector;
 		float Depth;
+		glm::vec3 ContactPoint;
 	};
 
 	virtual void RegisterObject(AObject* object) { }

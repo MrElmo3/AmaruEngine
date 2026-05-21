@@ -134,11 +134,23 @@ void PhysicsEngine::ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject
 void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionManifold manifold) {
 	auto baseObject = physicObject->baseObject;
 	auto rb = physicObject->rigidbody;
-	baseObject->Translate(manifold.Depth * -manifold.PenetrationVector);
-	rb->velocity = glm::vec2(0);
-	rb->aceleration = glm::vec2(0);
-	rb->angularAceleration = 0;
-	rb->angularVelocity = 0;
+
+	glm::vec2 normal = manifold.PenetrationVector;
+
+	baseObject->Translate(
+		glm::vec3(-manifold.Depth * normal, 0)
+	);
+	
+	float normalVelocity = glm::dot(rb->velocity, normal);
+
+	if(normalVelocity > 0) {
+		//TODO: add restitution
+		rb->velocity -= normalVelocity * normal;
+	}
+
+	// rb->aceleration = glm::vec2(0);
+	// rb->angularAceleration = 0;
+	// rb->angularVelocity = 0;
 };
 
 void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
