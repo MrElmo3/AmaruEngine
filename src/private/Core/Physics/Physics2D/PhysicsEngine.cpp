@@ -55,17 +55,42 @@ void PhysicsEngine::MoveRigidbody(Rigidbody2DComponent* rigidbody) {
 }
 
 void PhysicsEngine::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
-	rigidbody->forceAccumulator += glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y) * rigidbody->gravityScale;
-	rigidbody->aceleration = rigidbody->forceAccumulator / rigidbody->mass;
+	rigidbody->forceAccumulator += glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y) * rigidbody->GetGravityScale();
+	rigidbody->acceleration = rigidbody->forceAccumulator * rigidbody->GetInverseMass();
+
+	rigidbody->angularAcceleration = rigidbody->torqueAccumulator * rigidbody->GetInverseMomentOfInertia();
+
+	rigidbody->torqueAccumulator = 0.f;
 	rigidbody->forceAccumulator = glm::vec3(0);
 }
 
 void PhysicsEngine::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
-	rigidbody->velocity += rigidbody->aceleration * Global::FIXED_DELTA_TIME;
+	float dt = Global::FIXED_DELTA_TIME;
+
+	rigidbody->velocity += rigidbody->acceleration * dt;
+	rigidbody->angularVelocity += rigidbody->angularAcceleration * dt;
+
+	// rigidbody->velocity *= 0.99f; 
+    // rigidbody->angularVelocity *= 0.95f;
+
+	const float sleepThresholdLinear = 0.05f;
+	const float sleepThresholdAngular = 0.29f; // Radians per second
+
+    if (glm::length(rigidbody->velocity) < sleepThresholdLinear) {
+        rigidbody->velocity = glm::vec2(0.0f);
+    }
+    
+    if (abs(rigidbody->angularVelocity) < sleepThresholdAngular) {
+        rigidbody->angularVelocity = 0.0f;
+    }
 }
 
 void PhysicsEngine::UpdatePosition(Rigidbody2DComponent* rigidbody) {
-	rigidbody->parent->Translate(glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME, 0.f));
+	float dt = Global::FIXED_DELTA_TIME;
+
+	rigidbody->parent->Translate(glm::vec3(rigidbody->velocity * dt, 0.f));
+	float degrees = glm::degrees(rigidbody->angularVelocity);
+	rigidbody->parent->RotateEuler(glm::vec3(0, 0, degrees * dt));
 }
 
 void PhysicsEngine::UpdateTree() {
@@ -89,10 +114,6 @@ void PhysicsEngine::CheckCollisions() {
 			CheckCollision(object, nearObject);
 		}
 	}
-
-	//		If so, ResolveColision
-	//			Updates RB's velocity
-	//			Repell RB
 }
 
 bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB) {
@@ -137,20 +158,46 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 
 	glm::vec2 normal = manifold.PenetrationVector;
 
-	baseObject->Translate(
-		glm::vec3(-manifold.Depth * normal, 0)
-	);
-	
-	float normalVelocity = glm::dot(rb->velocity, normal);
+	const float slop = 0.01f;
+    const float percent = 0.8f;
 
-	if(normalVelocity > 0) {
-		//TODO: add restitution
-		rb->velocity -= normalVelocity * normal;
+	if (manifold.Depth > slop) {
+        float correction = (manifold.Depth - slop) * percent;
+        baseObject->Translate(glm::vec3(-correction * normal, 0.0f));
+    }
+
+	glm::vec2 centerOfMass = glm::vec2(baseObject->GetPosition()) + rb->centerOfMass;
+    glm::vec2 contactPoint = glm::vec2(manifold.ContactPoint);
+    glm::vec2 r = contactPoint - centerOfMass;
+
+    glm::vec2 contactVelocity = rb->velocity + glm::vec2(-rb->angularVelocity * r.y, rb->angularVelocity * r.x);
+
+	float normalVelocity = glm::dot(contactVelocity, normal);
+
+	if(normalVelocity < 0)  return;
+	
+	float restitution = 0.15f; // TODO: Pull from physical properties
+
+	float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
+	if (normalVelocity < (gravityStep * 2.0f)) {
+		restitution = 0.0f;
 	}
 
-	// rb->aceleration = glm::vec2(0);
-	// rb->angularAceleration = 0;
-	// rb->angularVelocity = 0;
+	float rCrossN = r.x * normal.y - r.y * normal.x;
+	
+	float inverseMass = rb->GetInverseMass();
+	float inverseInertia = rb->GetInverseMomentOfInertia();
+
+	float denominator = inverseMass + (rCrossN * rCrossN) * inverseInertia;
+	if (denominator <= 0.0f) return;
+	float impulseMagnitude = (1.0f + restitution) * normalVelocity / denominator;
+
+	glm::vec2 linearImpulse = impulseMagnitude * normal;
+	rb->velocity -= linearImpulse * inverseMass;
+	
+	float rCrossImpulse = r.x * linearImpulse.y - r.y * linearImpulse.x;
+	rb->angularVelocity -= rCrossImpulse * inverseInertia;
+
 };
 
 void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {

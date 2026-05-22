@@ -36,19 +36,20 @@ TestColisionScene::TestColisionScene() {
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
 	square1->SetPosition(glm::vec3(0, 4, 0));
 	square1->SetScale(glm::vec3(0.5f));
+	square1->RotateEuler(glm::vec3(0.f, 0.f, 15));
 	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
 	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
 	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
-	rigidbody->gravityScale = 0.5f;
+	rigidbody->SetGravityScale(0.5f);
 
-	auto childSquare = new Square("childSquare", square1);
-	childSquare->SetPosition(glm::vec3(2.5, -2, 0));
-	childSquare->RotateEuler(glm::vec3(0.f, 0.f, 45));
-	childSquare->GetRenderComponent()->enableRender = false;
+	// auto childSquare = new Square("childSquare", square1);
+	// childSquare->SetPosition(glm::vec3(2.5, -2, 0));
+	// childSquare->RotateEuler(glm::vec3(0.f, 0.f, 45));
+	// childSquare->GetRenderComponent()->enableRender = false;
 
 	squareFloor = new Square("squareFloor", nullptr, this);
 	squareFloor->SetPosition(glm::vec3(0, -2, 0));
-	squareFloor->RotateEuler(glm::vec3(0, 0, 25));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 0));
 	squareFloor->SetScale(glm::vec3(5, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
 
