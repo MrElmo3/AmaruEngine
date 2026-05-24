@@ -5,15 +5,12 @@
 class SquareColliderComponent : public ACollider2DComponent{
 private:
 	glm::vec2 halfSize;
-	glm::vec2 worldHalfSize;
 
 public:
 	SquareColliderComponent(AObject* parent, glm::vec2 position, glm::vec2 halfSize);
 	SquareColliderComponent(AObject* parent, glm::vec2 position);
 	SquareColliderComponent(AObject* parent);
 	~SquareColliderComponent() override;
-
-	virtual void FixedUpdate() override;
 
 protected:
 	virtual void UpdateLocalVertexPoints() override;
@@ -23,7 +20,6 @@ private:
 
 public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
-	glm::vec2 GetWorldHalfSize() const { return worldHalfSize; }
 
 	SquareColliderComponent* SetHalfSize(glm::vec2 halfSize);
 };

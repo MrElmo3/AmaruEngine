@@ -6,6 +6,7 @@
 #include <Core/Physics/Physics2D/PhysicsObject.h>
 #include <Core/Physics/Physics2D/Quadtree.h>
 #include <Core/Render/Color.h>
+#include <Util/Logger.h>
 
 namespace Physics2D {
 
@@ -59,7 +60,6 @@ void PhysicsEngine::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
 	rigidbody->acceleration = rigidbody->forceAccumulator * rigidbody->GetInverseMass();
 
 	rigidbody->angularAcceleration = rigidbody->torqueAccumulator * rigidbody->GetInverseMomentOfInertia();
-
 	rigidbody->torqueAccumulator = 0.f;
 	rigidbody->forceAccumulator = glm::vec3(0);
 }
@@ -69,20 +69,20 @@ void PhysicsEngine::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
 
 	rigidbody->velocity += rigidbody->acceleration * dt;
 	rigidbody->angularVelocity += rigidbody->angularAcceleration * dt;
-
-	// rigidbody->velocity *= 0.99f; 
-    // rigidbody->angularVelocity *= 0.95f;
+	
+	// rigidbody->velocity *= 0.99f;
+	// rigidbody->angularVelocity *= 0.95f;
 
 	const float sleepThresholdLinear = 0.05f;
 	const float sleepThresholdAngular = 0.29f; // Radians per second
 
-    if (glm::length(rigidbody->velocity) < sleepThresholdLinear) {
-        rigidbody->velocity = glm::vec2(0.0f);
-    }
-    
-    if (abs(rigidbody->angularVelocity) < sleepThresholdAngular) {
-        rigidbody->angularVelocity = 0.0f;
-    }
+	if (glm::length(rigidbody->velocity) < sleepThresholdLinear) {
+		rigidbody->velocity = glm::vec2(0.0f);
+	}
+
+	if (abs(rigidbody->angularVelocity) < sleepThresholdAngular) {
+		rigidbody->angularVelocity = 0.0f;
+	}
 }
 
 void PhysicsEngine::UpdatePosition(Rigidbody2DComponent* rigidbody) {
@@ -159,24 +159,24 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 	glm::vec2 normal = manifold.PenetrationVector;
 
 	const float slop = 0.01f;
-    const float percent = 0.8f;
+	const float percent = 0.8f;
 
 	if (manifold.Depth > slop) {
-        float correction = (manifold.Depth - slop) * percent;
-        baseObject->Translate(glm::vec3(-correction * normal, 0.0f));
-    }
+		float correction = (manifold.Depth - slop) * percent;
+		baseObject->Translate(glm::vec3(-correction * normal, 0.0f));
+	}
 
 	glm::vec2 centerOfMass = glm::vec2(baseObject->GetPosition()) + rb->centerOfMass;
-    glm::vec2 contactPoint = glm::vec2(manifold.ContactPoint);
-    glm::vec2 r = contactPoint - centerOfMass;
+	glm::vec2 contactPoint = glm::vec2(manifold.ContactPoint);
+	glm::vec2 r = contactPoint - centerOfMass;
 
-    glm::vec2 contactVelocity = rb->velocity + glm::vec2(-rb->angularVelocity * r.y, rb->angularVelocity * r.x);
+	glm::vec2 contactVelocity = rb->velocity + glm::vec2(-rb->angularVelocity * r.y, rb->angularVelocity * r.x);
 
 	float normalVelocity = glm::dot(contactVelocity, normal);
 
 	if(normalVelocity < 0)  return;
 	
-	float restitution = 0.15f; // TODO: Pull from physical properties
+	float restitution = 0.5f; // TODO: Pull from physical properties
 
 	float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
 	if (normalVelocity < (gravityStep * 2.0f)) {

@@ -10,7 +10,7 @@ SquareColliderComponent::SquareColliderComponent(
 	glm::vec2 position,
 	glm::vec2 halfSize)
 	: ACollider2DComponent(parent, position) {
-	this->halfSize = halfSize;
+	SetHalfSize(halfSize);
 }
 
 SquareColliderComponent::SquareColliderComponent(AObject* parent, glm::vec2 position)
@@ -21,14 +21,8 @@ SquareColliderComponent::SquareColliderComponent(AObject* parent)
 }
 
 SquareColliderComponent::~SquareColliderComponent() {
-	halfSize = glm::vec2(0);
-	worldHalfSize = glm::vec2(0);
+	SetHalfSize(glm::vec2(0));
 	ACollider2DComponent::~ACollider2DComponent();
-}
-
-void SquareColliderComponent::FixedUpdate() {
-	UpdateWorldHalfSize();
-	ACollider2DComponent::FixedUpdate();
 }
 
 void SquareColliderComponent::UpdateLocalVertexPoints() {
@@ -63,10 +57,3 @@ SquareColliderComponent* SquareColliderComponent::SetHalfSize(glm::vec2 halfSize
 	UpdateLocalVertexPoints();
 	return this;
 }
-
-void SquareColliderComponent::UpdateWorldHalfSize() {
-	worldHalfSize = glm::vec2(
-		halfSize.x * parent->GetWorldScale().x,
-		halfSize.y * parent->GetWorldScale().y
-	);
-};

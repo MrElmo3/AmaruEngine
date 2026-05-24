@@ -24,6 +24,7 @@ set(COMPONENTS_PHYSICS
 	${PRIVATE_DIR}/Core/Components/Physics/2D/ACollider2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/Rigidbody2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/SquareColliderComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Physics/2D/CircleColliderComponent.cpp
 	# ${PRIVATE_DIR}/Core/Components/Physics/3D/ACollider3DComponent.cpp
 	# ${PRIVATE_DIR}/Core/Components/Physics/3D/BoxColliderComponent.cpp
 	# ${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp

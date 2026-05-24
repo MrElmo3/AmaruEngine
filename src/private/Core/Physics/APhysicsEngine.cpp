@@ -212,8 +212,6 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 		poly.push_back({ v, onA, onB });
 	}
 
-
-
 	const float TOLERANCE = 1e-4f;
 
 	while (true) {
@@ -235,7 +233,10 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 			}
 		}
 
-		glm::vec3 support = SupportDifference(colliderA, colliderB, closestNormal);
+		glm::vec3 onA = colliderA->GetSupportPoint(closestNormal);
+		glm::vec3 onB = colliderB->GetSupportPoint(-closestNormal);
+		glm::vec3 support = onA - onB;
+
 		float supportDist = glm::dot(support, closestNormal);
 
 		if (supportDist - closestDistance < TOLERANCE) {
@@ -260,5 +261,6 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 		}
 
 		simplex.insert(simplex.begin() + closestIndex + 1, support);
+		poly.insert(poly.begin() + closestIndex + 1, { support, onA, onB });
 	}
 }

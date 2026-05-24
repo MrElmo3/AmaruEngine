@@ -1,12 +1,13 @@
 #pragma once
 #include "ASceneController.h"
 
+class EmptyObject;
 class Square;
 class TestColisionScene : public ASceneController {
 public:
 	TestColisionScene();
 
-	Square* square1;
+	EmptyObject* circle;
 	Square* squareFloor;
 
 	void Update(double deltaTime) override;

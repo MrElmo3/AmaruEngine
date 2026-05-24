@@ -3,7 +3,9 @@
 #include <Core/Global.h>
 #include <Core/Components/Render/RenderQuadComponent.h>
 #include <Core/Components/Physics/2D/SquareColliderComponent.h>
+#include <Core/Components/Physics/2D/CircleColliderComponent.h>
 #include <Core/Objects/2D/Square.h>
+#include <Core/Objects/EmptyObject.h>
 #include <Core/Components/Render/CameraComponent.h>
 #include <Core/Objects/General/CameraObject.h>
 #include <Core/Components/Physics/2D/Rigidbody2DComponent.h>
@@ -30,17 +32,17 @@ TestColisionScene::TestColisionScene() {
 	// movement->SetSpeed(1);
 	// movement->SetDirection(glm::vec2(1, -1));
 
-	square1 = new Square("staticSquare", nullptr, this);
-	square1->GetRenderComponent()->enableRender = false;
+	// square1 = new Square("staticSquare", nullptr, this);
+	// square1->GetRenderComponent()->enableRender = false;
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	square1->SetPosition(glm::vec3(0, 4, 0));
-	square1->SetScale(glm::vec3(0.5f));
-	square1->RotateEuler(glm::vec3(0.f, 0.f, 15));
+	// square1->SetPosition(glm::vec3(0, 4, 0));
+	// square1->SetScale(glm::vec3(0.5f));
+	// square1->RotateEuler(glm::vec3(0.f, 0.f, 15));
 	// auto addedComponent = square1->AddComponent<SquareColliderComponent>();
 	// addedComponent->SetPosition(glm::vec2(0, 0.25f));
-	auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
-	rigidbody->SetGravityScale(0.5f);
+	// auto rigidbody = square1->AddComponent<Rigidbody2DComponent>();
+	// rigidbody->SetGravityScale(0.5f);
 
 	// auto childSquare = new Square("childSquare", square1);
 	// childSquare->SetPosition(glm::vec3(2.5, -2, 0));
@@ -55,26 +57,33 @@ TestColisionScene::TestColisionScene() {
 
 	//Tree  test
 
-	square1 = new Square("square 1", nullptr, this);
-	square1->GetRenderComponent()->enableRender = false;
+	// square1 = new Square("square 1", nullptr, this);
+	// square1->GetRenderComponent()->enableRender = false;
 	// staticSquare->GetColliderComponent()->isTrigger = true;
 	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	square1->SetPosition(glm::vec3(2.5, 2, 0));
-	square1->SetScale(glm::vec3(0.5f));
+	// square1->SetPosition(glm::vec3(2.5, 2, 0));
+	// square1->SetScale(glm::vec3(0.5f));
 
-	square1 = new Square("square 2", nullptr, this);
-	square1->GetRenderComponent()->enableRender = false;
-	// staticSquare->GetColliderComponent()->isTrigger = true;
-	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	square1->SetPosition(glm::vec3(-2.5, 2, 0));
-	square1->SetScale(glm::vec3(0.5f));
+	circle = new EmptyObject("Circle", nullptr, this);
+	CircleColliderComponent* colliderComponent = circle->AddComponent<CircleColliderComponent>();
+	circle->SetPosition(glm::vec3(0, 4, 0));
+	// circleObject->SetScale(glm::vec3(0.5f));
+	auto rigidbody = circle->AddComponent<Rigidbody2DComponent>();
+	rigidbody->SetGravityScale(0.5f);
 
-	square1 = new Square("square 3", nullptr, this);
-	square1->GetRenderComponent()->enableRender = false;
-	// staticSquare->GetColliderComponent()->isTrigger = true;
-	// staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
-	square1->SetPosition(glm::vec3(-2.5, -2, 0));
-	square1->SetScale(glm::vec3(0.5f));
+	// square1 = new Square("square 2", nullptr, this);
+	// square1->GetRenderComponent()->enableRender = false;
+	// // staticSquare->GetColliderComponent()->isTrigger = true;
+	// // staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	// square1->SetPosition(glm::vec3(-2.5, 2, 0));
+	// square1->SetScale(glm::vec3(0.5f));
+
+	// square1 = new Square("square 3", nullptr, this);
+	// square1->GetRenderComponent()->enableRender = false;
+	// // staticSquare->GetColliderComponent()->isTrigger = true;
+	// // staticSquare->AddComponent(new FollowMouseComponent(staticSquare));
+	// square1->SetPosition(glm::vec3(-2.5, -2, 0));
+	// square1->SetScale(glm::vec3(0.5f));
 }
 
 void TestColisionScene::Update(double deltaTime) {
