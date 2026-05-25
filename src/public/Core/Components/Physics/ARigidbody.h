@@ -1,6 +1,6 @@
 #pragma once
-#include <glm/glm.hpp>
 #include <vector>
+#include <glm/glm.hpp>
 
 enum class RigidbodyConstraints {
 	NONE = 0,
@@ -31,35 +31,8 @@ enum class Rigidbody2DConstraints {
 };
 
 class ARigidbody {
-private:
+public:
 	float mass = 1.f;
 	float inverseMass = 1.f;
-
-	float momentOfInertia = 1.f;
-	float inverseMomentOfInertia = 1.f;
-
 	float gravityScale = 1.f;
-
-public:
-	float GetMass() const { return mass; }
-	float GetInverseMass() const { return inverseMass; }
-
-	float GetMomentOfInertia() const { return momentOfInertia; }
-	float GetInverseMomentOfInertia() const { return inverseMomentOfInertia; }
-
-	float GetGravityScale() const { return gravityScale; }
-
-	void SetMass(float m) {
-		mass = m;
-		inverseMass = (m > 0.0f) ? 1.0f / m : 0.0f;
-	}
-
-	void SetMomentOfInertia(glm::vec2 size) {
-		momentOfInertia = (1.0f / 12.0f) * mass * (size.x * size.x + size.y * size.y);
-		inverseMomentOfInertia = 1 / momentOfInertia;
-	}
-
-	void SetGravityScale(float g) {
-		gravityScale = g;
-	}
 };

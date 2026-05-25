@@ -51,7 +51,7 @@ TestColisionScene::TestColisionScene() {
 
 	squareFloor = new Square("squareFloor", nullptr, this);
 	squareFloor->SetPosition(glm::vec3(0, -2, 0));
-	squareFloor->RotateEuler(glm::vec3(0, 0, 0));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 25));
 	squareFloor->SetScale(glm::vec3(5, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
 
@@ -69,7 +69,7 @@ TestColisionScene::TestColisionScene() {
 	circle->SetPosition(glm::vec3(0, 4, 0));
 	// circleObject->SetScale(glm::vec3(0.5f));
 	auto rigidbody = circle->AddComponent<Rigidbody2DComponent>();
-	rigidbody->SetGravityScale(0.5f);
+	rigidbody->gravityScale = 0.5f;
 
 	// square1 = new Square("square 2", nullptr, this);
 	// square1->GetRenderComponent()->enableRender = false;

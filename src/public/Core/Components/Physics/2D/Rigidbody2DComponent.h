@@ -11,10 +11,10 @@ class Rigidbody2DComponent : public APhysics2DComponent, public ARigidbody{
 
 public:
 	glm::vec2 forceAccumulator;
+
 	glm::vec2 velocity;
 	glm::vec2 acceleration;
 
-	float torqueAccumulator;
 	float angularVelocity;
 	float angularAcceleration;
 
