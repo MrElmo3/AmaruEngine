@@ -6,10 +6,10 @@
 
 Rigidbody2DComponent::Rigidbody2DComponent(AObject* parent) : APhysics2DComponent(parent) {
 	forceAccumulator = glm::vec2(0);
-	aceleration = glm::vec2(0);
+	acceleration = glm::vec2(0);
 	velocity = glm::vec2(0);
 
-	angularAceleration = 0;
+	angularAcceleration = 0;
 	angularVelocity = 0;
 	
 	centerOfMass = glm::vec2(0);
@@ -18,10 +18,10 @@ Rigidbody2DComponent::Rigidbody2DComponent(AObject* parent) : APhysics2DComponen
 
 Rigidbody2DComponent::~Rigidbody2DComponent() {
 	forceAccumulator = glm::vec2(0);
-	aceleration = glm::vec2(0);
+	acceleration = glm::vec2(0);
 	velocity = glm::vec2(0);
 
-	angularAceleration = 0;
+	angularAcceleration = 0;
 	angularVelocity = 0;
 	
 	centerOfMass = glm::vec2(0);

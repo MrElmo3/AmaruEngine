@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
+#include <Util/Logger.h>
 
 enum class RigidbodyConstraints {
 	NONE = 0,
@@ -31,8 +32,22 @@ enum class Rigidbody2DConstraints {
 };
 
 class ARigidbody {
-public:
+private:
 	float mass = 1.f;
 	float inverseMass = 1.f;
+
+public:
 	float gravityScale = 1.f;
+
+	float GetMass() const { return mass; }
+	float GetInverseMass() const { return inverseMass;}
+
+	void SetMass(float mass) {
+		if(mass <= 0) {
+			Logger::Warning("The mass cannot be less or equal to 0.");
+			return;
+		}
+		this->mass = mass;
+		inverseMass = 1.f / mass;
+	}
 };

@@ -57,7 +57,7 @@ void PhysicsEngine::MoveRigidbody(Rigidbody2DComponent* rigidbody) {
 
 void PhysicsEngine::UpdateAceleration(Rigidbody2DComponent* rigidbody) {
 	rigidbody->forceAccumulator += glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y) * rigidbody->gravityScale;
-	rigidbody->aceleration = rigidbody->forceAccumulator / rigidbody->mass;
+	rigidbody->acceleration = rigidbody->forceAccumulator * rigidbody->GetInverseMass();
 	rigidbody->forceAccumulator = glm::vec3(0);
 }
 
@@ -107,10 +107,6 @@ void PhysicsEngine::CheckCollisions() {
 			CheckCollision(object, nearObject);
 		}
 	}
-
-	//		If so, ResolveColision
-	//			Updates RB's velocity
-	//			Repell RB
 }
 
 bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB) {
@@ -171,21 +167,16 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 
 	if(normalVelocity < 0)  return;
 	
-	float restitution = 0.15f; // TODO: Pull from physical properties
+	float restitution = 0.9f; // TODO: Pull from physical properties
 
 	float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
 	if (normalVelocity < (gravityStep * 2.0f)) {
 		restitution = 0.0f;
 	}
-	
-	float inverseMass = rb->inverseMass;
-
-	float denominator = inverseMass;
-	if (denominator <= 0.0f) return;
-	float impulseMagnitude = (1.0f + restitution) * normalVelocity / denominator;
+	float impulseMagnitude = (1.0f + restitution) * normalVelocity;
 
 	glm::vec2 linearImpulse = impulseMagnitude * normal;
-	rb->velocity -= linearImpulse * inverseMass;
+	rb->velocity -= linearImpulse;
 	
 
 };
