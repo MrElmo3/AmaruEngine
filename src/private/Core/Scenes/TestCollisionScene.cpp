@@ -50,10 +50,24 @@ TestColisionScene::TestColisionScene() {
 	// childSquare->GetRenderComponent()->enableRender = false;
 
 	squareFloor = new Square("squareFloor", nullptr, this);
-	squareFloor->SetPosition(glm::vec3(0, -2, 0));
-	squareFloor->RotateEuler(glm::vec3(0, 0, 25));
-	squareFloor->SetScale(glm::vec3(5, 1, 1));
+	squareFloor->SetPosition(glm::vec3(0, -4, 0));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 0));
+	squareFloor->SetScale(glm::vec3(20, 1, 1));
 	squareFloor->GetRenderComponent()->enableRender = false;
+
+	
+	squareFloor = new Square("squareFloor", nullptr, this);
+	squareFloor->SetPosition(glm::vec3(-6, 0, 0));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 90));
+	squareFloor->SetScale(glm::vec3(20, 1, 1));
+	squareFloor->GetRenderComponent()->enableRender = false;
+
+	squareFloor = new Square("squareFloor", nullptr, this);
+	squareFloor->SetPosition(glm::vec3(6, 0, 0));
+	squareFloor->RotateEuler(glm::vec3(0, 0, 90));
+	squareFloor->SetScale(glm::vec3(20, 1, 1));
+	squareFloor->GetRenderComponent()->enableRender = false;
+
 
 	//Tree  test
 
@@ -65,11 +79,19 @@ TestColisionScene::TestColisionScene() {
 	// square1->SetScale(glm::vec3(0.5f));
 
 	circle = new EmptyObject("Circle", nullptr, this);
+	CircleColliderComponent* colliderComponent2 = circle->AddComponent<CircleColliderComponent>();
+	circle->SetPosition(glm::vec3(0, 6, 0));
+	// circleObject->SetScale(glm::vec3(0.5f));
+	auto rigidbody2 = circle->AddComponent<Rigidbody2DComponent>();
+	rigidbody2->gravityScale = 0.5f;
+
+	circle = new EmptyObject("Circle", nullptr, this);
 	CircleColliderComponent* colliderComponent = circle->AddComponent<CircleColliderComponent>();
 	circle->SetPosition(glm::vec3(0, 4, 0));
 	// circleObject->SetScale(glm::vec3(0.5f));
 	auto rigidbody = circle->AddComponent<Rigidbody2DComponent>();
 	rigidbody->gravityScale = 0.5f;
+	rigidbody->AddForce(glm::vec2(150.f, 0.f));
 
 	// square1 = new Square("square 2", nullptr, this);
 	// square1->GetRenderComponent()->enableRender = false;
