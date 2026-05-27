@@ -182,6 +182,45 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 };
 
 void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
-}
+	auto rbA = physicObjectA->rigidbody;
+    auto rbB = physicObjectB->rigidbody;
 
+    float invMassA = rbA->GetInverseMass();
+    float invMassB = rbB->GetInverseMass();
+    float totalInvMass = invMassA + invMassB;
+
+	if (totalInvMass <= 0.0f)
+		return;
+	
+	glm::vec2 normal = glm::vec2(manifold.PenetrationVector);
+
+	const float slop = 0.01f;
+    const float percent = 0.8f; 
+    
+    if (manifold.Depth > slop) {
+        float correctionAmount = (manifold.Depth - slop) * percent;
+        
+        glm::vec2 correctionVector = normal * (correctionAmount / totalInvMass);
+
+        physicObjectA->baseObject->Translate(glm::vec3(-correctionVector * invMassA, 0.0f));
+        physicObjectB->baseObject->Translate(glm::vec3(correctionVector * invMassB, 0.0f));
+    }
+
+	glm::vec2 relativeVelocity = rbB->velocity - rbA->velocity;
+    float normalVelocity = glm::dot(relativeVelocity, normal);
+
+	if (normalVelocity < 0.0f) {
+		float restitution = 0.9f; //TODO: restitution
+		
+		float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
+        if (abs(normalVelocity) < (gravityStep * 2.0f)) {
+            restitution = 0.0f; 
+        }
+
+		float impulseMagnitude = -(1.0f + restitution) * normalVelocity / totalInvMass;
+		glm::vec2 linearImpulse = impulseMagnitude * normal;
+		rbA->velocity -= linearImpulse * invMassA;
+		rbB->velocity += linearImpulse * invMassB;
+	}
+};
 }
