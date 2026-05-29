@@ -1,39 +1,34 @@
 #pragma once
 #include <vector>
 #include <glm/glm.hpp>
+#include <Core/Components/IComponent.h>
+#include <Core/Components/Physics/2D/APhysics2DComponent.h>
+#include <Core/Components/Physics/ARigidbody.h>
 
-#include "Core/Components/IComponent.h"
-
-class PhysicsEngine3D;
 class ACollider3DComponent;
 
-class Rigidbody3DComponent : public IComponent{
-private:
-	std::vector<ACollider3DComponent*> colliders;
-	
+class Rigidbody3DComponent : public APhysics2DComponent, public ARigidbody{
+
 public:
+	glm::vec3 forceAccumulator;
+
 	glm::vec3 velocity;
-	float mass = 1;
+	glm::vec3 acceleration;
+
+	//TODO: add angular velocity and acceleration
+	// float angularVelocity;
+	// float angularAcceleration;
+
+	glm::vec3 centerOfMass;
+	
+	RigidbodyConstraints RigidbodyConstraints = RigidbodyConstraints::NONE;
 
 	Rigidbody3DComponent(AObject* parent);
-	~Rigidbody3DComponent() override;
-
-	void Awake() override;
-	void End() override;
-
-	void PhysicsUpdate(
-		std::vector<ACollider3DComponent*> nearColliders,
-		float fixedDeltaTime);
+	virtual ~Rigidbody3DComponent() override;
 
 private:
-	void DetectCollision(
-		ACollider3DComponent* externalCollider,
-		ACollider3DComponent* rbCollider,
-		float fixedDeltaTime);	
-	
+	bool ParentHasRigidbody();
+
 public:
-	void AddCollider(ACollider3DComponent* collider);
-	void RemoveCollider(ACollider3DComponent* collider);
-	void ClearColliders();
-	std::vector<ACollider3DComponent*> GetColliders();
+	void AddForce(glm::vec3 force);
 };

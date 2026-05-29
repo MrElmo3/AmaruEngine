@@ -1,0 +1,1 @@
+#include <Core/Components/Physics/3D/APhysics3DComponent.h>
