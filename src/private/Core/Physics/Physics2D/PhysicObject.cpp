@@ -1,4 +1,4 @@
-#include <Core/Physics/Physics2D/PhysicsObject.h>
+#include <Core/Physics/Physics2D/PhysicObject.h>
 
 #include <Core/Components/Physics/2D/ACollider2DComponent.h>
 

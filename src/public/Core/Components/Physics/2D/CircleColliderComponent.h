@@ -22,5 +22,5 @@ public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
 	float GetRadius() const { return radius; }
 
-	CircleColliderComponent* SetRadius(float halfSize);
+	CircleColliderComponent* SetRadius(float radius);
 };

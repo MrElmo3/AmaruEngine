@@ -2,12 +2,12 @@
 #include <vector>
 #include <glm/glm.hpp>
 #include <Core/Components/IComponent.h>
-#include <Core/Components/Physics/2D/APhysics2DComponent.h>
+#include <Core/Components/Physics/3D/APhysics3DComponent.h>
 #include <Core/Components/Physics/ARigidbody.h>
 
 class ACollider3DComponent;
 
-class Rigidbody3DComponent : public APhysics2DComponent, public ARigidbody{
+class Rigidbody3DComponent : public APhysics3DComponent, public ARigidbody{
 
 public:
 	glm::vec3 forceAccumulator;
@@ -21,7 +21,7 @@ public:
 
 	glm::vec3 centerOfMass;
 	
-	RigidbodyConstraints RigidbodyConstraints = RigidbodyConstraints::NONE;
+	RigidbodyConstraints constraints = RigidbodyConstraints::NONE;
 
 	Rigidbody3DComponent(AObject* parent);
 	virtual ~Rigidbody3DComponent() override;

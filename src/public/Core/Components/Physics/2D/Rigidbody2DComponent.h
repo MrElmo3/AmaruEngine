@@ -20,7 +20,7 @@ public:
 
 	glm::vec2 centerOfMass;
 	
-	Rigidbody2DConstraints RigidbodyConstraints = Rigidbody2DConstraints::NONE;
+	Rigidbody2DConstraints constraints = Rigidbody2DConstraints::NONE;
 
 	Rigidbody2DComponent(AObject* parent);
 	virtual ~Rigidbody2DComponent() override;

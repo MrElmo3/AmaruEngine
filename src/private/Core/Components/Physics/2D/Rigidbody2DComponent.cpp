@@ -1,7 +1,6 @@
 #include "Core/Components/Physics/2D/Rigidbody2DComponent.h"
 
 #include "Core/Components/Physics/2D/ACollider2DComponent.h"
-#include "Core/Components/Physics/2D/SquareColliderComponent.h"
 #include "Core/Objects/AObject.h"
 
 Rigidbody2DComponent::Rigidbody2DComponent(AObject* parent) : APhysics2DComponent(parent) {

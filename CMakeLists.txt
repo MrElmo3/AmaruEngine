@@ -20,15 +20,17 @@ set(COMPONENTS_INPUT
 # Physcis components source
 set(COMPONENTS_PHYSICS
 	${PRIVATE_DIR}/Core/Components/Physics/ACollider.cpp
+
 	${PRIVATE_DIR}/Core/Components/Physics/2D/APhysics2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/ACollider2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/Rigidbody2DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/SquareColliderComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/2D/CircleColliderComponent.cpp
+
 	${PRIVATE_DIR}/Core/Components/Physics/3D/APhysics3DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/3D/ACollider3DComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/3D/BoxColliderComponent.cpp
-	# ${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp
 )
 
 # Render components source
@@ -76,7 +78,7 @@ set(PHYSICS_2D
 set(PHYSICS_3D
 	${PRIVATE_DIR}/Core/Physics/Physics3D/Octree.cpp
 	${PRIVATE_DIR}/Core/Physics/Physics3D/PhysicsEngine.cpp
-	# ${PRIVATE_DIR}/Core/Physics/Physics3D/PhysicsObject.cpp
+	${PRIVATE_DIR}/Core/Physics/Physics3D/PhysicObject.cpp
 )
 
 #Physics engine source

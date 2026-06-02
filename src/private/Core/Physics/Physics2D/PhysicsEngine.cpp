@@ -3,7 +3,7 @@
 #include <Core/Global.h>
 #include <Core/Objects/AObject.h>
 #include <Core/Physics/Physics2D/PhysicsEngine.h>
-#include <Core/Physics/Physics2D/PhysicsObject.h>
+#include <Core/Physics/Physics2D/PhysicObject.h>
 #include <Core/Physics/Physics2D/Quadtree.h>
 #include <Core/Render/Color.h>
 #include <Util/Logger.h>

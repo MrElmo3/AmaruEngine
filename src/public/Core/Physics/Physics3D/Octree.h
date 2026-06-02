@@ -19,7 +19,7 @@ private:
 		int depth;
 
 		std::vector<PhysicObject*> objects;
-		std::unique_ptr<Node> children[4];
+		std::unique_ptr<Node> children[8];
 		bool isSplit = false;
 
 		/// @brief Gets the world center of the node.

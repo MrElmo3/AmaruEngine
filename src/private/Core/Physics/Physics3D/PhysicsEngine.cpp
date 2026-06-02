@@ -1,189 +1,217 @@
 #include <Core/Physics/Physics3D/PhysicsEngine.h>
+#include <Core/Physics/Physics3D/PhysicObject.h>
+#include <Core/Physics/Physics3D/Octree.h>
+#include <Core/Objects/AObject.h>
+#include <Core/Components/Physics/3D/ACollider3DComponent.h>
+#include <Core/Components/Physics/3D/Rigidbody3DComponent.h>
+#include <Core/Render/Color.h>
 
+namespace Physics3D {
 
-// #include <iostream>
+PhysicsEngine::PhysicsEngine() {
+	octree = new Octree();
+}
 
-// #include "Core/Global.h"
-// #include "Core/Components/Physics/3D/ACollider3DComponent.h"
-// #include "Core/Components/Physics/2D/SquareColliderComponent.h"
-// #include "Core/Components/Physics/3D/BoxColliderComponent.h"
-// #include "Core/Components/Physics/3D/Rigidbody3DComponent.h"
-// #include "Core/Objects/AObject.h"
+void PhysicsEngine::RegisterObject(AObject* object) {
+	Rigidbody3DComponent* rigidbody = object->GetComponent<Rigidbody3DComponent>();
 
-// std::vector<Rigidbody3DComponent*> PhysicsEngine3D::rigidbodies =
-// 	std::vector<Rigidbody3DComponent*>();
+	if (rigidbody != nullptr && rigidbody->PhysicsEnabled()) {
+		PhysicObject* newPhysicObject = new PhysicObject();
+		newPhysicObject->baseObject = object;
+		newPhysicObject->rigidbody = rigidbody;
+		newPhysicObject->colliders = object->GetAllComponentsInChildren<ACollider3DComponent>();
+		newPhysicObject->UpdateLimits();
+		physicObjects.push_back(newPhysicObject);
+		return;
+	}
 
-// std::vector<ACollider3DComponent*> PhysicsEngine3D::colliders =
-// 	std::vector<ACollider3DComponent*>();
+	auto colliders = object->GetComponentsOfType<ACollider3DComponent>();
+	if (!colliders.empty()) {
+		PhysicObject* newPhysicObject = new PhysicObject();
+		newPhysicObject->baseObject = object;
+		newPhysicObject->rigidbody = nullptr;
+		newPhysicObject->colliders = colliders;
+		newPhysicObject->UpdateLimits();
+		physicObjects.push_back(newPhysicObject);
+	}
 
-// void PhysicsEngine3D::Awake(std::vector<AObject*> objects) {
-// 	for (AObject* object : objects) {
-// 		AddObjectRigidbodyAndCollider(object);
-// 	}
-// }
+	for (auto child : object->GetChildren()) {
+		RegisterObject(child);
+	}
+}
 
-// void PhysicsEngine3D::Update() {
-// 	for (int i = 0; i < rigidbodies.size(); i++) {
-// 		std::vector<ACollider3DComponent*> nearColliders = GetNearColliders(rigidbodies[i]);
-// 		rigidbodies[i]->PhysicsUpdate(nearColliders, Global::FIXED_DELTA_TIME);
-// 	}
-// }
+void PhysicsEngine::MoveObjects() {
+	for (auto physicObject : physicObjects) {
+		if (physicObject->rigidbody != nullptr)
+			MoveRigidbody(physicObject->rigidbody);
+	}
+}
 
-// void PhysicsEngine3D::AddObjectRigidbodyAndCollider(AObject* object) {
-// 	for (IComponent* component : object->components) {
+void PhysicsEngine::MoveRigidbody(Rigidbody3DComponent* rigidbody) {
+	UpdateAceleration(rigidbody);
+	UpdateVelocity(rigidbody);
+	UpdatePosition(rigidbody);
+}
 
-// 		Rigidbody3DComponent* rigidbody = dynamic_cast<Rigidbody3DComponent*>(component);
-// 		if (rigidbody != nullptr) {
-// 			AddRigidbody(rigidbody);
-// 			continue;
-// 		}
+void PhysicsEngine::UpdateAceleration(Rigidbody3DComponent* rigidbody) {
+	rigidbody->forceAccumulator += Global::GRAVITY * rigidbody->gravityScale;
+	rigidbody->acceleration = rigidbody->forceAccumulator * rigidbody->GetInverseMass();
+	rigidbody->forceAccumulator = glm::vec3(0);
+}
 
-// 		ACollider3DComponent* collider = dynamic_cast<ACollider3DComponent*>(component);
-// 		if (collider != nullptr) {
-// 			AddCollider(collider);
-// 			continue;
-// 		}
-// 	}
+void PhysicsEngine::UpdateVelocity(Rigidbody3DComponent* rigidbody) {
+	float dt = Global::FIXED_DELTA_TIME;
 
-// 	for (AObject* child : object->children) {
-// 		AddObjectRigidbodyAndCollider(child);
-// 	}
-// }
-
-// void PhysicsEngine3D::AddRigidbody(Rigidbody3DComponent* rigidbody) {
-// 	rigidbodies.push_back(rigidbody);
-// }
-
-// void PhysicsEngine3D::AddCollider(ACollider3DComponent* collider) {
-// 	colliders.push_back(collider);
-// }
-
-// std::vector<ACollider3DComponent*> PhysicsEngine3D::GetNearColliders(Rigidbody3DComponent* rigidbody) {
-// 	std::vector<ACollider3DComponent*> nearColliders = std::vector<ACollider3DComponent*>();
-
-// 	glm::vec3 maxDistance = rigidbody->velocity != glm::vec3(0) ?
-// 		rigidbody->velocity : rigidbody->parent->GetWorldScale();
+	rigidbody->velocity += rigidbody->acceleration * dt;
+	// rigidbody->angularVelocity += rigidbody->angularAcceleration * dt;
 	
-// 	for (ACollider3DComponent* collider : colliders) {
-// 		if (rigidbody->parent == collider->parent) continue;
+	// rigidbody->velocity *= 0.99f;
+	// rigidbody->angularVelocity *= 0.95f;
 
-// 		glm::vec3 distance = rigidbody->parent->GetWorldPosition() - collider->parent->GetWorldPosition();
+	const float sleepThresholdLinear = 0.05f;
+	const float sleepThresholdAngular = 0.29f; // Radians per second
+
+	if (glm::length(rigidbody->velocity) < sleepThresholdLinear) {
+		rigidbody->velocity = glm::vec3(0.0f);
+	}
+}
+
+void PhysicsEngine::UpdatePosition(Rigidbody3DComponent* rigidbody) {
+	rigidbody->parent->Translate(glm::vec3(rigidbody->velocity * Global::FIXED_DELTA_TIME));
+}
+
+void PhysicsEngine::UpdateTree() {
+	UpdateContainers();
+	octree->Build(physicObjects, worldMin, worldMax);
+}
+
+void PhysicsEngine::UpdateContainers() {
+	for (auto physicObject : physicObjects) {
+		physicObject->UpdateLimits();
+	}
+}
+
+void PhysicsEngine::CheckCollisions() {
+	for (auto object : physicObjects) {
+		if (object->rigidbody == nullptr)
+			continue;
+		std::vector<PhysicObject*> nearObjects;
+		octree->GetNearObjects(object, nearObjects);
+		for (auto nearObject : nearObjects) {
+			CheckCollision(object, nearObject);
+		}
+	}
+}
+
+bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB) {
+	for (auto colliderA : physicObjectA->colliders) {
+		for (auto colliderB : physicObjectB->colliders) {
+			PhysicsEngine::GJKResult result = GJKCheck(colliderA, colliderB);
+
+			if (result.Collide) {
+				PhysicsEngine::CollisionManifold manifold = EPA(colliderA, colliderB, result.Simplex);
+
+				ResolveCollision2D(physicObjectA, physicObjectB, manifold);
+
+				colliderA->debugColor = Color::RED;
+				colliderB->debugColor = Color::RED;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+void PhysicsEngine::ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+	if (physicObjectA->rigidbody != nullptr && physicObjectB->rigidbody != nullptr) {
+		Resolve2RBCollision(physicObjectA, physicObjectB, manifold);
+		return;
+	}
+
+	if (physicObjectA->rigidbody != nullptr) {
+		Resolve1RBCollision(physicObjectA, manifold);
+		return;
+	}
+
+	if (physicObjectB->rigidbody != nullptr) {
+		Resolve1RBCollision(physicObjectB, manifold);
+		return;
+	}
+};
+
+void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionManifold manifold) {
+	auto baseObject = physicObject->baseObject;
+	auto rb = physicObject->rigidbody;
+
+	glm::vec3 normal = manifold.PenetrationVector;
+
+	const float slop = 0.01f;
+    const float percent = 0.8f;
+
+	if (manifold.Depth > slop) {
+        float correction = (manifold.Depth - slop) * percent;
+        baseObject->Translate(-correction * normal);
+    }
+
+    glm::vec3 contactVelocity = rb->velocity;
+
+	float normalVelocity = glm::dot(contactVelocity, normal);
+
+	if(normalVelocity < 0)  return;
+	
+	float restitution = 0.9f; // TODO: Pull from physical properties
+
+	float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
+	if (normalVelocity < (gravityStep * 2.0f)) {
+		restitution = 0.0f;
+	}
+	float impulseMagnitude = (1.0f + restitution) * normalVelocity;
+
+	glm::vec3 linearImpulse = impulseMagnitude * normal;
+	rb->velocity -= linearImpulse;
+	
+};
+
+void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+	auto rbA = physicObjectA->rigidbody;
+    auto rbB = physicObjectB->rigidbody;
+
+    float invMassA = rbA->GetInverseMass();
+    float invMassB = rbB->GetInverseMass();
+    float totalInvMass = invMassA + invMassB;
+
+	if (totalInvMass <= 0.0f)
+		return;
+	
+	glm::vec3 normal = manifold.PenetrationVector;
+
+	const float slop = 0.01f;
+    const float percent = 0.8f; 
+    
+    if (manifold.Depth > slop) {
+        float correctionAmount = (manifold.Depth - slop) * percent;
+        
+        glm::vec3 correctionVector = normal * (correctionAmount / totalInvMass);
+
+        physicObjectA->baseObject->Translate(-correctionVector * invMassA);
+        physicObjectB->baseObject->Translate(correctionVector * invMassB);
+    }
+
+	glm::vec3 relativeVelocity = rbB->velocity - rbA->velocity;
+    float normalVelocity = glm::dot(relativeVelocity, normal);
+
+	if (normalVelocity < 0.0f) {
+		float restitution = 0.9f; //TODO: restitution
 		
-// 		if (glm::length(distance) <= glm::length(maxDistance)) {
-// 			nearColliders.push_back(collider);
-// 		}
-// 	}
+		float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
+        if (abs(normalVelocity) < (gravityStep * 2.0f)) {
+            restitution = 0.0f; 
+        }
 
-// 	return nearColliders;
-// }
-
-// void PhysicsEngine3D::CalcMinAndMax(glm::vec3& min, glm::vec3& max, glm::vec3 center, glm::vec3 halfSize) {
-// 	min = center - halfSize;
-// 	max = center + halfSize;
-// }
-
-// bool PhysicsEngine3D::PointIntersectsBoxCollider(glm::vec3 point, BoxColliderComponent* collider) {
-// 	glm::vec3 min, max;
-// 	CalcMinAndMax(min, max, collider->GetWorldCenter(), collider->GetWorldHalfSize());
-
-// 	return (
-// 		point.x >= min.x &&
-// 		point.x <= max.x &&
-// 		point.y >= min.y &&
-// 		point.y <= max.y &&
-// 		point.z >= min.z &&
-// 		point.z <= max.z
-// 	);
-// }
-
-// bool PhysicsEngine3D::BoxColliderIntesectsBoxCollider(
-// 	BoxColliderComponent* collider1,
-// 	BoxColliderComponent* collider2
-// ) {
-// 	glm::vec3 resultPosition = collider1->GetWorldCenter() - collider2->GetWorldCenter();
-// 	glm::vec3 resultHalfSize = collider1->GetWorldHalfSize() + collider2->GetWorldHalfSize();
-
-// 	glm::vec3 min, max;
-// 	CalcMinAndMax(min, max, resultPosition, resultHalfSize);
-
-// 	return (
-// 		min.x <= 0 &&
-// 		max.x >= 0 &&
-// 		min.y <= 0 &&
-// 		max.y >= 0 &&
-// 		min.z <= 0 &&
-// 		max.z >= 0
-// 	);
-// }
-
-// glm::vec3 PhysicsEngine3D::BoxColliderPenetration(
-// 	BoxColliderComponent* collider1,
-// 	BoxColliderComponent* collider2
-// ) {
-// 	glm::vec3 resultPosition = collider1->GetWorldCenter() - collider2->GetWorldCenter();
-// 	glm::vec3 resultHalfSize = collider1->GetWorldHalfSize() + collider2->GetWorldHalfSize();
-
-// 	glm::vec3 min, max;
-// 	CalcMinAndMax(min, max, resultPosition, resultHalfSize);
-
-// 	glm::vec3 penetration = glm::vec3(min.x, 0, 0);
-
-// 	float minDistance = INFINITY;
-
-// 	for (int i = 0; i < 3; i++) {
-// 		if (std::abs(min[i]) < minDistance) {
-// 			minDistance = std::abs(min[i]);
-// 			penetration = glm::vec3(0);
-// 			penetration[i] = min[i];
-// 		}
-
-// 		if (std::abs(max[i]) < minDistance) {
-// 			penetration = glm::vec3(0);
-// 			penetration[i] = max[i];
-// 		}
-// 	}
-
-// 	return penetration;
-// }
-
-// PhysicsEngine3D::Raycast3D PhysicsEngine3D::RaycastBoxCollider(
-// 	glm::vec3 position,
-// 	glm::vec3 direction,
-// 	double distance,
-// 	glm::vec3 colliderPosition,
-// 	glm::vec3 colliderHalfSize) {
-	
-// 	Raycast3D hit;
-	
-// 	direction = glm::normalize(direction);
-	
-// 	glm::vec3 magnitude = direction;
-// 	magnitude *= distance;
-	
-// 	glm::vec3 min, max;
-// 	CalcMinAndMax(min, max, colliderPosition, colliderHalfSize);
-
-// 	float lastEntry = 0.0f;
-// 	float firstExit = INFINITY;
-	
-// 	for (int i = 0; i < 3; i++) {
-// 		if (std::abs(magnitude[i]) != 0) {
-// 			float t1 = (min[i] - position[i]) / magnitude[i];
-// 			float t2 = (max[i] - position[i]) / magnitude[i];
-
-// 			lastEntry = std::max(lastEntry, std::min(t1, t2));
-// 			firstExit = std::min(firstExit, std::max(t1, t2));
-// 		}
-// 		else if (position[i] <= min[i] || position[i] >= max[i]) {
-// 			return hit;
-// 		}
-// 	}
-
-// 	if (firstExit > lastEntry && firstExit > 0 && lastEntry < 1) {
-// 		hit.hit = true;
-// 		hit.time = lastEntry;
-// 		hit.position = position + magnitude * lastEntry;
-// 	}
-
-// 	return hit;
-// }
+		float impulseMagnitude = -(1.0f + restitution) * normalVelocity / totalInvMass;
+		glm::vec3 linearImpulse = impulseMagnitude * normal;
+		rbA->velocity -= linearImpulse * invMassA;
+		rbB->velocity += linearImpulse * invMassB;
+	}
+};
+}
