@@ -7,8 +7,10 @@ class TestColisionScene : public ASceneController {
 public:
 	TestColisionScene();
 
+	EmptyObject* cameraObject;
+
 	EmptyObject* circle;
-	Square* squareFloor;
+	EmptyObject* floor;
 
 	void Update(double deltaTime) override;
 };
