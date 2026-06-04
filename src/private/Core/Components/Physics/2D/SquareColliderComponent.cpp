@@ -35,7 +35,7 @@ void SquareColliderComponent::UpdateLocalVertexPoints() {
 }
 
 glm::vec3 SquareColliderComponent::GetSupportPoint(glm::vec3 direction) {
-	if(glm::length(direction) < 0.0001f) ACollider::GetSupportPoint(direction);
+	if(glm::length(direction) < 0.0001f) return ACollider::GetSupportPoint(direction);
 	if(glm::length(glm::vec2(direction.x, direction.y)) < 0.0001f) return glm::vec3(NAN);
 	
 	float maxDotProduct = -FLT_MAX;

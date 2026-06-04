@@ -38,7 +38,7 @@ void CircleColliderComponent::UpdateLocalVertexPoints() {
 }
 
 glm::vec3 CircleColliderComponent::GetSupportPoint(glm::vec3 direction) {
-	if(glm::length(direction) < 0.0001f) ACollider::GetSupportPoint(direction);
+	if(glm::length(direction) < 0.0001f) return ACollider::GetSupportPoint(direction);
 	if(glm::length(glm::vec2(direction.x, direction.y)) < 0.0001f) return glm::vec3(NAN);
 
 	return center + glm::normalize(direction) * radius;
