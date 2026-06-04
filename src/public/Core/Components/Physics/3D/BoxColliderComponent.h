@@ -21,5 +21,5 @@ private:
 public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
 
-	BoxColliderComponent* SetHalfSize(glm::vec2 halfSize);
+	BoxColliderComponent* SetHalfSize(glm::vec3 halfSize);
 };
