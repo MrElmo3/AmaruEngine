@@ -31,6 +31,7 @@ set(COMPONENTS_PHYSICS
 	${PRIVATE_DIR}/Core/Components/Physics/3D/ACollider3DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/3D/Rigidbody3DComponent.cpp
 	${PRIVATE_DIR}/Core/Components/Physics/3D/BoxColliderComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Physics/3D/SphereColliderComponent.cpp
 )
 
 # Render components source
