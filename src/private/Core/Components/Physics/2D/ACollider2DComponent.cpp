@@ -55,3 +55,11 @@ void ACollider2DComponent::UpdateWorldPosition() {
 	MarkDirty();
 }
 
+void ACollider2DComponent::UpdateRenderIndexes() {
+	renderIndexes.clear();
+	for (unsigned int i = 0; i < worldVertexPoints.size(); i++) {
+		renderIndexes.push_back(i);
+		renderIndexes.push_back(i + 1 == worldVertexPoints.size() ? 0 : i + 1);
+	}
+}
+

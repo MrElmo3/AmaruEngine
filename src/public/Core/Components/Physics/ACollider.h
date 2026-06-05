@@ -14,6 +14,9 @@ protected:
 
 	/// @brief The vertex points of the collider in world space.
 	std::vector<glm::vec3> worldVertexPoints;
+	
+	/// @brief The points to render 
+	std::vector<unsigned int> renderIndexes;
 
 	/// @brief The center of the collider in world space.
 	glm::vec3 center;
@@ -41,6 +44,7 @@ protected:
 	void UpdateWorldValues();
 	virtual void UpdateLocalVertexPoints();
 	virtual void UpdateWorldVertexPoints();
+	virtual void UpdateRenderIndexes();
 	void UpdateCenterValue();
 	void DrawDebugOutline();
 

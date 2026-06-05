@@ -35,6 +35,16 @@ void SphereColliderComponent::UpdateLocalVertexPoints() {
 	}
 }
 
+void SphereColliderComponent::UpdateRenderIndexes() {
+	renderIndexes.clear();
+	for (int i = 0; i < 3; i++) {
+		for(int j = 0; j < RENDER_VERTEX_NUMBER; j++) {
+			renderIndexes.push_back(i + j * 3);
+			renderIndexes.push_back(j+1 == RENDER_VERTEX_NUMBER ? i : i + (j + 1) * 3);
+		}
+	}
+}
+
 glm::vec3 SphereColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	if(glm::length(direction) < 0.0001f) return ACollider::GetSupportPoint(direction);
 

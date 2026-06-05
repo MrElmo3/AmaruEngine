@@ -5,7 +5,7 @@
 class SphereColliderComponent : public ACollider3DComponent {
 private:
 	static const int RENDER_LINE_NUMBER = 12;
-	static const int RENDER_VERTEX_NUMBER = 12;
+	static const int RENDER_VERTEX_NUMBER = 24;
 
 	float radius;
 
@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual void UpdateLocalVertexPoints() override;
+	virtual void UpdateRenderIndexes() override;
 
 public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;

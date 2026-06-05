@@ -2,6 +2,7 @@
 #include <Core/Render/Render.h>
 #include <Core/Render/Color.h>
 #include <Util/Logger.h>
+#include <stdexcept>
 
 ACollider::ACollider() {
 	debugColor = Color::GREEN;
@@ -20,9 +21,17 @@ void ACollider::UpdateWorldValues() {
 	UpdateAABBContainer();
 }
 
-void ACollider::UpdateLocalVertexPoints() {}
+void ACollider::UpdateLocalVertexPoints() {
+	throw std::logic_error("ACollider::UpdateRenderPoints() is not implemented yet.");
+}
 
-void ACollider::UpdateWorldVertexPoints() {}
+void ACollider::UpdateWorldVertexPoints() {
+	throw std::logic_error("ACollider::UpdateRenderPoints() is not implemented yet.");
+}
+
+void ACollider::UpdateRenderIndexes() {
+	throw std::logic_error("ACollider::UpdateRenderPoints() is not implemented yet.");
+}
 
 void ACollider::UpdateCenterValue() {
 	center = glm::vec3(0);
@@ -33,24 +42,15 @@ void ACollider::UpdateCenterValue() {
 }
 
 void ACollider::DrawDebugOutline() {
+	if (renderIndexes.empty()) UpdateRenderIndexes();
 	glm::vec3 debugColliderColor = debugColor;
 
-	for (unsigned int i = 0; i < worldVertexPoints.size(); i++)
-	{
-		if(i == worldVertexPoints.size() - 1){
-			Render::GetInstance().DrawLineSegment(
-				worldVertexPoints[i],
-				worldVertexPoints[0],
+	for (unsigned int i = 0; i < renderIndexes.size(); i += 2) {
+		Render::GetInstance().DrawLineSegment(
+				worldVertexPoints[renderIndexes[i]],
+				worldVertexPoints[renderIndexes[i+1]],
 				debugColliderColor
 			);
-			continue;
-		}
-
-		Render::GetInstance().DrawLineSegment(
-			worldVertexPoints[i],
-			worldVertexPoints[i+1],
-			debugColliderColor
-		);
 	}
 }
 

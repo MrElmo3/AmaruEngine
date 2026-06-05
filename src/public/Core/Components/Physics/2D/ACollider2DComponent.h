@@ -22,7 +22,8 @@ public:
 
 private:
 	void UpdateWorldPosition();
-	void UpdateWorldVertexPoints() override;
+	virtual void UpdateWorldVertexPoints() override;
+	virtual void UpdateRenderIndexes() override;
 	
 public:
 	std::pair<glm::vec3, glm::vec3> GetAABBContainer() override;

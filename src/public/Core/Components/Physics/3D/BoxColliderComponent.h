@@ -14,9 +14,7 @@ public:
 
 protected:
 	virtual void UpdateLocalVertexPoints() override;
-
-private:
-	void UpdateWorldHalfSize();
+	virtual void UpdateRenderIndexes() override;
 
 public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
