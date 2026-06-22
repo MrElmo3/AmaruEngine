@@ -19,9 +19,8 @@ Player::Player(const std::string &_name, AObject* _parent, ASceneController* _sc
 	playerCamera->FOV = 60.0f;
 	
 	rigidbodyComponent = AddComponent<Rigidbody3DComponent>();
-	colliderComponent = AddComponent<BoxColliderComponent>()
-		->SetCenter(glm::vec3(0.0f))
-		->SetHalfSize(glm::vec3(0.2f));
+	colliderComponent = AddComponent<BoxColliderComponent>()->SetHalfSize(glm::vec3(0.2f));
+	colliderComponent->SetPosition(glm::vec3(0.0f));
 	inputComponent = AddComponent<InputComponent>();
 	movementComponent = AddComponent<MovementComponent>();
 	

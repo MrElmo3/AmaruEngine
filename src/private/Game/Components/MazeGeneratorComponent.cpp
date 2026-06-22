@@ -181,8 +181,8 @@ void MazeGeneratorComponent::InstantiateWall(std::string id, glm::vec3 objectPos
 	std::string name = "Wall" + id;
 	
 	Cube* wall = new Cube(name, parent);
-	wall->position = objectPosition;
-	wall->scale = objectScale * 0.8f;
+	wall->SetPosition(objectPosition);
+	wall->SetScale(objectScale * 0.8f);
 	
 	LitMaterial* _material = dynamic_cast<LitMaterial*>(wall->GetRenderComponent()->material);
 	// _material->SetColor(glm::vec3(255, 127, 39) / 255.0f);

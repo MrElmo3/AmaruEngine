@@ -7,6 +7,8 @@
 #include <Core/Scenes/TestModelLoadingScene.h>
 #include <Core/Scenes/TestCollisionScene.h>
 
+#include <Game/Scenes/CollisionScene.h>
+
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
 #include <Util/Logger.h>
@@ -41,7 +43,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new TestColisionScene();
+	actualScene = new CollisionScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

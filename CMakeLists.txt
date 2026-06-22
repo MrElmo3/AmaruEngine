@@ -14,7 +14,7 @@ set(ASSETS_SRC_DIR ${CMAKE_SOURCE_DIR}/Assets)
 # Input components Source
 set(COMPONENTS_INPUT
 	# ${PRIVATE_DIR}/Core/Components/Input/FollowMouseComponent.cpp
-	# ${PRIVATE_DIR}/Core/Components/Input/InputComponent.cpp
+	${PRIVATE_DIR}/Core/Components/Input/InputComponent.cpp
 )
 
 # Physcis components source
@@ -130,7 +130,8 @@ set(UTIL
 
 #Game Source Files
 Set(GAME_SCENES
-	${PRIVATE_DIR}/Game/Scenes/Maze3DScene.cpp
+	# ${PRIVATE_DIR}/Game/Scenes/Maze3DScene.cpp
+	${PRIVATE_DIR}/Game/Scenes/CollisionScene.cpp
 )
 
 set(GAME_OBJECTS
@@ -155,7 +156,7 @@ set(SOURCES
 
 	${CORE}
 	${UTIL}
-	# ${GAME}
+	${GAME}
 )
 
 add_executable(
