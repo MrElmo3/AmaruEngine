@@ -2,6 +2,7 @@
 #include <Core/Objects/AObject.h>
 #include <Core/Physics/APhysicsEngine.h>
 #include <algorithm>
+#include <glm/gtc/epsilon.hpp>
 
 void APhysicsEngine::Awake(std::vector<AObject*> objects) {
 	for (auto* object : objects) {
@@ -25,6 +26,13 @@ APhysicsEngine::GJKResult APhysicsEngine::GJKCheck(ACollider* colliderA, ACollid
 
 	glm::vec3 direction = glm::normalize(colliderB->GetCenter() - colliderA->GetCenter());
 	std::vector<glm::vec3> simplex = { SupportDifference(colliderA, colliderB, direction) };
+
+	float epsilon = 0.0001f;
+	
+	if(glm::all(glm::epsilonEqual(simplex[0], glm::vec3(0), epsilon))){
+		result.Collide = false;
+		return result;
+	}
 
 	direction = glm::normalize(-simplex[0]);
 

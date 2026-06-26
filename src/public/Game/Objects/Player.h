@@ -22,5 +22,7 @@ private:
 	InputComponent* inputComponent;
 	MovementComponent* movementComponent;
 	BoxColliderComponent* colliderComponent;
-	
+
+public:
+	CameraComponent* GetCamera() const { return playerCamera; }
 };

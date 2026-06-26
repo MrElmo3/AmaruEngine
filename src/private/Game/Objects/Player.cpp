@@ -16,17 +16,18 @@ Player::Player(const std::string &_name, AObject* _parent, ASceneController* _sc
 	playerCamera = AddComponent<CameraComponent>();
 	playerCamera->orthographic = false;
 	playerCamera->mainCamera = true;
-	playerCamera->FOV = 60.0f;
+	playerCamera->FOV = 90.0f;
 	
 	rigidbodyComponent = AddComponent<Rigidbody3DComponent>();
-	colliderComponent = AddComponent<BoxColliderComponent>()->SetHalfSize(glm::vec3(0.2f));
-	colliderComponent->SetPosition(glm::vec3(0.0f));
+	// colliderComponent = AddComponent<BoxColliderComponent>()->SetHalfSize(glm::vec3(0.2f));
+	// colliderComponent->SetPosition(glm::vec3(0.0f));
 	inputComponent = AddComponent<InputComponent>();
 	movementComponent = AddComponent<MovementComponent>();
 	
 	// TextureMaterial* baseMaterial = dynamic_cast<TextureMaterial*>(renderComponent->material);
 	// baseMaterial->color = glm::vec3(63, 72, 204) / 255.0f;
 	
+	rigidbodyComponent->gravityScale = 0;
 }
 
 void Player::Awake() {

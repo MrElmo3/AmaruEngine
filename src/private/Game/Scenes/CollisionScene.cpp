@@ -7,49 +7,117 @@
 
 #include <Core/Components/Physics/3D/BoxColliderComponent.h>
 #include <Core/Components/Physics/3D/SphereColliderComponent.h>
-
 #include <Core/Components/Physics/3D/Rigidbody3DComponent.h>
+
+#include <Game/Objects/Player.h>
+
+#include <GLFW/glfw3.h>
 
 
 CollisionScene::CollisionScene() {
 
 	scenePhysicsType = PhysicsType::ENABLE_3D;
 
-	cameraObject = (EmptyObject*)(new CameraObject("Camera", nullptr, this));
-	auto* cameraComponent = ((CameraObject*)cameraObject)->GetCameraComponent();
-	cameraObject->RotateEuler(glm::vec3(15, 0, 0));
+	cameraObject = (EmptyObject*)(new Player("Camera", nullptr, this));
 	cameraObject->SetPosition(glm::vec3(0, 0, 20));
-	cameraComponent->mainCamera = true;
-	cameraComponent->orthographic = false;
-	cameraComponent->orthoSize = 4.0f;
 
 	EmptyObject* floor = new EmptyObject("floor", nullptr, this);
 	floor->SetPosition(glm::vec3(0, -6, 0));
 	floor->RotateEuler(glm::vec3(0, 0, 0));
 	floor->SetScale(glm::vec3(20, 1, 20));
-	BoxColliderComponent* floorCollider = floor->AddComponent<BoxColliderComponent>();
+	BoxColliderComponent* floorCollider = floor->AddComponent<BoxColliderComponent>();	
 
 
 	EmptyObject* wall1 = new EmptyObject("floor", nullptr, this);
-	wall1->SetPosition(glm::vec3(-10, 0, 0));
+	wall1->SetPosition(glm::vec3(-9.5, 3.5, 0));
 	wall1->RotateEuler(glm::vec3(0, 0, 0));
 	wall1->SetScale(glm::vec3(1, 20, 20));
 	BoxColliderComponent* wallCollider1 = wall1->AddComponent<BoxColliderComponent>();
+
+	EmptyObject* wall2 = new EmptyObject("floor", nullptr, this);
+	wall2->SetPosition(glm::vec3(9.5, 3.5, 0));
+	wall2->RotateEuler(glm::vec3(0, 0, 0));
+	wall2->SetScale(glm::vec3(1, 20, 20));
+	BoxColliderComponent* wallCollider2 = wall2->AddComponent<BoxColliderComponent>();
+
+	EmptyObject* wall3 = new EmptyObject("floor", nullptr, this);
+	wall3->SetPosition(glm::vec3(0, 3.5, 9.5));
+	wall3->RotateEuler(glm::vec3(0, 0, 0));
+	wall3->SetScale(glm::vec3(20, 20, 1));
+	BoxColliderComponent* wallCollider3 = wall3->AddComponent<BoxColliderComponent>();
+
+	EmptyObject* wall4 = new EmptyObject("floor", nullptr, this);
+	wall4->SetPosition(glm::vec3(0, 3.5, -9.5));
+	wall4->RotateEuler(glm::vec3(0, 0, 0));
+	wall4->SetScale(glm::vec3(20, 20, 1));
+	BoxColliderComponent* wallCollider4 = wall4->AddComponent<BoxColliderComponent>();
+
+	EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
+	sphere->AddComponent<SphereColliderComponent>();
+	sphere->SetPosition(glm::vec3(0, 10, 0));
+	sphere->SetScale(glm::vec3(0.25f));
+	sphere->AddComponent<Rigidbody3DComponent>();
 	
+	sphere= new EmptyObject("Sphere", nullptr, this);
+	sphere->AddComponent<SphereColliderComponent>();
+	sphere->SetPosition(glm::vec3(0, 11, 0));
+	sphere->SetScale(glm::vec3(0.25f));
+	sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 11, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 12, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 13, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 14, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 15, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 16, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 17, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
+	// sphere = new EmptyObject("Sphere", nullptr, this);
+	// sphere->AddComponent<SphereColliderComponent>();
+	// sphere->SetPosition(glm::vec3(0, 18, 0));
+	// sphere->SetScale(glm::vec3(0.25f));
+	// sphere->AddComponent<Rigidbody3DComponent>();
 
-	circle = new EmptyObject("Sphere", nullptr, this);
-	SphereColliderComponent* colliderComponent2 = circle->AddComponent<SphereColliderComponent>();
-	circle->SetPosition(glm::vec3(0, 6, 0));
-	// circleObject->SetScale(glm::vec3(0.5f));
-	auto rigidbody2 = circle->AddComponent<Rigidbody3DComponent>();
-	rigidbody2->gravityScale = 0.5f;
+	time = 0;
+}
 
+void CollisionScene::Update(double deltaTime) {
+	// if (glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_Z) == GLFW_PRESS) {
+	// 	CreateSphere();
+	// }
+	ASceneController::Update(deltaTime);
+}
 
-	circle = new EmptyObject("Sphere", nullptr, this);
-	SphereColliderComponent* colliderComponent1 = circle->AddComponent<SphereColliderComponent>();
-	circle->SetPosition(glm::vec3(0, 20, 0));
-	// circleObject->SetScale(glm::vec3(0.5f));
-	auto rigidbody1 = circle->AddComponent<Rigidbody3DComponent>();
-
-
+void CollisionScene::CreateSphere() {
+	EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
+	sphere->AddComponent<SphereColliderComponent>();
+	sphere->SetPosition(glm::vec3(0, 10, 0));
+	sphere->SetScale(glm::vec3(0.25f));
+	sphere->AddComponent<Rigidbody3DComponent>();
 }

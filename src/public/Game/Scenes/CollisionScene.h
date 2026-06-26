@@ -10,4 +10,10 @@ private:
 
 public:
 	CollisionScene();
+	void Update(double deltaTime) override;
+
+private: 
+	void CreateSphere();
+
+	float time;
 };
