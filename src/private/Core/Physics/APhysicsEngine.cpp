@@ -1,7 +1,6 @@
 #include <Core/Components/Physics/ACollider.h>
 #include <Core/Objects/AObject.h>
 #include <Core/Physics/APhysicsEngine.h>
-#include <algorithm>
 #include <glm/gtc/epsilon.hpp>
 
 void APhysicsEngine::Awake(std::vector<AObject*> objects) {
@@ -178,97 +177,7 @@ APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
 	ACollider* colliderB,
 	std::vector<glm::vec3>& simplex) {
 
-	auto SupportDifference = [](ACollider* a, ACollider* b, glm::vec3 dir) -> glm::vec3 {
-		return a->GetSupportPoint(dir) - b->GetSupportPoint(-dir);
-	};
+	auto manifold = APhysicsEngine::CollisionManifold();
 
-	// Ensures the counter clockwise order using the Shoelace formula to calculate the area
-	auto EnsureOrder = [](std::vector<glm::vec3>& poly) {
-		float area = 0.0f;
-		for (int i = 0; i < poly.size(); i++) {
-			glm::vec3 a = poly[i];
-			glm::vec3 b = poly[(i + 1) % poly.size()];
-			area += (a.x * b.y - b.x * a.y);
-		}
-		if (area < 0)
-			std::reverse(poly.begin(), poly.end());
-	};
-
-	auto EdgeNormal = [](glm::vec3 a, glm::vec3 b) -> glm::vec3 {
-		glm::vec3 edge = b - a;
-		return glm::normalize(glm::vec3(edge.y, -edge.x, 0));
-	};
-
-	auto EdgeDistance = [&EdgeNormal](glm::vec3 a, glm::vec3 b) -> float {
-		glm::vec3 normal = EdgeNormal(a, b);
-		return glm::dot(normal, a);
-	};
-
-	EnsureOrder(simplex);
-
-	struct SupportPoint {
-		glm::vec3 diff;
-		glm::vec3 onA;
-		glm::vec3 onB;
-	};
-
-	std::vector<SupportPoint> poly;
-	for (auto& v : simplex) {
-		glm::vec3 dir = glm::normalize(v);
-		glm::vec3 onA = colliderA->GetSupportPoint(dir);
-		glm::vec3 onB = colliderB->GetSupportPoint(-dir);
-		poly.push_back({ v, onA, onB });
-	}
-
-	const float TOLERANCE = 1e-4f;
-
-	while (true) {
-		int closestIndex = 0;
-		float closestDistance = FLT_MAX;
-		glm::vec3 closestNormal;
-
-		for (int j = 0; j < simplex.size(); j++) {
-			glm::vec3 a = simplex[j];
-			glm::vec3 b = simplex[(j + 1) % simplex.size()];
-
-			float dist = EdgeDistance(a, b);
-			glm::vec3 n = EdgeNormal(a, b);
-
-			if (dist < closestDistance) {
-				closestDistance = dist;
-				closestNormal = n;
-				closestIndex = j;
-			}
-		}
-
-		glm::vec3 onA = colliderA->GetSupportPoint(closestNormal);
-		glm::vec3 onB = colliderB->GetSupportPoint(-closestNormal);
-		glm::vec3 support = onA - onB;
-
-		float supportDist = glm::dot(support, closestNormal);
-
-		if (supportDist - closestDistance < TOLERANCE) {
-
-			const SupportPoint& spA = poly[closestIndex];
-			const SupportPoint& spB = poly[(closestIndex + 1) % poly.size()];
-
-			glm::vec3 edge = spB.diff - spA.diff;
-			float edgeLenSq = glm::dot(edge, edge);
-			float t = 0.5f;
-
-			if (edgeLenSq > TOLERANCE) {
-				t = glm::clamp(-glm::dot(spA.diff, edge) / edgeLenSq, 0.0f, 1.0f);
-			}
-
-			glm::vec3 contactOnA = spA.onA + t * (spB.onA - spA.onA);
-			glm::vec3 contactOnB = spA.onB + t * (spB.onB - spA.onB);
-
-			glm::vec3 contactPoint = (contactOnA + contactOnB) * 0.5f;
-
-			return { closestNormal, closestDistance, contactPoint };
-		}
-
-		simplex.insert(simplex.begin() + closestIndex + 1, support);
-		poly.insert(poly.begin() + closestIndex + 1, { support, onA, onB });
-	}
+	return manifold;
 }

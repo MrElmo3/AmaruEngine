@@ -17,6 +17,8 @@ private:
 	double current;
 	double previous;
 	double physicsTimeOffset = 0.0;
+
+	bool firstUpdate = true;
 	
 public:
 	/**

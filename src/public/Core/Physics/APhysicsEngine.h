@@ -33,7 +33,7 @@ protected:
 	virtual void UpdateTree() { }
 	virtual void CheckCollisions() { }
 	GJKResult GJKCheck(ACollider* colliderA, ACollider* colliderB);
-	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex);
+	virtual CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex);
 
 private:
 	bool HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction);

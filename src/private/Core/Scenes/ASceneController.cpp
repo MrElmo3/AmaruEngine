@@ -55,15 +55,16 @@ void ASceneController::SceneUpdate(){
 	// double fps = 1.0 / deltaTime;
 	// Logger::Log("FPS: " + std::to_string(fps));
 	Global::TIME += deltaTime;
-	while (physicsTimeOffset >= Global::FIXED_DELTA_TIME){
+	while (physicsTimeOffset >= Global::FIXED_DELTA_TIME && !firstUpdate){
 		FixedUpdate();
 		physicsTimeOffset -= Global::FIXED_DELTA_TIME;
 		if (Global::DEBUG)
 			physicsTimeOffset = 0;
 	}
-
+	
 	Update(deltaTime);
 	LateUpdate();
+	firstUpdate = false;
 }
 
 void ASceneController::FixedUpdate() {

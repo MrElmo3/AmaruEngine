@@ -122,6 +122,136 @@ bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* ph
 	return false;
 }
 
+APhysicsEngine::CollisionManifold APhysicsEngine::EPA(
+	ACollider* colliderA,
+	ACollider* colliderB,
+	std::vector<glm::vec3>& simplex) {
+	// EPA requires the input simplex to be a tetrahedron (4 points) that
+	// already encloses the origin in Minkowski space -- that's GJK's job,
+	// not EPA's. If this fires, the bug is in GJK's termination, not here.
+	if (simplex.size() != 4) {
+		Logger::Warning("APhysicsEngine::EPA expected a tetrahedron (4 points) from GJK.");
+		return { glm::vec3(0, 1, 0), 0.0f, glm::vec3(0) };
+	}
+
+	struct Vert {
+		glm::vec3 diff, onA, onB;
+	};
+	struct Face {
+		int a, b, c;
+		glm::vec3 normal;
+		float dist;
+	};
+
+	auto Support = [&](glm::vec3 dir) -> Vert {
+		glm::vec3 a = colliderA->GetSupportPoint(dir);
+		glm::vec3 b = colliderB->GetSupportPoint(-dir);
+		return { a - b, a, b };
+	};
+
+	std::vector<Vert> verts;
+	for (auto& p : simplex) {
+		// Reconstruct onA/onB for the initial tetrahedron points.
+		// Assumes GJK's original support direction was ~normalize(p).
+		// If GJK already tracks onA/onB per vertex, pass those through
+		// instead -- cheaper and exact, see note below.
+		glm::vec3 dir = glm::normalize(p);
+		verts.push_back({ p, colliderA->GetSupportPoint(dir), colliderB->GetSupportPoint(-dir) });
+	}
+
+	// Builds a face with an outward-facing normal (away from origin),
+	// regardless of the winding order passed in.
+	auto MakeFace = [&](int i0, int i1, int i2) -> Face {
+		glm::vec3 a = verts[i0].diff, b = verts[i1].diff, c = verts[i2].diff;
+		glm::vec3 n = glm::cross(b - a, c - a);
+		float len = glm::length(n);
+		if (len < 1e-9f)
+			return { i0, i1, i2, glm::vec3(0, 1, 0), FLT_MAX }; // degenerate guard
+		n /= len;
+		float d = glm::dot(n, a);
+		if (d < 0.0f) {
+			n = -n;
+			d = -d;
+			std::swap(i1, i2);
+		}
+		return { i0, i1, i2, n, d };
+	};
+
+	std::vector<Face> faces = {
+		MakeFace(0, 1, 2),
+		MakeFace(0, 3, 1),
+		MakeFace(0, 2, 3),
+		MakeFace(1, 3, 2),
+	};
+
+	const float TOLERANCE = 1e-4f;
+	const int MAX_ITER = 64;
+
+	for (int iter = 0; iter < MAX_ITER; ++iter) {
+		int best = 0;
+		for (int i = 1; i < (int)faces.size(); ++i)
+			if (faces[i].dist < faces[best].dist)
+				best = i;
+		Face closest = faces[best];
+
+		Vert sp = Support(closest.normal);
+		float supportDist = glm::dot(sp.diff, closest.normal);
+
+		if (supportDist - closest.dist < TOLERANCE) {
+			// Barycentric projection of the origin onto the closest face
+			glm::vec3 a = verts[closest.a].diff, b = verts[closest.b].diff, c = verts[closest.c].diff;
+			glm::vec3 proj = closest.normal * closest.dist;
+			glm::vec3 v0 = b - a, v1 = c - a, v2 = proj - a;
+			float d00 = glm::dot(v0, v0), d01 = glm::dot(v0, v1), d11 = glm::dot(v1, v1);
+			float d20 = glm::dot(v2, v0), d21 = glm::dot(v2, v1);
+			float denom = d00 * d11 - d01 * d01;
+			float v = (d11 * d20 - d01 * d21) / denom;
+			float w = (d00 * d21 - d01 * d20) / denom;
+			float u = 1.0f - v - w;
+
+			glm::vec3 cA = u * verts[closest.a].onA + v * verts[closest.b].onA + w * verts[closest.c].onA;
+			glm::vec3 cB = u * verts[closest.a].onB + v * verts[closest.b].onB + w * verts[closest.c].onB;
+			return { closest.normal, closest.dist, (cA + cB) * 0.5f };
+		}
+
+		int newIdx = (int)verts.size();
+		verts.push_back(sp);
+
+		// Remove faces visible from the new point, collect the silhouette
+		// (boundary edges), then patch the hole with new triangles.
+		std::vector<std::pair<int, int>> silhouette;
+		std::vector<Face> kept;
+		for (auto& f : faces) {
+			if (glm::dot(f.normal, sp.diff - verts[f.a].diff) > 0.0f) {
+				auto addEdge = [&](int x, int y) {
+					for (size_t k = 0; k < silhouette.size(); ++k) {
+						if (silhouette[k].first == y && silhouette[k].second == x) {
+							silhouette[k] = silhouette.back();
+							silhouette.pop_back();
+							return;
+						}
+					}
+					silhouette.push_back({ x, y });
+				};
+				addEdge(f.a, f.b);
+				addEdge(f.b, f.c);
+				addEdge(f.c, f.a);
+			} else {
+				kept.push_back(f);
+			}
+		}
+		for (auto& e : silhouette)
+			kept.push_back(MakeFace(e.first, e.second, newIdx));
+		faces = std::move(kept);
+	}
+
+	int best = 0;
+	for (int i = 1; i < (int)faces.size(); ++i)
+		if (faces[i].dist < faces[best].dist)
+			best = i;
+	return { faces[best].normal, faces[best].dist, glm::vec3(0) };
+}
+
 void PhysicsEngine::ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
 	if (physicObjectA->rigidbody != nullptr && physicObjectB->rigidbody != nullptr) {
 		Resolve2RBCollision(physicObjectA, physicObjectB, manifold);

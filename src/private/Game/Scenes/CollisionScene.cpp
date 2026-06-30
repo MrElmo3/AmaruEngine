@@ -12,21 +12,25 @@
 #include <Game/Objects/Player.h>
 
 #include <GLFW/glfw3.h>
+#include <cstdlib>
+#include <ctime>
 
 
 CollisionScene::CollisionScene() {
+
+	srand(std::time(0));
 
 	scenePhysicsType = PhysicsType::ENABLE_3D;
 
 	cameraObject = (EmptyObject*)(new Player("Camera", nullptr, this));
 	cameraObject->SetPosition(glm::vec3(0, 0, 20));
 
+	//Floors and walls
 	EmptyObject* floor = new EmptyObject("floor", nullptr, this);
 	floor->SetPosition(glm::vec3(0, -6, 0));
 	floor->RotateEuler(glm::vec3(0, 0, 0));
 	floor->SetScale(glm::vec3(20, 1, 20));
 	BoxColliderComponent* floorCollider = floor->AddComponent<BoxColliderComponent>();	
-
 
 	EmptyObject* wall1 = new EmptyObject("floor", nullptr, this);
 	wall1->SetPosition(glm::vec3(-9.5, 3.5, 0));
@@ -52,57 +56,36 @@ CollisionScene::CollisionScene() {
 	wall4->SetScale(glm::vec3(20, 20, 1));
 	BoxColliderComponent* wallCollider4 = wall4->AddComponent<BoxColliderComponent>();
 
-	EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
-	sphere->AddComponent<SphereColliderComponent>();
-	sphere->SetPosition(glm::vec3(0, 10, 0));
-	sphere->SetScale(glm::vec3(0.25f));
-	sphere->AddComponent<Rigidbody3DComponent>();
-	
-	sphere= new EmptyObject("Sphere", nullptr, this);
-	sphere->AddComponent<SphereColliderComponent>();
-	sphere->SetPosition(glm::vec3(0, 11, 0));
-	sphere->SetScale(glm::vec3(0.25f));
-	sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 11, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 12, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 13, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 14, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 15, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 16, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 17, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
-	// sphere = new EmptyObject("Sphere", nullptr, this);
-	// sphere->AddComponent<SphereColliderComponent>();
-	// sphere->SetPosition(glm::vec3(0, 18, 0));
-	// sphere->SetScale(glm::vec3(0.25f));
-	// sphere->AddComponent<Rigidbody3DComponent>();
+
+	//Spheres
+
+	glm::vec3 randomPosition = glm::normalize(glm::vec3(rand(), 0, rand()));
+		randomPosition *= 3;
+		randomPosition.y = 6;
+		glm::vec3 randomInitialVelocity = glm::normalize(glm::vec3(0, 0, 10));
+		randomInitialVelocity *= 5;
+
+		EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
+		sphere->AddComponent<SphereColliderComponent>();
+		sphere->SetPosition(randomPosition);
+		sphere->SetScale(glm::vec3(0.25f));
+		auto rb = sphere->AddComponent<Rigidbody3DComponent>();
+		rb->velocity = randomInitialVelocity;
+
+	// for (int i = 0; i <= 1; i++) {
+	// 	glm::vec3 randomPosition = glm::normalize(glm::vec3(rand(), 0, rand()));
+	// 	randomPosition *= 3;
+	// 	randomPosition.y = 6;
+	// 	glm::vec3 randomInitialVelocity = glm::normalize(glm::vec3(rand(), 0, rand()));
+	// 	randomInitialVelocity *= 3;
+
+	// 	EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
+	// 	sphere->AddComponent<SphereColliderComponent>();
+	// 	sphere->SetPosition(randomPosition);
+	// 	sphere->SetScale(glm::vec3(0.25f));
+	// 	auto rb = sphere->AddComponent<Rigidbody3DComponent>();
+	// 	rb->velocity = randomInitialVelocity;
+	// }
 
 	time = 0;
 }

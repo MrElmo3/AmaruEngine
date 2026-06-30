@@ -46,6 +46,7 @@ protected:
 
 	void CheckCollisions() override;
 	bool CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB);
+	CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex) override;
 	void ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold);
 
 private:
