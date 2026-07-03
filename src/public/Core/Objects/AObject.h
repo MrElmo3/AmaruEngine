@@ -53,6 +53,12 @@ protected:
 	/// @brief Flag used when the object changes its position, rotation or scale.
 	bool isDirty = true;
 
+	/// @brief Flag used when the object needs to execute the Awake function.
+	bool executeAwake = true;
+
+	/// @brief Flag used when the object needs to execute the Start function.
+	bool executeStart = true;
+
 public:
 	
 	/**

@@ -15,6 +15,7 @@ class APhysicsEngine {
 public:
 	virtual void Awake(std::vector<AObject*> objects);
 	virtual void UpdatePhysics();
+	virtual void RegisterObject(AObject* object) { }
 
 protected:
 	struct GJKResult {
@@ -28,7 +29,6 @@ protected:
 		glm::vec3 ContactPoint;
 	};
 
-	virtual void RegisterObject(AObject* object) { }
 	virtual void MoveObjects() { }
 	virtual void UpdateTree() { }
 	virtual void CheckCollisions() { }

@@ -31,6 +31,8 @@ AObject::AObject(const std::string &_name, AObject* _parent, ASceneController* _
 AObject::~AObject() = default;
 
 void AObject::Awake() {
+	executeAwake = false;
+	UpdateWorldValues();
 	for (auto element : components) {
 		if (!element->IsEnabled()) continue;
 		element->Awake();
@@ -43,6 +45,7 @@ void AObject::Awake() {
 }
 
 void AObject::Start() {
+	executeStart = false;
 	for (auto element : components) {
 		if (!element->IsEnabled()) continue;
 		element->Start();

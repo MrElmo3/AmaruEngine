@@ -105,6 +105,9 @@ void PhysicsEngine::CheckCollisions() {
 		std::vector<PhysicObject*> nearObjects;
 		quadtree->GetNearObjects(object, nearObjects);
 		for (auto nearObject : nearObjects) {
+			if(nearObject->baseObject == object->baseObject) 
+				continue; 
+			//TODO: If an object has multiple physics components, the object is added multiple times
 			CheckCollision(object, nearObject);
 		}
 	}
@@ -119,9 +122,6 @@ bool PhysicsEngine::CheckCollision(PhysicObject* physicObjectA, PhysicObject* ph
 				PhysicsEngine::CollisionManifold manifold = EPA(colliderA, colliderB, result.Simplex);
 
 				ResolveCollision2D(physicObjectA, physicObjectB, manifold);
-
-				colliderA->debugColor = Color::RED;
-				colliderB->debugColor = Color::RED;
 				return true;
 			}
 		}

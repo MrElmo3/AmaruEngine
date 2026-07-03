@@ -15,5 +15,5 @@ public:
 private: 
 	void CreateSphere();
 
-	float time;
+	bool sphereCreated = false;
 };

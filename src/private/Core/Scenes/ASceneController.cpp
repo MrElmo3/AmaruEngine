@@ -36,7 +36,6 @@ void ASceneController::Awake(){
 		if (!element->isEnabled) continue;
 		element->Awake();
 	}
-	if(physicsEngine != nullptr) physicsEngine->Awake(objects);
 }
 
 void ASceneController::Start(){
@@ -78,6 +77,17 @@ void ASceneController::FixedUpdate() {
 void ASceneController::Update(double deltaTime){
 	for (auto element : objects){
 		if (!element->isEnabled) continue;
+		
+		if(element->executeAwake) {
+			element->Awake();
+			continue;
+		}
+
+		if(element->executeStart){
+			element->Start();
+			continue;
+		}
+
 		element->Update(deltaTime);
 	}
 }
