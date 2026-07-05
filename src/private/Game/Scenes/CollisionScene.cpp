@@ -26,27 +26,27 @@ CollisionScene::CollisionScene() {
 	cameraObject->SetPosition(glm::vec3(0, 0, 1));
 	cameraComponent->mainCamera = true;
 	cameraComponent->orthographic = true;
-	cameraComponent->orthoSize = 30.0f;
+	cameraComponent->orthoSize = 15.0f;
 
 	//Floors and walls
 	EmptyObject* wall1 = new EmptyObject("floor", nullptr, this);
-	wall1->SetPosition(glm::vec3(0, -10, 0));
-	wall1->SetScale(glm::vec3(30, 1, 1));
-	SquareColliderComponent* wall1collider = wall1->AddComponent<SquareColliderComponent>();	
+	wall1->SetPosition(glm::vec3(0, -11, 0));
+	wall1->SetScale(glm::vec3(30, 5, 1));
+	SquareColliderComponent* wall1collider = wall1->AddComponent<SquareColliderComponent>();
 
 	EmptyObject* wall2 = new EmptyObject("floor", nullptr, this);
-	wall2->SetPosition(glm::vec3(0, 10, 0));
-	wall2->SetScale(glm::vec3(30, 1, 1));
+	wall2->SetPosition(glm::vec3(0, 11, 0));
+	wall2->SetScale(glm::vec3(30, 5, 1));
 	SquareColliderComponent* wall2Collider = wall2->AddComponent<SquareColliderComponent>();
-	
+
 	EmptyObject* wall3 = new EmptyObject("floor", nullptr, this);
-	wall3->SetPosition(glm::vec3(15, 0, 0));
-	wall3->SetScale(glm::vec3(1, 20, 1));
+	wall3->SetPosition(glm::vec3(16, 0, 0));
+	wall3->SetScale(glm::vec3(5, 20, 1));
 	SquareColliderComponent* wall3Collider = wall3->AddComponent<SquareColliderComponent>();
 
 	EmptyObject* wall4 = new EmptyObject("floor", nullptr, this);
-	wall4->SetPosition(glm::vec3(-15, 0, 0));
-	wall4->SetScale(glm::vec3(1, 20, 1));
+	wall4->SetPosition(glm::vec3(-16, 0, 0));
+	wall4->SetScale(glm::vec3(5, 20, 1));
 	SquareColliderComponent* wall4Collider = wall4->AddComponent<SquareColliderComponent>();
 }
 
@@ -67,11 +67,11 @@ void CollisionScene::CreateSphere() {
 	for (int i = 0; i < 10; i++) {
 		glm::vec3 randomPosition = glm::normalize(glm::vec3(rand(), rand(), 0));
 		randomPosition *= 5;
-		glm::vec2 randomInitialVelocity = glm::normalize(glm::vec2(10, 0));
+		glm::vec2 randomInitialVelocity = glm::normalize(glm::vec2(rand(), rand())) - glm::vec2(0.5f, 0.5f);
 		randomInitialVelocity *= 20;
 		EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
-		auto collider = sphere->AddComponent<CircleColliderComponent>();
 		sphere->SetPosition(randomPosition);
+		auto collider = sphere->AddComponent<CircleColliderComponent>();
 		collider->SetRadius(0.1f);
 		auto rb = sphere->AddComponent<Rigidbody2DComponent>();
 		rb->velocity = randomInitialVelocity;

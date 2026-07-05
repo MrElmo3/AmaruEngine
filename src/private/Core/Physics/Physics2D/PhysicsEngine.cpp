@@ -68,7 +68,7 @@ void PhysicsEngine::UpdateVelocity(Rigidbody2DComponent* rigidbody) {
 	rigidbody->velocity += rigidbody->acceleration * dt;
 	rigidbody->angularVelocity += rigidbody->angularAcceleration * dt;
 	
-	// rigidbody->velocity *= 0.99f;
+	// rigidbody->velocity *= 0.5f;
 	// rigidbody->angularVelocity *= 0.95f;
 
 	const float sleepThresholdLinear = 0.05f;
@@ -229,7 +229,11 @@ PhysicsEngine::CollisionManifold PhysicsEngine::EPA(
 	}
 }
 
-void PhysicsEngine::ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+void PhysicsEngine::ResolveCollision2D(
+	PhysicObject* physicObjectA, 
+	PhysicObject* physicObjectB, 
+	CollisionManifold manifold
+) {
 	if (physicObjectA->rigidbody != nullptr && physicObjectB->rigidbody != nullptr) {
 		Resolve2RBCollision(physicObjectA, physicObjectB, manifold);
 		return;
@@ -278,11 +282,13 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 
 	glm::vec2 linearImpulse = impulseMagnitude * normal;
 	rb->velocity -= linearImpulse;
-	
-
 };
 
-void PhysicsEngine::Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold) {
+void PhysicsEngine::Resolve2RBCollision(
+	PhysicObject* physicObjectA, 
+	PhysicObject* physicObjectB, 
+	CollisionManifold manifold
+) {
 	auto rbA = physicObjectA->rigidbody;
     auto rbB = physicObjectB->rigidbody;
 
