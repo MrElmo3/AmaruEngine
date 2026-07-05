@@ -64,9 +64,9 @@ void CollisionScene::CreateSphere() {
 	if(sphereCreated) return;
 	sphereCreated = true;
 
-	for (int i = 0; i < 10; i++) {
-		glm::vec3 randomPosition = glm::normalize(glm::vec3(rand(), rand(), 0));
-		randomPosition *= 5;
+	for (int i = 0; i < 300; i++) {
+		glm::vec3 randomPosition = glm::normalize(glm::vec3(rand(), rand(), 0)) - glm::vec3(0.5f, 0.5f, 0);
+		randomPosition *= 6;
 		glm::vec2 randomInitialVelocity = glm::normalize(glm::vec2(rand(), rand())) - glm::vec2(0.5f, 0.5f);
 		randomInitialVelocity *= 20;
 		EmptyObject* sphere = new EmptyObject("Sphere", nullptr, this);
@@ -75,5 +75,6 @@ void CollisionScene::CreateSphere() {
 		collider->SetRadius(0.1f);
 		auto rb = sphere->AddComponent<Rigidbody2DComponent>();
 		rb->velocity = randomInitialVelocity;
+		rb->gravityScale = 0;
 	}
 }

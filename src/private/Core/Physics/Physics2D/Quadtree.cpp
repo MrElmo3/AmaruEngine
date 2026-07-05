@@ -56,7 +56,7 @@ void Quadtree::Insert(Node* node, PhysicObject* object) {
 
 	node->objects.push_back(object);
 
-	if (node->objects.size() > MAX_OBJECTS && node->depth < MAX_DEPTH)
+	if (node->objects.size() > MAX_OBJECTS)
 		Split(node);
 }
 

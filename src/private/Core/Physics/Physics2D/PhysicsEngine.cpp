@@ -272,7 +272,7 @@ void PhysicsEngine::Resolve1RBCollision(PhysicObject* physicObject, CollisionMan
 
 	if(normalVelocity < 0)  return;
 	
-	float restitution = 0.9f; // TODO: Pull from physical properties
+	float restitution = 1; // TODO: Pull from physical properties
 
 	float gravityStep = glm::length(glm::vec2(Global::GRAVITY.x, Global::GRAVITY.y)) * Global::FIXED_DELTA_TIME;
 	if (normalVelocity < (gravityStep * 2.0f)) {
