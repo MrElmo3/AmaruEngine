@@ -2,7 +2,7 @@
 
 float Global::TIME = 0.0f;
 
-const float Global::FIXED_DELTA_TIME = 0.016f;
+const float Global::FIXED_DELTA_TIME = 1.0f / 60.0f;
 
 const float Global::SCREEN_FORMAT = (float)Global::SCREEN_WIDTH / (float)Global::SCREEN_HEIGHT;
 const float Global::METER = 1;

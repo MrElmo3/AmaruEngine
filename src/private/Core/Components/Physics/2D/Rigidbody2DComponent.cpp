@@ -24,7 +24,6 @@ Rigidbody2DComponent::~Rigidbody2DComponent() {
 	angularVelocity = 0;
 	
 	centerOfMass = glm::vec2(0);
-	APhysics2DComponent::~APhysics2DComponent();
 }
 
 bool Rigidbody2DComponent::ParentHasRigidbody() {

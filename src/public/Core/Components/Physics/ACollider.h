@@ -29,7 +29,7 @@ protected:
 
 public:
 	ACollider();
-	~ACollider();
+	virtual ~ACollider();
 	virtual glm::vec3 GetSupportPoint(glm::vec3 direction);
 
 	/// @brief Returns the AABB that contains all the world vertex of this collider.

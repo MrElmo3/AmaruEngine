@@ -19,7 +19,6 @@ CircleColliderComponent::CircleColliderComponent(AObject* parent)
 
 CircleColliderComponent::~CircleColliderComponent() {
 	SetRadius(0.f);
-	ACollider2DComponent::~ACollider2DComponent();
 }
 
 void CircleColliderComponent::UpdateLocalVertexPoints() {

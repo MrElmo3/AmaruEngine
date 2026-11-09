@@ -22,7 +22,6 @@ SquareColliderComponent::SquareColliderComponent(AObject* parent)
 
 SquareColliderComponent::~SquareColliderComponent() {
 	SetHalfSize(glm::vec2(0));
-	ACollider2DComponent::~ACollider2DComponent();
 }
 
 void SquareColliderComponent::UpdateLocalVertexPoints() {

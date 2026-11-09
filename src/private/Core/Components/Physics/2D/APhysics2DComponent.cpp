@@ -8,7 +8,6 @@ APhysics2DComponent::APhysics2DComponent(AObject* parent) : IComponent(parent) {
 
 APhysics2DComponent::~APhysics2DComponent() {
 	enabledPhysics = false;
-	IComponent::~IComponent();
 }
 
 void APhysics2DComponent::Awake() {

@@ -13,6 +13,7 @@ class ACollider;
 class APhysicsEngine {
 
 public:
+	virtual ~APhysicsEngine() {}
 	virtual void Awake(std::vector<AObject*> objects);
 	virtual void UpdatePhysics();
 	virtual void RegisterObject(AObject* object) { }

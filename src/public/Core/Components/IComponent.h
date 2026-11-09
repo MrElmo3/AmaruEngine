@@ -23,5 +23,5 @@ public:
 	virtual void SetEnable(bool isEnable) { this->isEnabled = isEnable; }
 	bool IsEnabled() { return isEnabled; }
 	bool IsDirty() { return isDirty; }
-	void MarkDirty() { isDirty = true; };
+	virtual void MarkDirty() { isDirty = true; };
 };

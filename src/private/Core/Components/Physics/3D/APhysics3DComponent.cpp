@@ -8,7 +8,6 @@ APhysics3DComponent::APhysics3DComponent(AObject* parent) : IComponent(parent) {
 
 APhysics3DComponent::~APhysics3DComponent() {
 	enabledPhysics = false;
-	IComponent::~IComponent();
 }
 
 void APhysics3DComponent::Awake() {

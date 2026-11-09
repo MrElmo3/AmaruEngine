@@ -16,7 +16,6 @@ ACollider2DComponent::ACollider2DComponent(AObject* parent)
 ACollider2DComponent::~ACollider2DComponent() {
 	position = glm::vec2(0);
 	worldPosition = glm::vec2(0);
-	APhysics2DComponent::~APhysics2DComponent();
 }
 
 void ACollider2DComponent::LateUpdate() {

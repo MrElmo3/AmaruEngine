@@ -29,7 +29,7 @@ public:
 	/**
 	 * @brief Indicates if the physics engine is allowed in 
 	 */
-	APhysicsEngine* physicsEngine;
+	APhysicsEngine* physicsEngine = nullptr;
 
 	/**
 	 * @brief The list of objects in the scene

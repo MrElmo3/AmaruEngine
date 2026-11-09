@@ -18,7 +18,6 @@ Rigidbody3DComponent::~Rigidbody3DComponent() {
 	velocity = glm::vec3(0);
 
 	centerOfMass = glm::vec3(0);
-	APhysics3DComponent::~APhysics3DComponent();
 }
 
 bool Rigidbody3DComponent::ParentHasRigidbody() {
