@@ -1,6 +1,7 @@
 #pragma once
 #include <Core/Physics/APhysicsEngine.h>
 #include <glm/glm.hpp>
+#include <unordered_set>
 #include <vector>
 
 class AObject;
@@ -13,43 +14,58 @@ class PhysicObject;
 class Octree;
 /**
  * This class encasulates all the physics calculations for 3D objects.
+ * Only linear dynamics are simulated (no rotation / torque).
  */
 class PhysicsEngine : public APhysicsEngine {
 
 private:
-	struct CollisionManifold3D{
-		glm::vec3 PenetrationVector;
-		float Depth;
+	/// @brief A point of the Minkowski difference (A - B) plus the points on each shape that generated it.
+	struct SupportPoint {
+		glm::vec3 point;
+		glm::vec3 onA;
+		glm::vec3 onB;
+	};
+
+	/// @brief Simplex used by GJK. The newest point is always at index 0.
+	struct Simplex {
+		SupportPoint points[4];
+		int size = 0;
 	};
 
 	std::vector<PhysicObject*> physicObjects;
 
+	/// @brief Objects already owned by a PhysicObject (avoids registering the same object twice).
+	std::unordered_set<AObject*> registeredObjects;
+
 	Octree* octree;
-	glm::vec3 worldMin = { -500, -500, -500 };
-	glm::vec3 worldMax = { 500, 500, 500 };
 
 public:
 	PhysicsEngine();
+	~PhysicsEngine() override;
 
-protected:
 	void RegisterObject(AObject* object) override;
 
+protected:
 	void MoveObjects() override;
 	void MoveRigidbody(Rigidbody3DComponent* rigidbody);
-	void UpdateAceleration(Rigidbody3DComponent* rigidbody);
-	void UpdateVelocity(Rigidbody3DComponent* rigidbody);
-	void UpdatePosition(Rigidbody3DComponent* rigidbody);
 
 	void UpdateTree() override;
-	void UpdateContainers();
 
 	void CheckCollisions() override;
-	bool CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB);
-	// CollisionManifold EPA(ACollider* colliderA, ACollider* colliderB, std::vector<glm::vec3>& simplex) override;
-	void ResolveCollision2D(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold);
+	void CheckCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB);
+	void ResolveCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, const CollisionManifold& manifold);
 
 private:
-	void Resolve2RBCollision(PhysicObject* physicObjectA, PhysicObject* physicObjectB, CollisionManifold manifold);
-	void Resolve1RBCollision(PhysicObject* physicObject, CollisionManifold manifold);
+	static SupportPoint Support(ACollider3DComponent* colliderA, ACollider3DComponent* colliderB, glm::vec3 direction);
+
+	/// @brief GJK intersection test. When it returns true, simplex is a tetrahedron that contains the origin.
+	bool GJK(ACollider3DComponent* colliderA, ACollider3DComponent* colliderB, Simplex& simplex);
+	bool DoSimplex(Simplex& simplex, glm::vec3& direction);
+	bool LineCase(Simplex& simplex, glm::vec3& direction);
+	bool TriangleCase(Simplex& simplex, glm::vec3& direction);
+	bool TetrahedronCase(Simplex& simplex, glm::vec3& direction);
+
+	/// @brief Expanding Polytope Algorithm. The returned normal points from A to B.
+	CollisionManifold EPA3D(ACollider3DComponent* colliderA, ACollider3DComponent* colliderB, const Simplex& simplex);
 };
 }
