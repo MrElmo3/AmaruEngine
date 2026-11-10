@@ -19,6 +19,7 @@ AObject::AObject(const std::string &_name, AObject* _parent, ASceneController* _
 
 	if (_parent) {
 		this->parent = _parent;
+		this->scene = _parent->scene;
 		parent->AddChild(this);
 	}
 
@@ -33,6 +34,7 @@ AObject::~AObject() = default;
 void AObject::Awake() {
 	executeAwake = false;
 	UpdateWorldValues();
+	UpdateTransform();
 	for (auto element : components) {
 		if (!element->IsEnabled()) continue;
 		element->Awake();
@@ -122,6 +124,14 @@ void AObject::Translate(glm::vec3 delta) {
 	MarkDirty();
 }
 
+void AObject::TranslateWorld(glm::vec3 delta) {
+	if (parent != nullptr) {
+		// world = parentPos + parentRot * (parentScale * local)
+		delta = (glm::inverse(parent->GetWorldRotation()) * delta) / parent->worldScale;
+	}
+	Translate(delta);
+}
+
 void AObject::Rotate(glm::quat rotation) {
 	rotation = glm::normalize(rotation);
 	this->rotation = this->rotation * rotation;
@@ -202,30 +212,25 @@ void AObject::UpdateWorldValues() {
 void AObject::UpdateTransform() {
 	if(!isDirty) return;
 
-	glm::mat4 matrix = glm::mat4(1);
-
-	glm::quat rotation = GetWorldRotation();
-	glm::vec3 vectorRot = glm::vec3(rotation.x, rotation.y, rotation.z);
-	float angle = 2 * glm::acos(rotation.w);
-
-	matrix = glm::translate(matrix, GetWorldPosition());
-	if (vectorRot != glm::vec3(0))
-		matrix = glm::rotate(matrix, angle, vectorRot);
-	matrix = glm::scale(matrix, GetWorldScale());
-
-	worldTransform = matrix;
+	worldTransform =
+		glm::translate(glm::mat4(1.0f), GetWorldPosition()) *
+		glm::mat4_cast(GetWorldRotation()) *
+		glm::scale(glm::mat4(1.0f), GetWorldScale());
 }
 
 void AObject::MarkDirty() {
-	if (isDirty) return; 
-    isDirty = true;
+	// Recalculate the world values right away so systems that run before
+	// Update/LateUpdate (like the physics step) never read a stale transform.
+	isDirty = true;
+	UpdateWorldValues();
+	UpdateTransform();
 
 	for(auto& component : components) {
 		component->MarkDirty();
 	}
 
-    for (auto& child : children)
-        child->MarkDirty();
+	for (auto& child : children)
+		child->MarkDirty();
 }
 
 AObject* AObject::FindObjectByName(const std::string& name) {

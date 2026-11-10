@@ -48,7 +48,7 @@ protected:
 
 	
 	/// @brief World transform matrix of the object.
-	glm::mat4 worldTransform;
+	glm::mat4 worldTransform = glm::mat4(1.0f);
 
 	/// @brief Flag used when the object changes its position, rotation or scale.
 	bool isDirty = true;
@@ -157,6 +157,10 @@ public:
 	/// @brief Translates the object in the local space.
 	/// @param positionDelta The amount to translate the object.
 	void Translate(glm::vec3 positionDelta);
+
+	/// @brief Translates the object by a delta expressed in world space.
+	/// @param positionDelta The amount to translate the object in world space.
+	void TranslateWorld(glm::vec3 positionDelta);
 
 	
 	/// @brief Rotates the object in the local space.
