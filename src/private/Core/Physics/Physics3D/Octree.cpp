@@ -8,12 +8,12 @@ glm::vec3 Octree::Node::Center() const{
 
 bool Octree::Node::Overlap(PhysicObject* object) const {
 	return 
-		object->bottomLeft.x < topRight.x 	&& 
-		object->bottomLeft.y < topRight.y 	&& 
-		object->bottomLeft.z < topRight.z	&&
-		object->topRight.x > bottomLeft.x 	&& 
-		object->topRight.y > bottomLeft.y	&&
-		object->topRight.z > bottomLeft.z;
+		object->bottomLeft.x <= topRight.x 	&& 
+		object->bottomLeft.y <= topRight.y 	&& 
+		object->bottomLeft.z <= topRight.z	&&
+		object->topRight.x >= bottomLeft.x 	&& 
+		object->topRight.y >= bottomLeft.y	&&
+		object->topRight.z >= bottomLeft.z;
 }
 
 bool Octree::Node::Contains(PhysicObject* object) const {
@@ -93,6 +93,7 @@ void Octree::Split (Node* node) {
 			if (child.get()->Contains(obj)) {
 				Insert(child.get(), obj);
 				fitsInChild = true;
+				break;
 			}
 		}
 		if (!fitsInChild)
