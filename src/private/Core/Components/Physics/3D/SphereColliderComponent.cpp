@@ -1,4 +1,5 @@
 #include <Core/Components/Physics/3D/SphereColliderComponent.h>
+#include <Core/Objects/AObject.h>
 
 SphereColliderComponent::SphereColliderComponent(AObject* parent, glm::vec3 position, float radius)
 	: ACollider3DComponent(parent, position) {
@@ -12,10 +13,7 @@ SphereColliderComponent::SphereColliderComponent(AObject* parent)
 	: SphereColliderComponent(parent, glm::vec3(0)) {
 }
 
-SphereColliderComponent::~SphereColliderComponent() {
-	SetRadius(0.f);
-	ACollider3DComponent::~ACollider3DComponent();
-}
+SphereColliderComponent::~SphereColliderComponent() {}
 
 void SphereColliderComponent::UpdateLocalVertexPoints() {
 	vertexPoints.clear();
@@ -29,9 +27,10 @@ void SphereColliderComponent::UpdateLocalVertexPoints() {
 		float cosA = glm::cos(angleInRadians);
 		float sinA = glm::sin(angleInRadians);
 
-		vertexPoints.push_back(glm::vec3(radius * cosA, radius * sinA, 0.0f));
-		vertexPoints.push_back(glm::vec3(radius * cosA, 0.0f, radius * sinA));
-		vertexPoints.push_back(glm::vec3(0.0f, radius * cosA, radius * sinA));
+		// Only used for the debug outline; the collision uses GetSupportPoint.
+		vertexPoints.push_back(position + glm::vec3(radius * cosA, radius * sinA, 0.0f));
+		vertexPoints.push_back(position + glm::vec3(radius * cosA, 0.0f, radius * sinA));
+		vertexPoints.push_back(position + glm::vec3(0.0f, radius * cosA, radius * sinA));
 	}
 }
 
@@ -45,14 +44,22 @@ void SphereColliderComponent::UpdateRenderIndexes() {
 	}
 }
 
+float SphereColliderComponent::GetWorldRadius() const {
+	// Non uniform scale is approximated with the biggest axis (no ellipsoids).
+	glm::vec3 scale = glm::abs(parent->GetWorldScale());
+	return radius * glm::max(scale.x, glm::max(scale.y, scale.z));
+}
+
 glm::vec3 SphereColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	if(glm::length(direction) < 0.0001f) return ACollider::GetSupportPoint(direction);
+	EnsureWorldValues();
 
-	return center + glm::normalize(direction) * radius;
+	return worldPosition + glm::normalize(direction) * GetWorldRadius();
 }
 
 SphereColliderComponent* SphereColliderComponent::SetRadius(float radius) {
 	this->radius = radius;
 	UpdateLocalVertexPoints();
+	MarkDirty();
 	return this;
 }

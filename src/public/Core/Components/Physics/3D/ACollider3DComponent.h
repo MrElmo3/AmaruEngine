@@ -5,28 +5,34 @@
 class ACollider3DComponent : public ACollider, public APhysics3DComponent {
 public:
 	/**
-	 * @brief Position of the center of the 2D collider
+	 * @brief Position of the center of the 3D collider (local to its object).
 	 */
 	glm::vec3 position;
 
 	/**
-	 * @brief world position of the center of the 2D collider
+	 * @brief World position of the center of the 3D collider.
 	 */
-	glm::vec3 worldPosition;
+	glm::vec3 worldPosition = glm::vec3(0);
 
 	ACollider3DComponent(AObject* parent, glm::vec3 position);
 	ACollider3DComponent(AObject* parent);
 	virtual ~ACollider3DComponent() override;
 
 	virtual void LateUpdate() override;
+	virtual void MarkDirty() override;
 
 private:
-	void UpdateWorldPosition();
+	/// @brief True when the world vertices are outdated with respect to the object transform.
+	bool worldValuesDirty = true;
+
 	void UpdateWorldVertexPoints() override;
-	
+
+protected:
+	/// @brief Recomputes the world values (vertices, center, AABB) only if they are outdated.
+	void EnsureWorldValues();
+
 public:
 	std::pair<glm::vec3, glm::vec3> GetAABBContainer() override;
-	glm::vec3 GetSupportPoint(glm::vec3 direction);
 	ACollider3DComponent* SetPosition(glm::vec3 position);
-	glm::vec2 GetWorldPosition() const { return worldPosition; }
+	glm::vec3 GetWorldPosition() { EnsureWorldValues(); return worldPosition; }
 };

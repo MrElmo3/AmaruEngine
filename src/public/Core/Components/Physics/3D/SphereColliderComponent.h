@@ -23,5 +23,8 @@ public:
 	glm::vec3 GetSupportPoint(glm::vec3 direction) override;
 	float GetRadius() const { return radius; }
 
+	/// @brief The radius after applying the object scale.
+	float GetWorldRadius() const;
+
 	SphereColliderComponent* SetRadius(float radius);
 };

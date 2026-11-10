@@ -15,10 +15,7 @@ BoxColliderComponent::BoxColliderComponent(AObject* parent)
 	: BoxColliderComponent(parent, glm::vec3(0)) {
 }
 
-BoxColliderComponent::~BoxColliderComponent() {
-	SetHalfSize(glm::vec3(0));
-	ACollider3DComponent::~ACollider3DComponent();
-}
+BoxColliderComponent::~BoxColliderComponent() {}
 
 void BoxColliderComponent::UpdateLocalVertexPoints() {
 	vertexPoints = {
@@ -44,9 +41,11 @@ void BoxColliderComponent::UpdateRenderIndexes() {
 
 glm::vec3 BoxColliderComponent::GetSupportPoint(glm::vec3 direction) {
 	if(glm::length(direction) < 0.0001f) return ACollider::GetSupportPoint(direction);
-	
+	EnsureWorldValues();
+	if(worldVertexPoints.empty()) return ACollider::GetSupportPoint(direction);
+
 	float maxDotProduct = -FLT_MAX;
-	int index = -1;
+	int index = 0;
 
 	for(int i = 0; i < worldVertexPoints.size(); i++) {
 		float currentDotProduct = glm::dot(direction, worldVertexPoints[i]);
@@ -62,5 +61,6 @@ glm::vec3 BoxColliderComponent::GetSupportPoint(glm::vec3 direction) {
 BoxColliderComponent* BoxColliderComponent::SetHalfSize(glm::vec3 halfSize) {
 	this->halfSize = halfSize;
 	UpdateLocalVertexPoints();
+	MarkDirty();
 	return this;
 }
