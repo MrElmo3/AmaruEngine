@@ -35,7 +35,8 @@ APhysicsEngine::GJKResult APhysicsEngine::GJKCheck(ACollider* colliderA, ACollid
 
 	direction = glm::normalize(-simplex[0]);
 
-	while (true) {
+	const int MAX_ITERATIONS = 64;
+	for (int iteration = 0; iteration < MAX_ITERATIONS; iteration++) {
 		glm::vec3 targetPoint = SupportDifference(colliderA, colliderB, direction);
 		if (glm::dot(targetPoint, direction) < 0) {
 			result.Collide = false;
@@ -50,6 +51,10 @@ APhysicsEngine::GJKResult APhysicsEngine::GJKCheck(ACollider* colliderA, ACollid
 			return result;
 		};
 	}
+
+	// Did not converge (degenerate case): treat it as no collision.
+	result.Collide = false;
+	return result;
 }
 
 bool APhysicsEngine::HandleSimplex(std::vector<glm::vec3>& simplex, glm::vec3& direction) {
@@ -163,7 +168,7 @@ bool APhysicsEngine::TetrahedronCase(std::vector<glm::vec3>& simplex, glm::vec3&
 
 	if (glm::dot(perpDAB, vectorAO) > 0) {
 		simplex = { simplex[3], simplex[2], simplex[0] };
-		direction = glm::normalize(perpCAD);
+		direction = glm::normalize(perpDAB);
 		return false;
 	}
 
