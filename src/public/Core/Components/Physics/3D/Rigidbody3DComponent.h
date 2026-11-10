@@ -20,6 +20,12 @@ public:
 	// float angularAcceleration;
 
 	glm::vec3 centerOfMass;
+
+	/// @brief Bounciness of the body [0, 1]. 0 = no bounce, 1 = perfectly elastic.
+	float restitution = 0.3f;
+
+	/// @brief Coulomb friction coefficient used when sliding over other colliders.
+	float friction = 0.4f;
 	
 	RigidbodyConstraints constraints = RigidbodyConstraints::NONE;
 
