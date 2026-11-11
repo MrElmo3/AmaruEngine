@@ -10,6 +10,7 @@
 #include <Core/Components/Render/RenderCubeComponent.h>
 #include <Core/Materials/LitMaterial.h>
 #include <Core/Objects/3D/Cube.h>
+#include <Core/Components/Physics/3D/BoxColliderComponent.h>
 
 MazeGeneratorComponent::MazeGeneratorComponent(AObject* parent) : IComponent(parent) {
 
@@ -18,17 +19,19 @@ MazeGeneratorComponent::MazeGeneratorComponent(AObject* parent) : IComponent(par
 	startID = -1;
 	endID = -1;
 
-	do{
-		int _size = 0;
-		std::cout << "Enter the size of the maze: ";
-		std::cin >> _size;
+	// do{
+	// 	int _size = 0;
+	// 	std::cout << "Enter the size of the maze: ";
+	// 	std::cin >> _size;
 	
-		if (_size < 3 || _size % 2 == 0) {
-			std::cout << "Invalid size. Size must be an odd number greater than 4." << std::endl;
-		}
-		SetSize(_size);
-	} 
-	while (size < 3 || size % 2 == 0);
+	// 	if (_size < 3 || _size % 2 == 0) {
+	// 		std::cout << "Invalid size. Size must be an odd number greater than 4." << std::endl;
+	// 	}
+	// 	SetSize(_size);
+	// } 
+	// while (size < 3 || size % 2 == 0);
+
+	SetSize(7);
 }
 
 MazeGeneratorComponent::~MazeGeneratorComponent() {
@@ -187,4 +190,21 @@ void MazeGeneratorComponent::InstantiateWall(std::string id, glm::vec3 objectPos
 	LitMaterial* _material = dynamic_cast<LitMaterial*>(wall->GetRenderComponent()->material);
 	// _material->SetColor(glm::vec3(255, 127, 39) / 255.0f);
 	_material->SetDiffuse("Assets/Textures/HL.jpg");
+
+	// Static collider (no rigidbody): the default half size of 0.5 matches the cube mesh,
+	// and the object scale is applied on top of it.
+	wall->AddComponent<BoxColliderComponent>();
+}
+
+glm::vec3 MazeGeneratorComponent::GetCellPosition(int row, int column) const {
+	const float objectScale = 1.0f;
+	return glm::vec3(
+		-1 * (size)/2.0f + (objectScale / 2) + objectScale * column,
+		0.f,
+		+1 * (size)/2.0f - (objectScale / 2) - objectScale * row);
+}
+
+glm::vec3 MazeGeneratorComponent::GetStartPosition() const {
+	// The start node (ID 0) is always the first inner cell: row 1, column 1.
+	return GetCellPosition(1, 1);
 }

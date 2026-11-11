@@ -30,4 +30,10 @@ public:
 	void SetSize(int size) { this->size = size; }
 	long GetSeed() const { return seed; }
 	void SetSeed(long seed) { this->seed = seed; }
+
+	/// @brief World position of the center of a maze cell (local to the maze object).
+	glm::vec3 GetCellPosition(int row, int column) const;
+
+	/// @brief World position of the start cell (marked as A in the console).
+	glm::vec3 GetStartPosition() const;
 };

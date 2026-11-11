@@ -5,7 +5,7 @@ class CameraComponent;
 class InputComponent;
 class MovementComponent;
 class Rigidbody3DComponent;
-class BoxColliderComponent;
+class SphereColliderComponent;
 
 class Player : public AObject {
 public:
@@ -21,8 +21,13 @@ private:
 	Rigidbody3DComponent* rigidbodyComponent;
 	InputComponent* inputComponent;
 	MovementComponent* movementComponent;
-	BoxColliderComponent* colliderComponent;
+	SphereColliderComponent* colliderComponent;
+
+	glm::vec3 spawnPosition = glm::vec3(0.0f);
 
 public:
 	CameraComponent* GetCamera() const { return playerCamera; }
+
+	/// @brief Position where the player appears when the scene starts.
+	void SetSpawnPosition(glm::vec3 position) { spawnPosition = position; }
 };
