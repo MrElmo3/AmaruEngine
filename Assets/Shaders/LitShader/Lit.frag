@@ -61,7 +61,7 @@ void main() {
 	vec3 norm = normalize(normalModel);
 	vec3 viewDirection = normalize(_viewPosition - fragPosition);
 
-	vec3 result;
+	vec3 result = vec3(0.0);
 
 	for (int i = 0; i < MAX_LIGHTS; i++) {
 		Light currentLight = _activeLights[i];
