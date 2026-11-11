@@ -130,8 +130,9 @@ set(UTIL
 
 #Game Source Files
 Set(GAME_SCENES
-	# ${PRIVATE_DIR}/Game/Scenes/Maze3DScene.cpp
+	${PRIVATE_DIR}/Game/Scenes/Maze3DScene.cpp
 	${PRIVATE_DIR}/Game/Scenes/CollisionScene.cpp
+	${PRIVATE_DIR}/Game/Scenes/Collision3DScene.cpp
 )
 
 set(GAME_OBJECTS
