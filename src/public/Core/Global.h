@@ -23,7 +23,7 @@ public:
 	 */
 	static const  float METER;
 	
-	static const bool DEBUG = true;
+	static const bool DEBUG = false;
 	/**
 	 * The framerate of the game in debug mode (Unused)
 	 */

@@ -266,8 +266,9 @@ void Render::InitCube() {
 		nullptr,
 		GL_DYNAMIC_DRAW
 	);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	// Lit.vert / PBR.vert (and Mesh) expect: 0 = position, 1 = normal, 2 = uv.
+	glEnableVertexAttribArray(2);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//VBO NORMALS
 	std::vector<glm::vec3> verticesNorm = {
@@ -316,8 +317,8 @@ void Render::InitCube() {
 		verticesNorm.data(),
 		GL_STATIC_DRAW
 	);
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//EBO
 	std::vector<unsigned int> indices = {

@@ -8,6 +8,8 @@
 #include <Core/Scenes/TestCollisionScene.h>
 
 #include <Game/Scenes/CollisionScene.h>
+#include <Game/Scenes/Collision3DScene.h>
+#include <Game/Scenes/Maze3DScene.h>
 
 #include <Core/Scenes/TestScene.h>
 #include <Core/Global.h>
@@ -43,7 +45,7 @@ void Window::Start() {
 
 	glEnable(GL_DEPTH_TEST);
 	
-	actualScene = new CollisionScene();
+	actualScene = new Maze3DScene();
 	actualScene->Awake();
 	actualScene->Start();
 }

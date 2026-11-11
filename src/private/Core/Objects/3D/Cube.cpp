@@ -6,7 +6,7 @@
 Cube::Cube(const std::string &_name, AObject* _parent, ASceneController* _scene)
 	: AObject(_name, _parent, _scene) {
 
-	// renderComponent = AddComponent<RenderCubeComponent>();
+	renderComponent = AddComponent<RenderCubeComponent>();
 	// colliderComponent = AddComponent<BoxColliderComponent>();
 }
 

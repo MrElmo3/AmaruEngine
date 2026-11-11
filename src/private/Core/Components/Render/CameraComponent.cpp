@@ -19,20 +19,12 @@ void CameraComponent::Awake() {
 }
 
 glm::mat4 CameraComponent::GetViewMatrix() {
-	view = glm::mat4(1.0f);
-	
-	//base rotation
-	 // view = glm::rotate(view, glm::radians(180.0f), glm::vec3(0, 1, 0));
-	
-	glm::quat rotation = parent->GetWorldRotation();
-	glm::vec3 vectorRotation = glm::vec3(rotation.x, rotation.y, rotation.z);
-	float angle = 2 * glm::acos(rotation.w);
-	// Logger::Log("Angle: " + std::to_string(angle));
-	if (vectorRotation != glm::vec3(0))
-		view = glm::rotate(view, angle, vectorRotation);
-	
+	// The view matrix is the inverse of the camera's world transform, so the
+	// rotation has to be inverted too (not only the translation). Otherwise the
+	// camera turns the opposite way to the object's Forward()/Right().
+	view = glm::mat4_cast(glm::inverse(parent->GetWorldRotation()));
 	view = glm::translate(view, -1.0f * this->parent->GetWorldPosition());
-	
+
 	return view;
 }
 
