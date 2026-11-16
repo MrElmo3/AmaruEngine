@@ -35,6 +35,10 @@ void Window::Start() {
 		nullptr);
 
 	glfwMakeContextCurrent(window);
+	// Wait for the monitor refresh before swapping. Without it the game renders
+	// hundreds of frames per second and the monitor shows pieces of several
+	// frames at once (tearing) whenever the camera moves.
+	glfwSwapInterval(1);
 	glfwSetFramebufferSizeCallback(window, [](GLFWwindow* window, int width, int height) {
 		glViewport(0, 0, width, height);
 	});

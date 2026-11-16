@@ -40,7 +40,7 @@ void Player::Awake() {
 	RotateEuler(glm::vec3(0.0f, 180.0f, 0.0f));
 
 	movementComponent->SetSpeed(2.0f);
-	movementComponent->SetRotationSpeed(5.0f);
+	movementComponent->SetRotationSpeed(60.0f); // degrees per second
 
 	AObject::Awake();
 }

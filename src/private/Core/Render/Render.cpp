@@ -15,12 +15,30 @@
 #include <Core/Render/LightData.h>
 #include <Util/Logger.h>
 #include <Core/Render/Model.h>
+#include <Core/Scenes/ASceneController.h>
+#include <Core/Components/Render/Lights/LightComponent.h>
+#include <cfloat>
+
+// The same UVs for each of the 6 faces of the cube
+static const std::vector<glm::vec2> DEFAULT_CUBE_UV = [] {
+	std::vector<glm::vec2> uv;
+	for (int face = 0; face < 6; face++) {
+		uv.insert(uv.end(), {
+			{0.0f, 0.0f},
+			{1.0f, 0.0f},
+			{1.0f, 1.0f},
+			{0.0f, 1.0f},
+		});
+	}
+	return uv;
+}();
 
 Render::Render() {
 	gizmosMaterial = new ColorMaterial();
 	InitQuad();
 	InitLine();
 	InitCube();
+	InitShadowMap();
 	InitUniformCameraBuffer();
 	InitUniformLightBuffer();
 }
@@ -258,12 +276,12 @@ void Render::InitCube() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
 	//VBO UV
-	glGenBuffers(1, &VBOQuadUv);
-	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
+	glGenBuffers(1, &VBOCubeUv);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOCubeUv);
 	glBufferData(
 		GL_ARRAY_BUFFER,
-		24 * sizeof(glm::vec2),
-		nullptr,
+		DEFAULT_CUBE_UV.size() * sizeof(glm::vec2),
+		DEFAULT_CUBE_UV.data(),
 		GL_DYNAMIC_DRAW
 	);
 	// Lit.vert / PBR.vert (and Mesh) expect: 0 = position, 1 = normal, 2 = uv.
@@ -468,60 +486,144 @@ void Render::DrawCube(
 
 	if (!currentCamera) return;
 
-	material->Use();
+	// The cube is not drawn right away: the shadow pass needs to know every
+	// cube of the frame before the first one is shaded. See Flush().
+	CubeDrawCommand command;
+	command.model = *modelMatrix;
+	command.material = material;
+	if (uv != nullptr && uv->size() == 24) command.uv = *uv;
+	cubeQueue.push_back(command);
+}
 
-	material->shader->SetMatrix4("_model", *modelMatrix);
-
-	glm::mat3 normalMatrix = glm::mat3(glm::transpose(glm::inverse(*modelMatrix)));
-	material->shader->SetMatrix3("_normalModel", normalMatrix);
-
-	glBindVertexArray(VAOCube);
-
-	if (uv == nullptr || uv->size() != 24) {
-		uv = new std::vector<glm::vec2>({
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-
-			{0.0f,	0.0f},
-			{1.0f,	0.0f},
-			{1.0f,	1.0f},
-			{0.0f,	1.0f},
-			});
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOQuadUv);
-	glBufferSubData(
-		GL_ARRAY_BUFFER,
-		0,
-		uv->size() * sizeof(glm::vec2),
-		uv->data()
+void Render::InitShadowMap() {
+	shadowShader = new Shader(
+		"Assets/Shaders/Shadow/ShadowDepth.vert",
+		"Assets/Shaders/Shadow/ShadowDepth.frag"
 	);
 
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	glGenTextures(1, &shadowMap);
+	glBindTexture(GL_TEXTURE_2D, shadowMap);
+	glTexImage2D(
+		GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24,
+		SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, 0,
+		GL_DEPTH_COMPONENT, GL_FLOAT, nullptr
+	);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// Everything outside of the shadow map counts as lit
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	const float borderColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
+	glGenFramebuffers(1, &shadowFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowMap, 0);
+	// Depth only: no color buffer
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		Logger::Error("Render::InitShadowMap -> The shadow framebuffer is not complete");
+	}
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+bool Render::RenderShadowPass(glm::mat4& lightSpaceMatrix) {
+	LightComponent* light = Window::GetInstance().GetActualScene()->directionalLight;
+	if (light == nullptr) return false;
+
+	glm::vec3 direction = light->GetLightData().direction;
+	if (glm::length(direction) < 0.0001f) return false;
+	direction = glm::normalize(direction);
+
+	// World bounds of every cube, so the light frustum covers the whole scene
+	glm::vec3 minBounds(FLT_MAX);
+	glm::vec3 maxBounds(-FLT_MAX);
+	for (const CubeDrawCommand& command : cubeQueue) {
+		for (int corner = 0; corner < 8; corner++) {
+			glm::vec4 local(
+				(corner & 1) ? 0.5f : -0.5f,
+				(corner & 2) ? 0.5f : -0.5f,
+				(corner & 4) ? 0.5f : -0.5f,
+				1.0f);
+			glm::vec3 world = glm::vec3(command.model * local);
+			minBounds = glm::min(minBounds, world);
+			maxBounds = glm::max(maxBounds, world);
+		}
+	}
+	glm::vec3 center = (minBounds + maxBounds) * 0.5f;
+	float radius = glm::length(maxBounds - minBounds) * 0.5f;
+	if (radius < 0.0001f) return false;
+
+	// A directional light has no position: place the "camera" of the light
+	// outside of the scene bounds, looking at the center along its direction.
+	glm::vec3 up = glm::abs(direction.y) > 0.99f ? glm::vec3(0, 0, 1) : glm::vec3(0, 1, 0);
+	glm::mat4 lightView = glm::lookAt(center - direction * radius, center, up);
+	glm::mat4 lightProjection = glm::ortho(-radius, radius, -radius, radius, 0.0f, 2.0f * radius);
+	lightSpaceMatrix = lightProjection * lightView;
+
+	int viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowFBO);
+	glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+	shadowShader->Use();
+	shadowShader->SetMatrix4("_lightSpaceMatrix", lightSpaceMatrix);
+
+	glBindVertexArray(VAOCube);
+	for (const CubeDrawCommand& command : cubeQueue) {
+		shadowShader->SetMatrix4("_model", command.model);
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+	}
 	glBindVertexArray(0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+	return true;
+}
+
+void Render::Flush() {
+	if (cubeQueue.empty()) return;
+
+	glm::mat4 lightSpaceMatrix(1.0f);
+	const bool hasShadows = RenderShadowPass(lightSpaceMatrix);
+
+	glActiveTexture(GL_TEXTURE0 + SHADOW_MAP_UNIT);
+	glBindTexture(GL_TEXTURE_2D, shadowMap);
+
+	glBindVertexArray(VAOCube);
+	for (const CubeDrawCommand& command : cubeQueue) {
+		command.material->Use();
+
+		Shader* shader = command.material->shader;
+		shader->SetMatrix4("_model", command.model);
+		shader->SetMatrix3("_normalModel", glm::mat3(glm::transpose(glm::inverse(command.model))));
+
+		// Only the shaders that declare these uniforms (PBR) use them
+		shader->SetBool("_receiveShadows", hasShadows);
+		shader->SetMatrix4("_lightSpaceMatrix", lightSpaceMatrix);
+		shader->SetInt("_shadowMap", SHADOW_MAP_UNIT);
+
+		if (!command.uv.empty()) {
+			glBindBuffer(GL_ARRAY_BUFFER, VBOCubeUv);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, command.uv.size() * sizeof(glm::vec2), command.uv.data());
+		}
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+		if (!command.uv.empty()) {
+			// Leave the default UVs for the next cube
+			glBufferSubData(GL_ARRAY_BUFFER, 0, DEFAULT_CUBE_UV.size() * sizeof(glm::vec2), DEFAULT_CUBE_UV.data());
+		}
+	}
+	glBindVertexArray(0);
+
+	// The cubes changed the bound shader behind SetCurrentMaterial's back
+	currentMaterial = nullptr;
+	cubeQueue.clear();
 }
 
 void Render::DrawModel(

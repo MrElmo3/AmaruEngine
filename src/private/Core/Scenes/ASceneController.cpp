@@ -115,6 +115,9 @@ void ASceneController::LateUpdate(){
 		if (!element->isEnabled) continue;
 		element->LateUpdate();
 	}
+
+	// Everything is queued now: draw the shadow map and then the scene
+	Render::GetInstance().Flush();
 }
 
 void ASceneController::End(){

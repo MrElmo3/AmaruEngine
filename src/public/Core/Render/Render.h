@@ -20,9 +20,24 @@ class Shader;
 class Render : public Singleton<Render> {
 private:
 
-	CameraComponent* currentCamera;
+	CameraComponent* currentCamera = nullptr;
 
-	AMaterial* currentMaterial;
+	AMaterial* currentMaterial = nullptr;
+
+	/// A cube waiting to be drawn by Flush()
+	struct CubeDrawCommand {
+		glm::mat4 model;
+		AMaterial* material;
+		std::vector<glm::vec2> uv; // empty = default UVs
+	};
+	std::vector<CubeDrawCommand> cubeQueue;
+
+	// Shadow map of the directional light
+	static constexpr int SHADOW_MAP_SIZE = 2048;
+	static constexpr int SHADOW_MAP_UNIT = 5;
+	unsigned int shadowFBO = 0;
+	unsigned int shadowMap = 0;
+	Shader* shadowShader = nullptr;
 
 	std::vector<Shader*> shaders;
 
@@ -34,6 +49,7 @@ private:
 	unsigned int VAOCube;
 	unsigned int VBOCubePos;
 	unsigned int VBOCubeNorm;
+	unsigned int VBOCubeUv;
 	unsigned int EBOCube;
 
 	unsigned int VAOQuad;
@@ -61,8 +77,24 @@ private:
 	void InitQuad();
 	void InitLine();
 	void InitCube();
+	void InitShadowMap();
+
+	/**
+	 * @brief Renders the queued cubes into the shadow map from the
+	 * directional light's point of view.
+	 * @param lightSpaceMatrix Output: world space -> light clip space
+	 * @return False if the scene has no usable directional light
+	 */
+	bool RenderShadowPass(glm::mat4& lightSpaceMatrix);
 
 public:
+
+	/**
+	 * @brief Draws everything queued this frame: first the shadow map,
+	 * then the cubes with their materials. Called once per frame by the
+	 * scene, after all the objects were updated.
+	 */
+	void Flush();
 
 	/**
 	 * @brief This method creates a shader program
@@ -123,7 +155,8 @@ public:
 	);
 
 	/**
-	 * @brief This method draws a cube in the world
+	 * @brief This method queues a cube to be drawn in the world.
+	 * The cube is drawn (and casts shadows) when Flush() is called.
 	 * @param modelMatrix The model matrix
 	 * @param material The material to use
 	 */

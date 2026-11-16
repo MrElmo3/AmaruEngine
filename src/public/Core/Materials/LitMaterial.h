@@ -7,18 +7,18 @@
 class LitMaterial : public AMaterial {
 private:
 	glm::vec3 color = glm::vec3(1.0);
-	unsigned int diffuse;
-	unsigned int specular;
-	unsigned int emission;
+	unsigned int diffuse = 0;
+	unsigned int specular = 0;
+	unsigned int emission = 0;
 	float shininess = 64.0f;
 
 	//PBR stuff
 	bool isPBR = false;
-	unsigned int albedo;
-	unsigned int normal;
-	unsigned int metallic;
-	unsigned int roughness;
-	unsigned int ao;
+	unsigned int albedo = 0;
+	unsigned int normal = 0;
+	unsigned int metallic = 0;
+	unsigned int roughness = 0;
+	unsigned int ao = 0;
 
 public:
 	LitMaterial();

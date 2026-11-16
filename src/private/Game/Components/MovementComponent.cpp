@@ -38,7 +38,8 @@ void MovementComponent::Update(double deltaTime) {
 
 	//For now the rigidbody will not manage the rotation
 	if (rotation != glm::vec2(0)) {
-		float step = glm::radians(rotationSpeed * Global::FIXED_DELTA_TIME);
+		// rotationSpeed is in degrees per second, whatever the frame rate is.
+		float step = glm::radians(rotationSpeed * (float)deltaTime);
 		// Yaw around the world up axis and pitch around the local right axis,
 		// so combining both never rolls the camera.
 		glm::quat yaw = glm::angleAxis(-rotation.x * step, Global::UP);

@@ -18,7 +18,7 @@ void LitMaterial::Use() {
 		this->shader->SetInt("_material.albedoMap", 0);
 		this->shader->SetInt("_material.normalMap", 1);
 		this->shader->SetInt("_material.metallicMap", 2);
-		this->shader->SetInt("_material.roughnessMap", 2);
+		this->shader->SetInt("_material.roughnessMap", 3);
 		this->shader->SetInt("_material.aoMap", 4);
 
 		this->shader->SetTexture(albedo, 0);

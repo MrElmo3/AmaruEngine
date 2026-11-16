@@ -10,8 +10,8 @@
 Shader::Shader (const std::string vertexPath, const std::string fragmentPath){
 
 	//saving path for retriving the shader
-	this->vertexPath = std::filesystem::current_path().generic_string() + vertexPath;
-	this->fragmentPath = std::filesystem::current_path().generic_string() + fragmentPath;
+	this->vertexPath = vertexPath;
+	this->fragmentPath = fragmentPath;
 
 	// 1 Reading data from the path
 	std::string vertexCode;
@@ -65,7 +65,7 @@ Shader::Shader (const std::string vertexPath, const std::string fragmentPath){
 	glGetShaderiv(vertex, GL_COMPILE_STATUS, &sucess);
 	if(!sucess){
 		glGetShaderInfoLog(vertex, 512, NULL, infoLog);
-		Logger::Error("ERROR::SHADER::VERTEX::COMPILATION_FAILED");
+		Logger::Error("ERROR::SHADER::VERTEX::COMPILATION_FAILED " + vertexPath + ": " + infoLog);
 		return;
 	}
 
@@ -76,7 +76,7 @@ Shader::Shader (const std::string vertexPath, const std::string fragmentPath){
 	glGetShaderiv(fragment, GL_COMPILE_STATUS, &sucess);
 	if(!sucess){
 		glGetShaderInfoLog(fragment, 512, NULL, infoLog);
-		Logger::Error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED");
+		Logger::Error("ERROR::SHADER::FRAGMENT::COMPILATION_FAILED " + fragmentPath + ": " + infoLog);
 		return;
 	}
 
@@ -88,7 +88,7 @@ Shader::Shader (const std::string vertexPath, const std::string fragmentPath){
 	glGetProgramiv(ID, GL_LINK_STATUS, &sucess);
 	if(!sucess){
 		glGetProgramInfoLog(ID, 512, NULL, infoLog);
-		Logger::Error("ERROR::SHADER::PROGRAM::LINKING_FAILED");
+		Logger::Error("ERROR::SHADER::PROGRAM::LINKING_FAILED " + vertexPath + ": " + infoLog);
 		return;
 	}
 

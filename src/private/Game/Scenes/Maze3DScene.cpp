@@ -31,7 +31,11 @@ Maze3DScene::Maze3DScene() {
 	player->SetSpawnPosition(maze->GetMazeGeneratorComponent()->GetStartPosition());
 	// AddObject(player);
 
-	a = new DirectionalLight("Light", nullptr, this);
+	auto* light = new DirectionalLight("Light", nullptr, this);
+	// Tilted down and sideways so the walls cast shadows over each other.
+	light->RotateEuler(glm::vec3(-50.0f, 210.0f, 0.0f));
+	light->SetColor(3.0f, 3.0f, 3.0f);
+	a = light;
 }
 
 void Maze3DScene::Update(double deltaTime) {

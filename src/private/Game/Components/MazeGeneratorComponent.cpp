@@ -9,6 +9,7 @@
 #include <Core/Global.h>
 #include <Core/Components/Render/RenderCubeComponent.h>
 #include <Core/Materials/LitMaterial.h>
+#include <Core/Render/Render.h>
 #include <Core/Objects/3D/Cube.h>
 #include <Core/Components/Physics/3D/BoxColliderComponent.h>
 
@@ -185,11 +186,20 @@ void MazeGeneratorComponent::InstantiateWall(std::string id, glm::vec3 objectPos
 	
 	Cube* wall = new Cube(name, parent);
 	wall->SetPosition(objectPosition);
-	wall->SetScale(objectScale * 0.8f);
+	wall->SetScale(objectScale * 1.0f);
 	
 	LitMaterial* _material = dynamic_cast<LitMaterial*>(wall->GetRenderComponent()->material);
-	// _material->SetColor(glm::vec3(255, 127, 39) / 255.0f);
-	_material->SetDiffuse("Assets/Textures/HL.jpg");
+	// PBR stone wall. There is no metallic map: an unset map reads as 0 (non-metal).
+	_material
+		->SetAlbedo("Assets/Textures/StoneWall/albedo.png")
+		->SetNormal("Assets/Textures/StoneWall/normal.png")
+		->SetRoughness("Assets/Textures/StoneWall/roughness.png")
+		->SetAO("Assets/Textures/StoneWall/ao.png")
+		->IsPBR(true)
+		->shader = Render::GetInstance().CreateShader(
+			"Assets/Shaders/PBR/PBR.vert",
+			"Assets/Shaders/PBR/PBR.frag"
+		);
 
 	// Static collider (no rigidbody): the default half size of 0.5 matches the cube mesh,
 	// and the object scale is applied on top of it.

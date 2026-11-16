@@ -68,9 +68,15 @@ layout (std140, binding = 1) uniform LightBlock {
 	Light _activeLights[MAX_LIGHTS];
 };
 
+// Shadow of the directional light (set by the renderer, off by default)
+uniform bool _receiveShadows;
+uniform mat4 _lightSpaceMatrix;
+uniform sampler2D _shadowMap;
+
 const float PI = 3.14159265359;
 
 vec3 GetNormalFromMap();
+float CalcShadow(vec3 lightDirection);
 
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -102,7 +108,7 @@ void main() {
 	);
 
     // reflectance equation
-	vec3 Lo;
+	vec3 Lo = vec3(0.0);
 
     for (int i = 0; i < MAX_LIGHTS; i++) {
 		Light currentLight = _activeLights[i];
@@ -115,7 +121,7 @@ void main() {
 
     // ambient lighting (note that the next IBL tutorial will replace 
     // this ambient lighting with environment lighting).
-    vec3 ambient = vec3(0.001) * fragInfo.albedo * fragInfo.ao;
+    vec3 ambient = vec3(0.03) * fragInfo.albedo * fragInfo.ao;
     
     vec3 color = ambient + Lo;
 
@@ -142,6 +148,33 @@ vec3 GetNormalFromMap() {
 	mat3 TBN = mat3(T, B, N);
 
 	return normalize(TBN * tangentNormal);
+}
+
+// Returns how much the fragment is in shadow: 0 = fully lit, 1 = fully shadowed.
+float CalcShadow(vec3 lightDirection) {
+	if (!_receiveShadows) return 0.0;
+
+	vec4 fragPositionLight = _lightSpaceMatrix * vec4(fragPosition, 1.0);
+	vec3 projCoords = fragPositionLight.xyz / fragPositionLight.w;
+	projCoords = projCoords * 0.5 + 0.5;
+
+	// Outside of the far plane of the light: nothing can occlude it
+	if (projCoords.z > 1.0) return 0.0;
+
+	// Bigger bias on surfaces almost parallel to the light to avoid shadow acne
+	float NdotL = max(dot(normalize(normalModel), lightDirection), 0.0);
+	float bias = max(0.004 * (1.0 - NdotL), 0.001);
+
+	// 3x3 PCF to soften the edges
+	vec2 texelSize = 1.0 / vec2(textureSize(_shadowMap, 0));
+	float shadow = 0.0;
+	for (int x = -1; x <= 1; x++) {
+		for (int y = -1; y <= 1; y++) {
+			float closestDepth = texture(_shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+			shadow += (projCoords.z - bias > closestDepth) ? 1.0 : 0.0;
+		}
+	}
+	return shadow / 9.0;
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness) {
@@ -199,6 +232,10 @@ vec3 CalcLight(
 	vec3 halfwayDirection = normalize(viewDirection + lightDirection);
 
 	vec3 radiance = light.color;
+
+	if(light.type == DIRECTIONAL){
+		radiance *= 1.0 - CalcShadow(lightDirection);
+	}
 
 	if(light.type != DIRECTIONAL){
 		float distance = length(light.position - fragPosition);
