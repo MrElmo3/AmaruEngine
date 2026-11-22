@@ -9,10 +9,9 @@
 
 MovementComponent::MovementComponent(AObject* parent) : IComponent(parent) {
 	direction = glm::vec2(0);
-	rotation = glm::vec2(0);
-	
+
 	speed = 0;
-	rotationSpeed = 0;
+	lookSensitivity = 0.1f;
 }
 
 MovementComponent::~MovementComponent() {
@@ -35,21 +34,10 @@ void MovementComponent::Update(double deltaTime) {
 	normalizeDirection = normalizeDirection != glm::vec3(0.0f)? glm::normalize(normalizeDirection) : normalizeDirection;
 	glm::vec3 velocity = normalizeDirection * speed;
 	rb->velocity = velocity;
-
-	//For now the rigidbody will not manage the rotation
-	if (rotation != glm::vec2(0)) {
-		// rotationSpeed is in degrees per second, whatever the frame rate is.
-		float step = glm::radians(rotationSpeed * (float)deltaTime);
-		// Yaw around the world up axis and pitch around the local right axis,
-		// so combining both never rolls the camera.
-		glm::quat yaw = glm::angleAxis(-rotation.x * step, Global::UP);
-		glm::quat pitch = glm::angleAxis(rotation.y * step, Global::RIGHT);
-		parent->SetRotation(yaw * parent->GetRotation() * pitch);
-	}
 }
 
 void MovementComponent::FixedUpdate() {
-	
+
 }
 
 
@@ -58,8 +46,8 @@ MovementComponent* MovementComponent::SetSpeed(float speed) {
 	return this;
 }
 
-MovementComponent* MovementComponent::SetRotationSpeed(float rotationSpeed) {
-	this->rotationSpeed = rotationSpeed;
+MovementComponent* MovementComponent::SetLookSensitivity(float lookSensitivity) {
+	this->lookSensitivity = lookSensitivity;
 	return this;
 }
 
@@ -68,7 +56,19 @@ MovementComponent* MovementComponent::SetDirection(glm::vec2 direction) {
 	return this;
 }
 
-MovementComponent* MovementComponent::SetRotation(glm::vec2 rotation) {
-	this->rotation = rotation;
-	return this;
+void MovementComponent::Look(glm::vec2 mouseDelta) {
+	// The mouse delta is already the distance moved this frame, so no deltaTime here.
+	float yawDegrees = mouseDelta.x * lookSensitivity;
+	float pitchDegrees = mouseDelta.y * lookSensitivity;
+
+	// Clamp the pitch so the camera can never flip over the top or bottom.
+	float currentPitch = glm::degrees(asin(glm::clamp(parent->Forward().y, -1.0f, 1.0f)));
+	float targetPitch = glm::clamp(currentPitch + pitchDegrees, -MAX_PITCH, MAX_PITCH);
+	pitchDegrees = targetPitch - currentPitch;
+
+	// Yaw around the world up axis and pitch around the local right axis,
+	// so combining both never rolls the camera.
+	glm::quat yaw = glm::angleAxis(glm::radians(-yawDegrees), Global::UP);
+	glm::quat pitch = glm::angleAxis(glm::radians(pitchDegrees), Global::RIGHT);
+	parent->SetRotation(yaw * parent->GetRotation() * pitch);
 }

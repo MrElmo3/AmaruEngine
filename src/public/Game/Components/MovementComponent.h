@@ -9,13 +9,15 @@ class Rigidbody3DComponent;
 class MovementComponent : public IComponent {
 private:
 	glm::vec2 direction;
-	glm::vec2 rotation;
-	
+
 	float speed;
-	float rotationSpeed;
+	// Degrees rotated per pixel of mouse movement.
+	float lookSensitivity;
 
 	Rigidbody3DComponent* rb;
-	
+
+	static constexpr float MAX_PITCH = 89.0f;
+
 public:
 	MovementComponent(AObject* parent);
 	~MovementComponent() override;
@@ -25,12 +27,12 @@ public:
 	void FixedUpdate() override;
 
 	MovementComponent* SetSpeed(float speed);
-	MovementComponent* SetRotationSpeed(float rotationSpeed);
+	MovementComponent* SetLookSensitivity(float lookSensitivity);
 	MovementComponent* SetDirection(glm::vec2 direction);
-	MovementComponent* SetRotation(glm::vec2 rotation);
+	// Rotates the object by a mouse delta in pixels (x = right, y = up).
+	void Look(glm::vec2 mouseDelta);
 
 	glm::vec2 GetDirection()	const { return direction; }
-	glm::vec2 GetRotation()			const { return rotation; }
 	double GetSpeed()			const { return speed; }
-	double GetRotationSpeed()	const { return rotationSpeed; }
+	double GetLookSensitivity()	const { return lookSensitivity; }
 };

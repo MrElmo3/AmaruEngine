@@ -60,7 +60,7 @@ Collision3DScene::Collision3DScene() {
 	auto* rb = cameraObject->AddComponent<Rigidbody3DComponent>();
 	rb->gravityScale = 0;
 	movement->SetSpeed(5);
-	movement->SetRotationSpeed(5);
+	movement->SetLookSensitivity(0.1f);
 
 	// Closed box: floor, ceiling, right, left, back, front.
 	// Each wall is WALL_THICKNESS thick and sits just outside the inner volume.

@@ -3,6 +3,7 @@
 
 class CameraComponent;
 class InputComponent;
+class LightComponent;
 class MovementComponent;
 class Rigidbody3DComponent;
 class SphereColliderComponent;
@@ -22,6 +23,8 @@ private:
 	InputComponent* inputComponent;
 	MovementComponent* movementComponent;
 	SphereColliderComponent* colliderComponent;
+	// Spot light that follows the camera, used as a flashlight.
+	LightComponent* flashlight;
 
 	glm::vec3 spawnPosition = glm::vec3(0.0f);
 

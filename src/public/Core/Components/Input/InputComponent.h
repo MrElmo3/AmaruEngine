@@ -15,12 +15,12 @@ private:
 	const int DOWN = GLFW_KEY_S;
 	const int LEFT = GLFW_KEY_A;
 	const int RIGHT = GLFW_KEY_D;
-	const int RIGHT_ROTATION = GLFW_KEY_E;
-	const int LEFT_ROTATION = GLFW_KEY_Q;
-	const int UP_ROTATION = GLFW_KEY_R;
-	const int DOWN_ROTATION = GLFW_KEY_F;
 
 	MovementComponent* movementComponent;
+
+	// Cursor position of the previous frame, to turn the mouse motion into a delta.
+	glm::dvec2 lastCursorPosition;
+	bool firstMouseFrame = true;
 
 public:
 	InputComponent(AObject* parent);
@@ -31,4 +31,5 @@ public:
 
 private:
 	void SetMovementDirection();
+	void SetLookDelta();
 };
