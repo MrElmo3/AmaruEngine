@@ -36,4 +36,8 @@ public:
 
 	/// @brief World position of the start cell (marked as A in the console).
 	glm::vec3 GetStartPosition() const;
+
+	/// @brief World position of the end cell (marked as B in the console): the dead end
+	/// farthest from the start. Only valid after the maze is generated (Awake).
+	glm::vec3 GetEndPosition() const;
 };

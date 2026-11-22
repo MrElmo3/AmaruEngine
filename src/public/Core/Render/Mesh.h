@@ -19,6 +19,8 @@ public:
     
 	void Draw(AMaterial* material, glm::mat4x4* parentTransform);
 
+	glm::mat4x4 GetMeshTransform() const { return meshTransform; }
+
 private:
 
 	glm::mat4x4 meshTransform;

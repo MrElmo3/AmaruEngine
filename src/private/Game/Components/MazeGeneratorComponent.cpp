@@ -15,7 +15,7 @@
 
 MazeGeneratorComponent::MazeGeneratorComponent(AObject* parent) : IComponent(parent) {
 
-	size = 5; //Default size of Maze
+	size = 13; //Default size of Maze
 	seed = 1111; //Default seed
 	startID = -1;
 	endID = -1;
@@ -212,6 +212,14 @@ glm::vec3 MazeGeneratorComponent::GetCellPosition(int row, int column) const {
 		-1 * (size)/2.0f + (objectScale / 2) + objectScale * column,
 		0.f,
 		+1 * (size)/2.0f - (objectScale / 2) - objectScale * row);
+}
+
+glm::vec3 MazeGeneratorComponent::GetEndPosition() const {
+	if (endID < 0) return GetStartPosition(); // maze not generated yet
+
+	// Node IDs cover only the inner cells, so shift by 1 to skip the border walls.
+	int innerSize = size - 2;
+	return GetCellPosition(endID / innerSize + 1, endID % innerSize + 1);
 }
 
 glm::vec3 MazeGeneratorComponent::GetStartPosition() const {

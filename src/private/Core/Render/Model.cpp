@@ -1,4 +1,5 @@
 #include <Core/Render/Model.h>
+#include <cfloat>
 #include <Core/Render/Mesh.h>
 #include <Util/Logger.h>
 #include <Util/Utility.h>
@@ -11,6 +12,23 @@ Model::Model(std::string modelPath) {
 void Model::Draw(AMaterial* material, glm::mat4x4* parentTransform) {
 	for (unsigned int i = 0; i < meshes.size(); i++)
 		meshes[i].Draw(material, parentTransform);
+}
+
+void Model::GetBounds(glm::vec3& min, glm::vec3& max) const {
+	min = glm::vec3(FLT_MAX);
+	max = glm::vec3(-FLT_MAX);
+	for (const Mesh& mesh : meshes) {
+		glm::mat4x4 transform = mesh.GetMeshTransform();
+		for (const Vertex& vertex : mesh.vertices) {
+			glm::vec3 point = glm::vec3(transform * glm::vec4(vertex.Position, 1.0f));
+			min = glm::min(min, point);
+			max = glm::max(max, point);
+		}
+	}
+	// Empty or failed model: return a zero box instead of infinities.
+	if (meshes.empty()) {
+		min = max = glm::vec3(0.0f);
+	}
 }
 
 void Model::LoadModel(std::string modelPath) {

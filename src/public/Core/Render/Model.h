@@ -13,6 +13,10 @@ public:
 	Model(std::string modelPath);
 	void Draw(AMaterial* material, glm::mat4x4* parentTransform);
 
+	/// @brief Axis aligned bounds of the whole model in its own space (mesh transforms applied).
+	/// Useful to fit a model of unknown size into the scene.
+	void GetBounds(glm::vec3& min, glm::vec3& max) const;
+
 private:
 	std::vector<Mesh> meshes;
 	std::string directory;
